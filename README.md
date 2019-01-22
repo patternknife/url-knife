@@ -53,8 +53,11 @@ For ES5 users,
 
 For ES6 npm users, do 'npm install --save strict-parser' on console.
 
+``` html
+import StrictParser from 'strict-parser';
+```
 
-## Syntax & Usage
+## Syntax & Usage (ES6 : var->let)
 
 ### Sample (XmlArea)
 
