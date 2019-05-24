@@ -5,32 +5,76 @@
 **Strict-parser** is an open source JavaScript library in order to parse certain patterns such as
 urls, emails or decimals on xml(or html) which is, as you are aware, divided into three areas - elements, 
 comments and text. You can obtain strings with certain patterns and where they are on html.
+Definitely you can also use it on plain texts.
+
 
 ## More sophisticated parsing patterns
 
-1. Url  
+1. Url (From ver 0.0.3, more stronger than before)  
  
-    A) referred to validator.js and added no-protocol cases such as www.google.com 
-    or ip numbers like 192.168.0.5:8000/abc.  
+    A) The core regex is based on 'validator.js' 
+    
+    B) Rare cases such as localhost,ip numbers is detected
+    
+    C) Urls with no-protocol are distilled (strong point)
+    
+        e.g., a sample url without protocols such as http or https
+        ```
+        [...
+          {
+            "value": {
+              "url": "s5houl７十七日dbedetected.jp?japan=go",
+              "protocol": null,
+              "onlyDomain": "s5houl７十七日dbedetected.jp",
+              "onlyUriWithParams": "?japan=go",
+              "type": "domain"
+            },
+            "area": "text"
+          }
+        ]
+        ```
+        
+        // wrong domains such as this is not distilled
+        ```
+        fakeshouldnotbedetected.url?abc=fake
+        ```
+        
+     The core regex combined with all existing root domains (around over 1770) has made it possible 
+     to implement a logic to extract urls with no-protocol.  
+   
+    D) Detailed information about a parsed url on xmls or texts is provided. (strong point)
+    e.g.,
+    ```
+    [...
+        {
+          "url": "xtp:// gooppalgo.com/park/tree?abc=1",
+          "protocol": "xtp (unknown protocol)",
+          "onlyUriWithParams": "/park/tree?abc=1",
+          "onlyDomain": "gooppalgo.com",
+          "type": "domain"
+        }
+    ]
+    ```
 
 2. Email  
 
-    A) separated only emails from post-connected characters.  
+    A) Can separate only emails from post-connected characters.  
         [ex.] abc@naver.comCOCO, cde@adela.co.kr에서, fgh@adela.co.kr(next)   
               -> abc@naver.com, cde@adela.co.kr, fgh@adela.co.kr  
                           
-    B) separated only emails from pre-connected characters.      
+    B) Can separate only emails from pre-connected characters.      
         [ex.] 请发邮件给我abc@naver.com, ---과자@daum.net, "all_day@bbqg.com" 
               -> abc@naver.com, 과자@daum.net, all_day@bbqg.com
           
 3. Element
    
-    A) a well-known regex indicating tags is not simply '<[^>]+>'.
-    This regex fails to parse some cases such as '`````<p class="here>to" style="width:100%">`````' where '>' is inserted in the 
+    A) A well-known regex indicating tags is not simply '<[^>]+>'.
+    This regex fails to parse some rare cases such as '`````<p class="here>to" style="width:100%">`````' where '>' is inserted in the 
     class attribute.
+    
+    B) This library has overcome the weakness above.
 
-4. Zero-dependency except for regular expressions for parsing - any xml type is available.  
-
+  
 Please inform me of more sophisticated patterns you need by leaving issues on Github or emailing me at studypurpose@naver.com.
 
 
@@ -57,21 +101,21 @@ For ES6 npm users, do 'npm install --save strict-parser' on console.
 import StrictParser from 'strict-parser';
 ```
 
-## Syntax & Usage (ES6 : var->let)
+## Syntax & Usage (ES6 uses 'let' instead of 'var')
 
-### Sample (XmlArea)
+### XmlArea
 
 ``` javascript
 
     /**
      * @variable xmlStr is only a html sample.
      */ 
-    var htmlStr = '<body><p></p>\n' +
-        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
-        '<!-- 请发邮件给我abc件给@navered.com http://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  -->  "abc@daum.net"로 보내주세요. ' +
-        '<p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
-        '<p><img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //localhost:8000 localhost:80<p class="https://www.aadc给s.cn"> www.aaa가가.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';   
+    var xmlStr = '<body><p>packed1book.net</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go <img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!-- 请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';   
 ```
 
 
@@ -87,91 +131,160 @@ import StrictParser from 'strict-parser';
      var urls = StrictParser.XmlArea.extractAllUrls(xmlStr);    
    
 ```
-##### console.log(urls) ( To print them out, JSON.stringify(urls, null, 2) )
+##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
 ``` javascript
 [
   {
     "value": {
-      "protocol": "http",
+      "url": "ssh://www.aaa가.com",
+      "protocol": "ssh",
       "onlyDomain": "www.aaa가.com",
-      "type": "domain",
-      "url": "http://www.aaa가.com"
+      "onlyUriWithParams": null,
+      "type": "domain"
     },
     "area": "comment"
   },
   {
     "value": {
-      "protocol": "",
+      "url": "www.naver.com",
+      "protocol": null,
       "onlyDomain": "www.naver.com",
-      "type": "domain",
-      "url": "www.naver.com"
+      "onlyUriWithParams": null,
+      "type": "domain"
     },
     "area": "comment"
   },
   {
     "value": {
+      "url": "http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png",
       "protocol": "http",
       "onlyDomain": "www.aaa가가.com",
-      "type": "domain",
-      "url": "http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"
+      "onlyUriWithParams": "/image/showWorkOrderImg?fileName=12345.png",
+      "type": "domain"
     },
     "area": "element : img"
   },
   {
     "value": {
+      "url": "https://www.aadc给s.cn",
       "protocol": "https",
       "onlyDomain": "www.aadc给s.cn",
-      "type": "domain",
-      "url": "https://www.aadc给s.cn"
+      "onlyUriWithParams": null,
+      "type": "domain"
     },
     "area": "element : p"
   },
   {
     "value": {
+      "url": "packed1book.net",
+      "protocol": null,
+      "onlyDomain": "packed1book.net",
+      "onlyUriWithParams": null,
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "s5houl７十七日dbedetected.jp?japan=go",
+      "protocol": null,
+      "onlyDomain": "s5houl７十七日dbedetected.jp",
+      "onlyUriWithParams": "?japan=go",
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "gigi.dau.ac.kr?mac=10",
+      "protocol": null,
+      "onlyDomain": "gigi.dau.ac.kr",
+      "onlyUriWithParams": "?mac=10",
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "dau.ac.kr?mac=10",
+      "protocol": null,
+      "onlyDomain": "dau.ac.kr",
+      "onlyUriWithParams": "?mac=10",
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "구루.com",
+      "protocol": null,
+      "onlyDomain": "구루.com",
+      "onlyUriWithParams": null,
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "http://ne1ver.com:8000?abc=1&dd=5",
       "protocol": "http",
-      "onlyDomain": "localhost:8000",
-      "type": "localhost",
-      "url": "http://localhost:8000"
+      "onlyDomain": "ne1ver.com:8000",
+      "onlyUriWithParams": "?abc=1&dd=5",
+      "type": "domain"
     },
     "area": "text"
   },
   {
     "value": {
-      "protocol": "",
+      "url": "localhost:80",
+      "protocol": null,
       "onlyDomain": "localhost:80",
-      "type": "localhost",
-      "url": "localhost:80"
+      "onlyUriWithParams": null,
+      "type": "localhost"
     },
     "area": "text"
   },
   {
     "value": {
-      "protocol": "",
-      "onlyDomain": "www.aaa가가.com",
-      "type": "domain",
-      "url": "www.aaa가가.com/abc/def"
+      "url": "abcd.com",
+      "protocol": null,
+      "onlyDomain": "abcd.com",
+      "onlyUriWithParams": null,
+      "type": "domain"
     },
     "area": "text"
   },
   {
     "value": {
+      "url": "www.aaa그给.com/abc/def",
+      "protocol": null,
+      "onlyDomain": "www.aaa그给.com",
+      "onlyUriWithParams": "/abc/def",
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "https://flaviocopes.com/how-to-inspect-javascript-object/",
       "protocol": "https",
       "onlyDomain": "flaviocopes.com",
-      "type": "domain",
-      "url": "https://flaviocopes.com/how-to-inspect-javascript-object/"
+      "onlyUriWithParams": "/how-to-inspect-javascript-object/",
+      "type": "domain"
     },
     "area": "text"
   },
   {
     "value": {
-      "protocol": "",
+      "url": "203.35.33.555:8000",
+      "protocol": null,
       "onlyDomain": "203.35.33.555:8000",
-      "type": "ip",
-      "url": "203.35.33.555:8000"
+      "onlyUriWithParams": null,
+      "type": "ip"
     },
     "area": "text"
   }
-]    
+]
 ```
 
 
@@ -186,10 +299,10 @@ import StrictParser from 'strict-parser';
      * @return array
      */
    
-     var urls = StrictParser.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
+     var emails = StrictParser.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
    
 ```
-##### console.log(urls)
+##### console.log()
 ``` javascript
 [
   {
@@ -229,7 +342,7 @@ import StrictParser from 'strict-parser';
          */
     var elements = StrictParser.XmlArea.extractAllElements(xmlStr);   
 ```
-##### console.log(urls) 
+##### console.log() 
 ``` javascript
 [
   {
@@ -359,7 +472,7 @@ import StrictParser from 'strict-parser';
      */     
     var comments = StrictParser.XmlArea.extractAllComments(xmlStr); 
 ```
-##### console.log(urls) 
+##### console.log() 
 ``` javascript
 [
   {
@@ -371,18 +484,19 @@ import StrictParser from 'strict-parser';
 ```
  
  
-### Sample (TextArea)
+### TextArea
 
-#### 1. TextArea.assortUrl
+#### TextArea.assortUrl
 ``` javascript
- var result = StrictParser.TextArea.assortUrl("http://www.goopplgo.com")
+ var url = StrictParser.TextArea.assortUrl("http://www.goopplgo.com/?abc=1")
  ```
- ##### console.log(url) 
+ ##### console.log() 
  ``` javascript
 {
+  "url": "http://www.goopplgo.com/?abc=1",
   "protocol": "http",
   "onlyDomain": "www.goopplgo.com",
-  "type": "domain",
-  "url": "http://www.goopplgo.com"
+  "onlyUriWithParams": "/?abc=1",
+  "type": "domain"
 }
  ```

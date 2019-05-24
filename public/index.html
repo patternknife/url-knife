@@ -23,21 +23,24 @@
         console.log(seconds + " ms");
     }
 
-    var htmlStr = '<body><p></p>\n' +
-        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
-        '<!-- 请发邮件给我abc件给@navered.com http://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
-        '<p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
-        '<p><img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //localhost:8000 localhost:80<p class="https://www.aadc给s.cn"> www.aaa가가.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';
+    var xmlStr = '<body><p>packed1book.net</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go <img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!-- 请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';
+
 
     start();
 
-    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(htmlStr), null, 2));
-    console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(htmlStr), null, 2));
-    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(htmlStr), null, 2));
-    console.log('final_4 : ' + JSON.stringify(StrictParser.XmlArea.extractAllEmails(htmlStr), null, 2));
+    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
+    console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
+    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
+    console.log('final_4 : ' + JSON.stringify(StrictParser.XmlArea.extractAllEmails(xmlStr), null, 2));
 
-    console.log('final_5 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("http://www.goopplgo.com"), null, 2));
+    console.log('final_5 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("http://www.goopplgo.com/?abc=1"), null, 2));
+    console.log('final_6 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_7 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
 
     end();
 
