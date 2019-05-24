@@ -4,9 +4,7 @@
 
 **Strict-parser** is an open source JavaScript library in order to parse certain patterns such as
 urls, emails or decimals on xml(or html) which is, as you are aware, divided into three areas - elements, 
-comments and text. You can obtain strings with certain patterns and where they are on html.
-Definitely you can also use it on plain texts.
-
+comments and texts. You can obtain strings with certain patterns and where they are on them, and can also use this library on plain texts.
 
 ## More sophisticated parsing patterns
 
@@ -18,7 +16,8 @@ Definitely you can also use it on plain texts.
     
     C) Urls with no-protocol are distilled (strong point)
     
-        e.g., a sample url without protocols such as http or https
+     e.g., a sample url without protocols such as http or https
+     
         ```
         [...
           {
@@ -34,7 +33,7 @@ Definitely you can also use it on plain texts.
         ]
         ```
         
-        // wrong domains such as this is not distilled
+        // wrong domains such as this are not distilled
         ```
         fakeshouldnotbedetected.url?abc=fake
         ```
@@ -43,7 +42,9 @@ Definitely you can also use it on plain texts.
      to implement a logic to extract urls with no-protocol.  
    
     D) Detailed information about a parsed url on xmls or texts is provided. (strong point)
+    
     e.g.,
+    
     ```
     [...
         {
