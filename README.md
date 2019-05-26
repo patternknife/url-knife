@@ -283,7 +283,7 @@ import StrictParser from 'strict-parser';
 ``` javascript
  var url = StrictParser.UrlArea.assortUrl("http://www.goopplgo.com/?abc=1")
  ```
- ##### console.log() 
+ ###### console.log() 
  ``` javascript
 {
   "url": "http://www.goopplgo.com/?abc=1",
@@ -302,7 +302,7 @@ import StrictParser from 'strict-parser';
 ##### 3. Plain texts
 
 ``` javascript
- var url = StrictParser.TextArea.extractAllUrls(textStr),
+ var urls = StrictParser.TextArea.extractAllUrls(textStr),
  ```
  ##### console.log() 
  ``` javascript
@@ -352,7 +352,7 @@ import StrictParser from 'strict-parser';
     "area": "text"
   }
 ]
-
+```
 
 #### Chapter 2. Parse emails in whatever situations !
 
@@ -370,7 +370,7 @@ import StrictParser from 'strict-parser';
      var emails = StrictParser.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
    
 ```
-##### console.log()
+###### console.log()
 ``` javascript
 [
   {
@@ -396,6 +396,25 @@ import StrictParser from 'strict-parser';
 ] 
 ```
 
+##### 2. Plain texts
+
+``` javascript
+var emails = StrictParser.TextArea.extractAllEmails(textStr),
+ ```
+ 
+ ###### console.log() 
+ ``` javascript
+[
+  {
+    "value": "가나다@pacbook.net",
+    "area": "text"
+  },
+  {
+    "value": "abc@daum.net",
+    "area": "text"
+  }
+]
+```
 
 #### Chapter 3. Parse elements and comments on XML(HTML) !
 
