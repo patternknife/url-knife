@@ -3,81 +3,9 @@
 ## Overview
 
 **Strict-parser** is an open source JavaScript library in order to parse certain patterns such as
-urls, emails or decimals on xml(or html) which is, as you are aware, divided into three areas - elements, 
-comments and texts. You can obtain strings with certain patterns and where they are on them, and can also use this library on plain texts.
-
-## More sophisticated parsing patterns
-
-1. Url (From ver 0.0.3, more stronger than before)  
+urls, emails or decimals on xml(or html), or just plain texts which is, as you are aware, divided into three areas - elements, 
+comments and texts. You can obtain strings with certain patterns and find out where they are.
  
-    A) The core regex is based on 'validator.js' 
-    
-    B) Rare cases such as localhost,ip numbers is detected
-    
-    C) Urls with no-protocol are distilled (strong point)
-    
-     e.g., a sample url without protocols such as http or https
-     
-        ```
-        [...
-          {
-            "value": {
-              "url": "s5houl７十七日dbedetected.jp?japan=go",
-              "protocol": null,
-              "onlyDomain": "s5houl７十七日dbedetected.jp",
-              "onlyUriWithParams": "?japan=go",
-              "type": "domain"
-            },
-            "area": "text"
-          }
-        ]
-        ```
-        
-        // wrong domains such as this are not distilled
-        ```
-        fakeshouldnotbedetected.url?abc=fake
-        ```
-        
-     The core regex combined with all existing root domains (around over 1770) has made it possible 
-     to implement a logic to extract urls with no-protocol.  
-   
-    D) Detailed information about a parsed url on xmls or texts is provided. (strong point)
-    
-    e.g.,
-    
-    ```
-    [...
-        {
-          "url": "xtp:// gooppalgo.com/park/tree?abc=1",
-          "protocol": "xtp (unknown protocol)",
-          "onlyUriWithParams": "/park/tree?abc=1",
-          "onlyDomain": "gooppalgo.com",
-          "type": "domain"
-        }
-    ]
-    ```
-
-2. Email  
-
-    A) Can separate only emails from post-connected characters.  
-        [ex.] abc@naver.comCOCO, cde@adela.co.kr에서, fgh@adela.co.kr(next)   
-              -> abc@naver.com, cde@adela.co.kr, fgh@adela.co.kr  
-                          
-    B) Can separate only emails from pre-connected characters.      
-        [ex.] 请发邮件给我abc@naver.com, ---과자@daum.net, "all_day@bbqg.com" 
-              -> abc@naver.com, 과자@daum.net, all_day@bbqg.com
-          
-3. Element
-   
-    A) A well-known regex indicating tags is not simply '<[^>]+>'.
-    This regex fails to parse some rare cases such as '`````<p class="here>to" style="width:100%">`````' where '>' is inserted in the 
-    class attribute.
-    
-    B) This library has overcome the weakness above.
-
-  
-Please inform me of more sophisticated patterns you need by leaving issues on Github or emailing me at studypurpose@naver.com.
-
 
 ## Installation
 
@@ -102,25 +30,31 @@ For ES6 npm users, do 'npm install --save strict-parser' on console.
 import StrictParser from 'strict-parser';
 ```
 
-## Syntax & Usage (ES6 uses 'let' instead of 'var')
-
-### XmlArea
+## Syntax & Usage
 
 ``` javascript
 
     /**
-     * @variable xmlStr is only a html sample.
+     * @variable xmlStr is a html sample.
      */ 
     var xmlStr = '<body><p>packed1book.net</p>\n' +
         'fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go <img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
         '<!-- 请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
         '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';   
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';  
+        
+    /**
+     * @variable textStr is a plain-text sample.
+    */ 
+     var textStr = 'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span></span> abc.com/ad/fg/?kk=5 ';    
+        
 ```
 
+#### Chapter 1. Parse urls in whatever situations !
 
-#### 1. XmlArea.extractAllUrls
+##### 1. XML (HTML)
+
 ``` javascript
         /**
          * @brief
@@ -132,7 +66,7 @@ import StrictParser from 'strict-parser';
      var urls = StrictParser.XmlArea.extractAllUrls(xmlStr);    
    
 ```
-##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
+###### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
 ``` javascript
 [
   {
@@ -140,7 +74,10 @@ import StrictParser from 'strict-parser';
       "url": "ssh://www.aaa가.com",
       "protocol": "ssh",
       "onlyDomain": "www.aaa가.com",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "comment"
@@ -150,7 +87,10 @@ import StrictParser from 'strict-parser';
       "url": "www.naver.com",
       "protocol": null,
       "onlyDomain": "www.naver.com",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "comment"
@@ -160,7 +100,12 @@ import StrictParser from 'strict-parser';
       "url": "http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png",
       "protocol": "http",
       "onlyDomain": "www.aaa가가.com",
+      "onlyParams": "?fileName=12345.png",
+      "onlyUri": "/image/showWorkOrderImg",
       "onlyUriWithParams": "/image/showWorkOrderImg?fileName=12345.png",
+      "onlyParamsJsn": {
+        "fileName": "12345.png"
+      },
       "type": "domain"
     },
     "area": "element : img"
@@ -170,7 +115,10 @@ import StrictParser from 'strict-parser';
       "url": "https://www.aadc给s.cn",
       "protocol": "https",
       "onlyDomain": "www.aadc给s.cn",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "element : p"
@@ -180,7 +128,10 @@ import StrictParser from 'strict-parser';
       "url": "packed1book.net",
       "protocol": null,
       "onlyDomain": "packed1book.net",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "text"
@@ -190,7 +141,12 @@ import StrictParser from 'strict-parser';
       "url": "s5houl７十七日dbedetected.jp?japan=go",
       "protocol": null,
       "onlyDomain": "s5houl７十七日dbedetected.jp",
+      "onlyParams": "?japan=go",
+      "onlyUri": null,
       "onlyUriWithParams": "?japan=go",
+      "onlyParamsJsn": {
+        "japan": "go"
+      },
       "type": "domain"
     },
     "area": "text"
@@ -200,7 +156,12 @@ import StrictParser from 'strict-parser';
       "url": "gigi.dau.ac.kr?mac=10",
       "protocol": null,
       "onlyDomain": "gigi.dau.ac.kr",
+      "onlyParams": "?mac=10",
+      "onlyUri": null,
       "onlyUriWithParams": "?mac=10",
+      "onlyParamsJsn": {
+        "mac": "10"
+      },
       "type": "domain"
     },
     "area": "text"
@@ -210,7 +171,12 @@ import StrictParser from 'strict-parser';
       "url": "dau.ac.kr?mac=10",
       "protocol": null,
       "onlyDomain": "dau.ac.kr",
+      "onlyParams": "?mac=10",
+      "onlyUri": null,
       "onlyUriWithParams": "?mac=10",
+      "onlyParamsJsn": {
+        "mac": "10"
+      },
       "type": "domain"
     },
     "area": "text"
@@ -220,7 +186,10 @@ import StrictParser from 'strict-parser';
       "url": "구루.com",
       "protocol": null,
       "onlyDomain": "구루.com",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "text"
@@ -230,7 +199,13 @@ import StrictParser from 'strict-parser';
       "url": "http://ne1ver.com:8000?abc=1&dd=5",
       "protocol": "http",
       "onlyDomain": "ne1ver.com:8000",
+      "onlyParams": "?abc=1&dd=5",
+      "onlyUri": null,
       "onlyUriWithParams": "?abc=1&dd=5",
+      "onlyParamsJsn": {
+        "abc": "1",
+        "dd": "5"
+      },
       "type": "domain"
     },
     "area": "text"
@@ -240,7 +215,10 @@ import StrictParser from 'strict-parser';
       "url": "localhost:80",
       "protocol": null,
       "onlyDomain": "localhost:80",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "localhost"
     },
     "area": "text"
@@ -250,7 +228,10 @@ import StrictParser from 'strict-parser';
       "url": "abcd.com",
       "protocol": null,
       "onlyDomain": "abcd.com",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "text"
@@ -260,7 +241,10 @@ import StrictParser from 'strict-parser';
       "url": "www.aaa그给.com/abc/def",
       "protocol": null,
       "onlyDomain": "www.aaa그给.com",
+      "onlyParams": null,
+      "onlyUri": "/abc/def",
       "onlyUriWithParams": "/abc/def",
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "text"
@@ -270,7 +254,10 @@ import StrictParser from 'strict-parser';
       "url": "https://flaviocopes.com/how-to-inspect-javascript-object/",
       "protocol": "https",
       "onlyDomain": "flaviocopes.com",
+      "onlyParams": null,
+      "onlyUri": "/how-to-inspect-javascript-object/",
       "onlyUriWithParams": "/how-to-inspect-javascript-object/",
+      "onlyParamsJsn": null,
       "type": "domain"
     },
     "area": "text"
@@ -280,7 +267,10 @@ import StrictParser from 'strict-parser';
       "url": "203.35.33.555:8000",
       "protocol": null,
       "onlyDomain": "203.35.33.555:8000",
+      "onlyParams": null,
+      "onlyUri": null,
       "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
       "type": "ip"
     },
     "area": "text"
@@ -288,8 +278,85 @@ import StrictParser from 'strict-parser';
 ]
 ```
 
+##### 2. One url
+  
+``` javascript
+ var url = StrictParser.UrlArea.assortUrl("http://www.goopplgo.com/?abc=1")
+ ```
+ ##### console.log() 
+ ``` javascript
+{
+  "url": "http://www.goopplgo.com/?abc=1",
+  "protocol": "http",
+  "onlyDomain": "www.goopplgo.com",
+  "onlyParams": "?abc=1",
+  "onlyUri": "/",
+  "onlyUriWithParams": "/?abc=1",
+  "onlyParamsJsn": {
+    "abc": "1"
+  },
+  "type": "domain"
+}
+ ```
 
-#### 2. XmlArea.extractAllEmails
+##### 3. Plain texts
+
+``` javascript
+ var url = StrictParser.TextArea.extractAllUrls(textStr),
+ ```
+ ##### console.log() 
+ ``` javascript
+[
+  {
+    "value": {
+      "url": "packed1book.net",
+      "protocol": null,
+      "onlyDomain": "packed1book.net",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>",
+      "protocol": null,
+      "onlyDomain": "s5houl７十七日dbedetected.jp",
+      "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>",
+      "onlyUri": null,
+      "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.net</span>",
+      "onlyParamsJsn": {
+        "japan": "go",
+        "html": "<span>가나다@pacbook.net</span>"
+      },
+      "type": "domain"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "abc.com/ad/fg/?kk=5",
+      "protocol": null,
+      "onlyDomain": "abc.com",
+      "onlyParams": "?kk=5",
+      "onlyUri": "/ad/fg/",
+      "onlyUriWithParams": "/ad/fg/?kk=5",
+      "onlyParamsJsn": {
+        "kk": "5"
+      },
+      "type": "domain"
+    },
+    "area": "text"
+  }
+]
+
+
+#### Chapter 2. Parse emails in whatever situations !
+
+##### 1. XML (HTML)
 ``` javascript
     /**
      * @brief
@@ -330,7 +397,9 @@ import StrictParser from 'strict-parser';
 ```
 
 
-#### 3. XmlArea.extractAllElements
+#### Chapter 3. Parse elements and comments on XML(HTML) !
+
+##### 1. Elements
 ``` javascript
         /**
          *
@@ -343,7 +412,7 @@ import StrictParser from 'strict-parser';
          */
     var elements = StrictParser.XmlArea.extractAllElements(xmlStr);   
 ```
-##### console.log() 
+###### console.log() 
 ``` javascript
 [
   {
@@ -461,8 +530,7 @@ import StrictParser from 'strict-parser';
 ]
 ```
  
- 
-#### 4. XmlArea.extractAllComments
+##### 2. Comments
 ``` javascript
     /**
      * @brief
@@ -473,7 +541,7 @@ import StrictParser from 'strict-parser';
      */     
     var comments = StrictParser.XmlArea.extractAllComments(xmlStr); 
 ```
-##### console.log() 
+###### console.log() 
 ``` javascript
 [
   {
@@ -484,20 +552,84 @@ import StrictParser from 'strict-parser';
 ]
 ```
  
- 
-### TextArea
+## More sophisticated parsing patterns
 
-#### TextArea.assortUrl
-``` javascript
- var url = StrictParser.TextArea.assortUrl("http://www.goopplgo.com/?abc=1")
- ```
- ##### console.log() 
- ``` javascript
-{
-  "url": "http://www.goopplgo.com/?abc=1",
-  "protocol": "http",
-  "onlyDomain": "www.goopplgo.com",
-  "onlyUriWithParams": "/?abc=1",
-  "type": "domain"
-}
- ```
+1. Url (From ver 0.0.3, more stronger than before)  
+ 
+    A) The core regex is based on 'validator.js' 
+    
+    B) Rare cases such as localhost,ip numbers is detected
+    
+    C) Urls with no-protocol are distilled (strong point)
+    
+     e.g., a sample url without protocols such as http or https
+     
+        ```
+        [...
+           {
+             "value": {
+               "url": "s5houl７十七日dbedetected.jp?japan=go",
+               "protocol": null,
+               "onlyDomain": "s5houl７十七日dbedetected.jp",
+               "onlyParams": "?japan=go",
+               "onlyUri": null,
+               "onlyUriWithParams": "?japan=go",
+               "onlyParamsJsn": {
+                 "japan": "go"
+               },
+               "type": "domain"
+             },
+             "area": "text"
+           }
+        ]
+        ```
+        
+        // wrong domains such as this are not distilled
+        ```
+        fakeshouldnotbedetected.url?abc=fake
+        ```
+        
+     The core regex combined with all existing root domains (around over 1770) has made it possible 
+     to implement a logic to extract urls with no-protocol.  
+   
+    D) Detailed information about a parsed url on xmls or texts is provided. (strong point)
+    
+    e.g.,
+    
+    ```
+    [...
+        {
+          "url": "xtp:// gooppalgo.com/park/tree/?abc=1",
+          "protocol": "xtp (unknown protocol)",
+          "onlyDomain": "gooppalgo.com",
+          "onlyParams": "?abc=1",
+          "onlyUri": "/park/tree/",
+          "onlyUriWithParams": "/park/tree/?abc=1",
+          "onlyParamsJsn": {
+            "abc": "1"
+          },
+          "type": "domain"
+        }
+    ]
+    ```
+
+2. Email  
+
+    A) Can separate only emails from post-connected characters.  
+        [ex.] abc@naver.comCOCO, cde@adela.co.kr에서, fgh@adela.co.kr(next)   
+              -> abc@naver.com, cde@adela.co.kr, fgh@adela.co.kr  
+                          
+    B) Can separate only emails from pre-connected characters.      
+        [ex.] 请发邮件给我abc@naver.com, ---과자@daum.net, "all_day@bbqg.com" 
+              -> abc@naver.com, 과자@daum.net, all_day@bbqg.com
+          
+3. Element
+   
+    A) A well-known regex indicating tags is not simply '<[^>]+>'.
+    This regex fails to parse some rare cases such as '`````<p class="here>to" style="width:100%">`````' where '>' is inserted in the 
+    class attribute.
+    
+    B) This library has overcome the weakness above.
+
+  
+Please inform me of more sophisticated patterns you need by leaving issues on Github or emailing me at studypurpose@naver.com.

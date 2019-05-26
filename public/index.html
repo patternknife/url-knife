@@ -31,16 +31,21 @@
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';
 
 
+    var textStr = 'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span> abc.com/ad/fg/?kk=5 abc@daum.net';
+
     start();
 
     console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
     console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
-    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
-    console.log('final_4 : ' + JSON.stringify(StrictParser.XmlArea.extractAllEmails(xmlStr), null, 2));
 
-    console.log('final_5 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("http://www.goopplgo.com/?abc=1"), null, 2));
-    console.log('final_6 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
-    console.log('final_7 : ' + JSON.stringify(StrictParser.TextArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
+    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllUrls(textStr), null, 2));
+    console.log('final_3_2 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("http://www.goopplgo.com?abc=1"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
+
+    console.log('final_4 : ' + JSON.stringify(StrictParser.XmlArea.extractAllEmails(xmlStr), null, 2));
+    console.log('final_4_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllEmails(textStr), null, 2));
 
     end();
 
