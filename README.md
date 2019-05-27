@@ -3,7 +3,7 @@
 ## Overview
 
 **Strict-parser** is an open source JavaScript library in order to parse certain patterns such as
-urls, emails or decimals on xml(or html), or just plain texts which is, as you are aware, divided into three areas - elements, 
+urls, emails or decimals from xml(or html), or just plain texts which is, as you are aware, divided into three areas - elements, 
 comments and texts. You can obtain strings with certain patterns and find out where they are.
  
 
@@ -416,7 +416,7 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
 ]
 ```
 
-#### Chapter 3. Parse elements and comments on XML(HTML) !
+#### Chapter 3. Parse elements and comments from XML(HTML) !
 
 ##### 1. Elements
 ``` javascript
@@ -611,7 +611,7 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
      The core regex combined with all existing root domains (around over 1770) has made it possible 
      to implement a logic to extract urls with no-protocol.  
    
-    D) Detailed information about a parsed url on xmls or texts is provided. (strong point)
+    D) Detailed information about a parsed url from xmls or texts is provided. (strong point)
     
     e.g.,
     

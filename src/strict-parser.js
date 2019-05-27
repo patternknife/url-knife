@@ -122,7 +122,26 @@ const RxGroup = {
 
     all_emails: '(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))[\\n\\r\\t\\s]*@[\\n\\r\\t\\s]*((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{1,3}))',
 
+    element_rx : '(?:<' + '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
 
+    /* Type B. <p abc="" ...> */
+
+    /* Head part*/
+    '(?:<' + '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
+
+    /* Tail part*/
+
+    // readonly>
+    '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
+    // "....">
+    '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
+
+    /* Final tail part */
+    // /> >
+    '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
+
+    /* Type C. </p> */
+    '(?:<\\/' + '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[^>]*?>)'
 };
 
 
@@ -133,30 +152,7 @@ const XmlService = {
 
     extractAllPureElements(xmlStr) {
 
-        let elementRegex = '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
-
-        const rx = new RegExp(
-            /* Type A. <p> or <p abc> */
-            '(?:<' + elementRegex + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
-
-            /* Type B. <p abc="" ...> */
-
-            /* Head part*/
-            '(?:<' + elementRegex + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
-
-            /* Tail part*/
-
-            // readonly>
-            '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
-            // "....">
-            '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
-
-            /* Final tail part */
-            // /> >
-            '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
-
-            /* Type C. </p> */
-            '(?:<\\/' + elementRegex + '[^>]*?>)', "g");
+        const rx = new RegExp(RxGroup.element_rx, "g");
 
 
         let matches = [];
@@ -407,27 +403,12 @@ const XmlArea = {
 
             /* 4. Remove all elements */
             const elementRegex = '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
-            xmlStr = xmlStr.replace(new RegExp(
-                /* Type A. <p> or <p abc> */
-                '(?:<' + elementRegex + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
+            xmlStr = xmlStr.replace(new RegExp(RxGroup.element_rx, "g"), '');
 
-                /* Type B. <p abc="" ...> */
 
-                /* Head part*/
-                '(?:<' + elementRegex + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
-
-                /* Tail part*/
-
-                // readonly>
-                '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
-                // "....">
-                '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
-
-                /* Final tail part */
-                // /> >
-                '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)', "g"), '');
 
         }
+
 
         /* 5. normal text area */
         let rx = new RegExp(RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end, 'g');
@@ -444,6 +425,8 @@ const XmlArea = {
 
             let mod_val = match[0];
             mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+
+            //mod_val = mod_val.replace(new RegExp(RxGroup_P.no_lang_char + '$', 'g'), '');
 
             obj.push({
                 'value': UrlArea.assortUrl(mod_val),
