@@ -37,12 +37,26 @@ import StrictParser from 'strict-parser';
     /**
      * @variable xmlStr is a html sample.
      */ 
-    var xmlStr = '<body><p>packed1book.net</p>\n' +
-        'fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go <img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
-        '<!-- 请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+    var xmlStr =
+        'en.wikipedia.org/wiki/Wikipedia:About\n' +
+        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
+        'tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have you visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'Why not visit google.ee/? ' +
+        'Colon\n' +
+        'plus.google.co.kr0에서.., \n' +
+        'Plus\n' +
+        'https://plus.google.com/+google\n' +
+        '\n' +
+        'At sign, Colon, Comma and Exclamation mark\n' +
+        'https://www.google.com/maps/place/USA/@36.2218457,...' +
+        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
         '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 abcd.com<p class="https://www.aadc给s.cn"> www.aaa그给.com/abc/def	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body>';  
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
         
     /**
      * @variable textStr is a plain-text sample.
@@ -68,36 +82,56 @@ import StrictParser from 'strict-parser';
 ```
 ###### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
 ``` javascript
-[
+ [
+  {
+    "value": {
+      "url": "adackedbooked.co.kr",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "adackedbooked.co.kr",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "comment"
+  },
   {
     "value": {
       "url": "ssh://www.aaa가.com",
+      "removedTailOnUrl": "",
       "protocol": "ssh",
       "onlyDomain": "www.aaa가.com",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "comment"
   },
   {
     "value": {
       "url": "www.naver.com",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "www.naver.com",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "comment"
   },
   {
     "value": {
       "url": "http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png",
+      "removedTailOnUrl": "",
       "protocol": "http",
       "onlyDomain": "www.aaa가가.com",
       "onlyParams": "?fileName=12345.png",
@@ -106,54 +140,195 @@ import StrictParser from 'strict-parser';
       "onlyParamsJsn": {
         "fileName": "12345.png"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "element : img"
   },
   {
     "value": {
       "url": "https://www.aadc给s.cn",
+      "removedTailOnUrl": "",
       "protocol": "https",
       "onlyDomain": "www.aadc给s.cn",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "element : p"
   },
   {
     "value": {
-      "url": "packed1book.net",
+      "url": "en.wikipedia.org/wiki/Wikipedia:About",
+      "removedTailOnUrl": "",
       "protocol": null,
-      "onlyDomain": "packed1book.net",
+      "onlyDomain": "en.wikipedia.org",
       "onlyParams": null,
-      "onlyUri": null,
-      "onlyUriWithParams": null,
+      "onlyUri": "/wiki/Wikipedia:About",
+      "onlyUriWithParams": "/wiki/Wikipedia:About",
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
-      "url": "s5houl７十七日dbedetected.jp?japan=go",
+      "url": "packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "packed1book.net",
+      "onlyParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
+      "onlyUri": null,
+      "onlyUriWithParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
+      "onlyParamsJsn": {
+        "user": {
+          "name": {
+            "first": "tj",
+            "last": "holowaychuk"
+          }
+        }
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "s5houl７十七日dbedetected.jp?japan=go-",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "s5houl７十七日dbedetected.jp",
-      "onlyParams": "?japan=go",
+      "onlyParams": "?japan=go-",
       "onlyUri": null,
-      "onlyUriWithParams": "?japan=go",
+      "onlyUriWithParams": "?japan=go-",
       "onlyParamsJsn": {
-        "japan": "go"
+        "japan": "go-"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "tnae1ver.com:8000",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "tnae1ver.com",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": "8000"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "goasidaio.ac.kr",
+      "onlyParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+      "onlyParamsJsn": {
+        "abd": "5안녕하세요?5...,.",
+        "kkk": "5rk.,,"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,.",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "goasidaio.ac.kr",
+      "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyParamsJsn": {
+        "abd": "5hell0?5...",
+        "kkk": "5rk.,."
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "google.ee",
+      "removedTailOnUrl": "/?",
+      "protocol": null,
+      "onlyDomain": "google.ee",
+      "onlyParams": null,
+      "onlyUri": "/",
+      "onlyUriWithParams": "/",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "plus.google.co.kr",
+      "removedTailOnUrl": "0에서..,",
+      "protocol": null,
+      "onlyDomain": "plus.google.co.kr0에서..,",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "https://plus.google.com/+google",
+      "removedTailOnUrl": "",
+      "protocol": "https",
+      "onlyDomain": "plus.google.com",
+      "onlyParams": null,
+      "onlyUri": "/+google",
+      "onlyUriWithParams": "/+google",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "https://www.google.com/maps/place/USA/@36.2218457",
+      "removedTailOnUrl": ",...",
+      "protocol": "https",
+      "onlyDomain": "www.google.com",
+      "onlyParams": null,
+      "onlyUri": "/maps/place/USA/@36.2218457,...",
+      "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "gigi.dau.ac.kr?mac=10",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "gigi.dau.ac.kr",
       "onlyParams": "?mac=10",
@@ -162,13 +337,15 @@ import StrictParser from 'strict-parser';
       "onlyParamsJsn": {
         "mac": "10"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "dau.ac.kr?mac=10",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "dau.ac.kr",
       "onlyParams": "?mac=10",
@@ -177,28 +354,32 @@ import StrictParser from 'strict-parser';
       "onlyParamsJsn": {
         "mac": "10"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "구루.com",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "구루.com",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "http://ne1ver.com:8000?abc=1&dd=5",
+      "removedTailOnUrl": "",
       "protocol": "http",
-      "onlyDomain": "ne1ver.com:8000",
+      "onlyDomain": "ne1ver.com",
       "onlyParams": "?abc=1&dd=5",
       "onlyUri": null,
       "onlyUriWithParams": "?abc=1&dd=5",
@@ -206,72 +387,98 @@ import StrictParser from 'strict-parser';
         "abc": "1",
         "dd": "5"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": "8000"
     },
     "area": "text"
   },
   {
     "value": {
       "url": "localhost:80",
+      "removedTailOnUrl": "",
       "protocol": null,
-      "onlyDomain": "localhost:80",
+      "onlyDomain": "localhost",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "localhost"
+      "type": "localhost",
+      "port": "80"
     },
     "area": "text"
   },
   {
     "value": {
-      "url": "abcd.com",
+      "url": "estonia.ee",
+      "removedTailOnUrl": "/",
       "protocol": null,
-      "onlyDomain": "abcd.com",
+      "onlyDomain": "estonia.ee",
+      "onlyParams": null,
+      "onlyUri": "/",
+      "onlyUriWithParams": "/",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "estonia.ee",
+      "removedTailOnUrl": "?",
+      "protocol": null,
+      "onlyDomain": "estonia.ee",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
-      "url": "www.aaa그给.com/abc/def",
-      "protocol": null,
-      "onlyDomain": "www.aaa그给.com",
-      "onlyParams": null,
-      "onlyUri": "/abc/def",
-      "onlyUriWithParams": "/abc/def",
-      "onlyParamsJsn": null,
-      "type": "domain"
-    },
-    "area": "text"
-  },
-  {
-    "value": {
-      "url": "https://flaviocopes.com/how-to-inspect-javascript-object/",
+      "url": "https://flaviocopes.com/how-to-inspect-javascript-object",
+      "removedTailOnUrl": "/",
       "protocol": "https",
       "onlyDomain": "flaviocopes.com",
       "onlyParams": null,
       "onlyUri": "/how-to-inspect-javascript-object/",
       "onlyUriWithParams": "/how-to-inspect-javascript-object/",
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "203.35.33.555:8000",
+      "removedTailOnUrl": "",
       "protocol": null,
-      "onlyDomain": "203.35.33.555:8000",
+      "onlyDomain": "203.35.33.555",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "ip"
+      "type": "ip",
+      "port": "8000"
+    },
+    "area": "text"
+  },
+  {
+    "value": {
+      "url": "goasidaioaaa.ac.kr",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "goasidaioaaa.ac.kr",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   }
@@ -286,8 +493,9 @@ import StrictParser from 'strict-parser';
  ###### console.log() 
  ``` javascript
 {
-  "url": "http://www.goopplgo.com/?abc=1",
-  "protocol": "http",
+  "url": "ssh://www.goopplgo.com/?abc=1",
+  "removedTailOnUrl": "",
+  "protocol": "ssh",
   "onlyDomain": "www.goopplgo.com",
   "onlyParams": "?abc=1",
   "onlyUri": "/",
@@ -295,7 +503,8 @@ import StrictParser from 'strict-parser';
   "onlyParamsJsn": {
     "abc": "1"
   },
-  "type": "domain"
+  "type": "domain",
+  "port": null
 }
  ```
 
@@ -310,19 +519,22 @@ import StrictParser from 'strict-parser';
   {
     "value": {
       "url": "packed1book.net",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "packed1book.net",
       "onlyParams": null,
       "onlyUri": null,
       "onlyUriWithParams": null,
       "onlyParamsJsn": null,
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "s5houl７十七日dbedetected.jp",
       "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>",
@@ -332,13 +544,15 @@ import StrictParser from 'strict-parser';
         "japan": "go",
         "html": "<span>가나다@pacbook.net</span>"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   },
   {
     "value": {
       "url": "abc.com/ad/fg/?kk=5",
+      "removedTailOnUrl": "",
       "protocol": null,
       "onlyDomain": "abc.com",
       "onlyParams": "?kk=5",
@@ -347,7 +561,8 @@ import StrictParser from 'strict-parser';
       "onlyParamsJsn": {
         "kk": "5"
       },
-      "type": "domain"
+      "type": "domain",
+      "port": null
     },
     "area": "text"
   }
@@ -573,9 +788,9 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
  
 ## More sophisticated parsing patterns
 
-1. Url (From ver 0.0.3, more stronger than before)  
+1. Url (From ver 1.0.1, more stronger than before)  
  
-    A) The core regex is based on 'validator.js' 
+    A) The core regex is based on the 'Validator.js' 
     
     B) Rare cases such as localhost,ip numbers is detected
     
@@ -631,6 +846,8 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
         }
     ]
     ```
+    
+    E) For the "onlyParamsJsn" property, the 'fast-url-parser'(https://github.com/petkaantonov/urlparser) has been used.
 
 2. Email  
 
