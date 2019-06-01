@@ -31,6 +31,7 @@
 
 * */
 
+import Jquery from 'jquery';
 
 import Terms from './terms';
 
@@ -76,23 +77,6 @@ ValidationError.prototype = Object.create(Error.prototype, {
 
 });
 
-
-/*
-*     Private : Utils
-* */
-const UtilObj = {
-
-    replaceBetween(from, start, end, what) {
-        return from.substring(0, start) + what + from.substring(end);
-    },
-    escapeRegex(v) {
-        return v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    },
-    removeAllSpaces(v) {
-        return v.replace(/[\n\r\t\s]/g, '');
-    }
-
-};
 
 /*
 *     Private : Core
@@ -153,6 +137,16 @@ const RxGroup = {
     /* this is for ./ref/terms.js ('https://www.iana.org/domains/root/db') */
     all_urls3_end: '(?:(?:\\/|\\?)[^\\n\\r\\t\\s]*|\\.[^\\n\\r\\t\\s]*|[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[0-9]+|\\b)',
     //all_urls3_end: '(?:(?:\\/|\\?)[\\n\\r\\t\\s]*[^\\s]*|(?:\\b))',
+
+    /* only uri */
+
+
+    all_urls4:
+    // 1. '/a...' (the first letter must be any lang char and nums)
+    '(?:\\/' + '(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.lang_char + ')' + '[^/\\n\\r\\t\\s]*(?:\\/[^/\\n\\r\\t\\s]*|\\b))' +
+    '|' +
+    // 2. 'abc/...' (the first letter must be any lang char and nums)
+    '(?:(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.lang_char + ')' + '[^/\\n\\r\\t\\s]*\\/[^\\n\\r\\t\\s]*)',
 
     all_emails: '(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))[\\n\\r\\t\\s]*@[\\n\\r\\t\\s]*((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{1,3}))'
 };
@@ -240,6 +234,54 @@ const ValidService = {
 
         }
 
+
+    }
+
+};
+
+/*
+*     Private : Utils
+* */
+const UtilObj = {
+
+    replaceBetween(from, start, end, what) {
+        return from.substring(0, start) + what + from.substring(end);
+    },
+    escapeRegex(v) {
+        return v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    },
+    removeAllSpaces(v) {
+        return v.replace(/[\n\r\t\s]/g, '');
+    },
+    reduceEndIndex(tg, endIndex, ptrn) {
+
+        let obj = {
+            'tg': tg,
+            'endIndex': endIndex
+        };
+
+        let rx = new RegExp(ptrn, 'g');
+        let match = {};
+        while ((match = rx.exec(tg)) !== null) {
+            endIndex -= match[0].length;
+        }
+
+        obj['tg'] = tg.replace(rx, '');
+        obj['endIndex'] = endIndex;
+
+        return obj;
+    },
+    /* args - st : 대상 스트링, index : replacement가 삽입될 위치, replacement : 바뀌어지는 스트링 */
+
+    replaceAt: function (st, index, replacement) {
+
+        //console.log(str.length);
+        let str = st.toString();
+        let len = str.length;
+        let fw = str.substr(0, index);
+        let lw = str.substr(index, index + len);
+
+        return fw + replacement + lw;
 
     }
 
@@ -336,11 +378,14 @@ const XmlArea = {
      * @param skipXml boolean (default : false)
      * @return array
      */
-    extractAllUrls(xmlStr, skipXml) {
+    extractAllUrls(xmlStr, skipXml = false) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
             throw new ValidationError('the variable xmlStr must be a string type and not be null.');
         }
+
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+
 
         let obj = [];
 
@@ -352,7 +397,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end, 'g');
+                let rx = new RegExp(url_core_rx, 'g');
 
                 let matches = [];
                 let match = {};
@@ -365,8 +410,8 @@ const XmlArea = {
                     }
 
                     /* comment - regex conflict case handler */
-
                     let mod_val = match[0].replace(/-->$/, '');
+
                     mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
                     mod_val = mod_val.trim();
 
@@ -382,7 +427,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end, 'g');
+                let rx = new RegExp(url_core_rx, 'g');
 
                 let matches = [];
                 let match = {};
@@ -414,17 +459,18 @@ const XmlArea = {
             xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_comment, 'g'), '');
 
             /* 4. Remove all elements */
-            const elementRegex = '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
             xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_element, "g"), '');
 
 
         }
 
+
         /* check if all comments and elements have been removed properly */
         //console.log('xmlStr : ' + xmlStr);
 
+
         /* 5. normal text area */
-        let rx = new RegExp(RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end, 'g');
+        let rx = new RegExp(url_core_rx, 'g');
 
         let matches = [];
         let match = {};
@@ -438,7 +484,6 @@ const XmlArea = {
 
             let mod_val = match[0];
             mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
-
 
             obj.push({
                 'value': UrlArea.assortUrl(mod_val),
@@ -460,7 +505,7 @@ const XmlArea = {
      * @param skipXml boolean (default : false)
      * @return array
      */
-    extractAllEmails(xmlStr, prefixSanitizer, skipXml) {
+    extractAllEmails(xmlStr, prefixSanitizer = true, skipXml = false) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
             throw new ValidationError('the variable xmlStr must be a string type and not be null.');
@@ -589,25 +634,7 @@ const XmlArea = {
 
             /* 4. Remove all elements */
             const elementRegex = '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
-            xmlStr = xmlStr.replace(new RegExp(
-                /* Type A. <p> or <p abc> */
-                '(?:<' + elementRegex + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
-
-                /* Type B. <p abc="" ...> */
-
-                /* Head part*/
-                '(?:<' + elementRegex + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
-
-                /* Tail part*/
-
-                // readonly>
-                '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
-                // "....">
-                '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
-
-                /* Final tail part */
-                // /> >
-                '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)', "g"), '');
+            xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_element, "g"), '');
 
         }
 
@@ -675,9 +702,45 @@ const TextArea = {
      */
     extractAllUrls(textStr) {
 
-        return XmlArea.extractAllUrls(textStr, true);
+        if (!(textStr && typeof textStr === 'string')) {
+            throw new ValidationError('the variable textStr must be a string type and not be null.');
+        }
+
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+
+        let obj = [];
+
+        /* normal text area */
+        let rx = new RegExp(url_core_rx, 'g');
+
+        let matches = [];
+        let match = {};
+
+        while ((match = rx.exec(textStr)) !== null) {
+
+            /* remove email patterns related to 'all_urls3_front' regex */
+            if (/^@/.test(match[0])) {
+                continue;
+            }
+
+            let mod_val = match[0];
+            mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+
+            obj.push({
+                'value': UrlArea.assortUrl(mod_val),
+                'area': 'text',
+                'index': {
+                    'start': match.index,
+                    'end': match.index + match[0].length
+                }
+            });
+        }
+
+
+        return obj;
 
     },
+
 
     /**
      * @brief
@@ -696,6 +759,120 @@ const TextArea = {
 
 };
 
+/*
+*     Public
+* */
+const TextEditorArea = {
+
+    /**
+     * @brief
+     * Distill all urls from normal text, tags, comments in html
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param clsName string required
+     * @return string
+     */
+    addClassToAllUrls(textStr, clsName) {
+
+        if (!(textStr && typeof textStr === 'string')) {
+            throw new ValidationError('the variable textStr must be a string type and not be null.');
+        }
+
+        /* To apply the regex 'url_core_rx', make a space as it is */
+        textStr = textStr.replace(/&nbsp;/gi, ' ');
+        /* Html Contenteditable  */
+        textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
+
+        //console.log('txb : ' + textStr);
+
+        /* Strip elements with the 'clsName' */
+        /* This needs to be optimized for the future */
+        let t = Jquery('<p>'+ textStr + '</p>');
+        t.find('.' + clsName).contents().unwrap();
+        textStr = t.html();
+
+        //console.log('tx : ' + textStr);
+
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+
+        let obj = [];
+
+        /* normal text area */
+        let rx = new RegExp(url_core_rx, 'g');
+
+        let matches = [];
+        let match = {};
+
+        while ((match = rx.exec(textStr)) !== null) {
+
+            /* remove email patterns related to 'all_urls3_front' regex */
+            if (/^@/.test(match[0])) {
+                continue;
+            }
+
+            let mod_val = match[0];
+            mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+
+            obj.push({
+                'value': UrlArea.assortUrl(mod_val),
+                'area': 'text',
+                'index': {
+                    'start': match.index,
+                    'end': match.index + match[0].length
+                }
+            });
+        }
+
+        /* Add the 'clsName' */
+        obj.reverse().forEach(function (val, idx) {
+            textStr = UtilObj.replaceAt(textStr, val['index']['end'], '</span>');
+            textStr = UtilObj.replaceAt(textStr, val['index']['start'], '<span class="' + clsName + '">');
+
+        });
+
+
+        /* To apply the regex 'url_core_rx', we changed spaces and now change them back to &nbsp; */
+        // spaces on elements must be avoided
+        let el_matches = XmlArea.extractAllElements(textStr);
+        el_matches = el_matches.reverse();
+
+        let space_matches = [];
+        let rx2 = new RegExp('[\\u0020]', 'g');
+        let match2 = {};
+        while ((match2 = rx2.exec(textStr)) !== null) {
+
+            space_matches.push({
+                'startIndex': match2.index,
+                'lastIndex': match2.index + match2[0].length
+            });
+
+        }
+        space_matches.reverse().forEach(function (val, idx) {
+
+            let isInEl = false;
+            for (let a = 0; a < el_matches.length; a++) {
+
+                //console.log(el_matches[a]['startIndex'], val['startIndex'], val['lastIndex'], el_matches[a]['lastIndex']);
+
+                if (el_matches[a]['startIndex'] < val['startIndex'] && val['lastIndex'] < el_matches[a]['lastIndex']) {
+                    isInEl = true;
+                }
+
+            }
+
+            if (isInEl === false) {
+
+                textStr = UtilObj.replaceBetween(textStr, val['startIndex'], val['lastIndex'], '&nbsp;');
+
+            }
+        });
+
+
+        return textStr;
+
+    },
+
+}
 /*
 *     Public
 * */
@@ -786,7 +963,7 @@ const UrlArea = {
             }
             url = url.replace(rx3, '');
 
-            if(obj['onlyParams'] === "?"){
+            if (obj['onlyParams'] === "?") {
                 obj['onlyParams'] = null;
             }
 
@@ -918,6 +1095,7 @@ export default {
 
     XmlArea,
     TextArea,
+    TextEditorArea,
     UrlArea
 
 };

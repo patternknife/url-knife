@@ -5,3 +5,4 @@ target
 .idea/inspectionProfiles/
 /.idea
 /.npmignore
+/public/root_domain_process.html

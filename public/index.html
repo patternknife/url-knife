@@ -1,9 +1,109 @@
 <html>
-<body>
-<p id="content"></p><!-- -->
 
+<style>
+    .highlighted1 {
+        background-color: yellow;
+    }
+
+    div.editable {
+        border: 1px solid black;
+        height: 200px;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+</style>
+
+<body>
+<p id="content"></p>
+
+<div id="ta" contenteditable="true"></div>
+
+
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="../dist/strict-parser.bundle.js"></script>
 <script type="text/javascript">
+
+    function getCaretCharacterOffsetWithin(element) {
+        var caretOffset = 0;
+        var doc = element.ownerDocument || element.document;
+        var win = doc.defaultView || doc.parentWindow;
+        var sel;
+        if (typeof win.getSelection != "undefined") {
+            sel = win.getSelection();
+            if (sel.rangeCount > 0) {
+                var range = win.getSelection().getRangeAt(0);
+                var preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(element);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                caretOffset = preCaretRange.toString().length;
+            }
+        } else if ((sel = doc.selection) && sel.type != "Control") {
+            var textRange = sel.createRange();
+            var preCaretTextRange = doc.body.createTextRange();
+            preCaretTextRange.moveToElementText(element);
+            preCaretTextRange.setEndPoint("EndToEnd", textRange);
+            caretOffset = preCaretTextRange.text.length;
+        }
+        return caretOffset;
+    }
+
+    function getCaretPosition (node) {
+        var range = window.getSelection().getRangeAt(0),
+            preCaretRange = range.cloneRange(),
+            caretPosition,
+            tmp = document.createElement("div");
+
+        preCaretRange.selectNodeContents(node);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        tmp.appendChild(preCaretRange.cloneContents());
+        caretPosition = tmp.innerHTML.length;
+        return caretPosition;
+    }
+
+    function setCaretPosition(element, offset) {
+        var range = document.createRange();
+        var sel = window.getSelection();
+
+        //select appropriate node
+        var currentNode = null;
+        var previousNode = null;
+
+        for (var i = 0; i < element.childNodes.length; i++) {
+            //save previous node
+            previousNode = currentNode;
+
+            //get current node
+            currentNode = element.childNodes[i];
+            //if we get span or something else then we should get child node
+            while(currentNode.childNodes.length > 0){
+                currentNode = currentNode.childNodes[0];
+            }
+
+            //calc offset in current node
+            if (previousNode !== null) {
+                offset -= previousNode.length;
+            }
+            //check whether current node has enough length
+            if (offset <= currentNode.length) {
+                break;
+            }
+        }
+        //move caret to specified offset
+        if (currentNode !== null) {
+
+/*            let tmp = offset;
+            if (offset >= currentNode.length) {
+                tmp = currentNode.length;
+            }*/
+
+            range.setStart(currentNode, offset);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
 
 
     var startTime, endTime;
@@ -28,16 +128,8 @@
         'en.wikipedia.org/wiki/Wikipedia:About\n' +
         '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
         'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
-        'tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have you visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'Why not visit google.ee/? ' +
-        'Colon\n' +
         'plus.google.co.kr0에서.., \n' +
-        'Plus\n' +
         'https://plus.google.com/+google\n' +
-        '\n' +
-        'At sign, Colon, Comma and Exclamation mark\n' +
         'https://www.google.com/maps/place/USA/@36.2218457,...' +
         '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
         '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
@@ -45,13 +137,18 @@
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
 
-
-    var textStr = 'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span> abc.com/ad/fg/?kk=5 abc@daum.net';
+    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span> abc.com/ad/fg/?kk=5 abc@daum.net';
 
     start();
 
-    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
+/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
     console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
+
+    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));*/
+/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));*/
 
     console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
     console.log('final_3_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllUrls(textStr), null, 2));
@@ -63,6 +160,46 @@
     console.log('final_4_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllEmails(textStr), null, 2));
 
     end();
+
+
+
+    $('#ta').on("propertychange paste input", function(e) {
+
+
+        if ($(this).text() != $(this).attr("origin")) {
+
+            console.log(e);
+
+            let tg = this.innerHTML;
+
+            var ele = document.getElementById('ta');
+
+            let textStr = StrictParser.TextEditorArea.addClassToAllUrls(tg, 'highlighted1');
+
+            //console.log('re : ' + textStr);
+
+            var position = getCaretCharacterOffsetWithin(ele);
+
+
+            setCaretPosition(ele, position);
+            $("#ta").html(textStr);
+            setCaretPosition(ele, position);
+        }
+
+
+
+    });
+
+
+    $(function(){
+
+        let entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+        textStr = String(textStr).replace(/[&<>"'`=\/]/g, function (s) { return entityMap[s]; });
+
+        textStr = StrictParser.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
+        $("#ta").html(textStr);
+
+    })
 
 </script>
 </body>
