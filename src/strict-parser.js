@@ -798,7 +798,7 @@ const TextEditorArea = {
 
             let txt = Jquery(this).html();
 
-            console.log(contentEditableMode + ' t1: ' + txt);
+            //console.log(contentEditableMode + ' t1: ' + txt);
 
             let obj = [];
 
