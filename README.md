@@ -83,7 +83,7 @@ You can check how url patterns are highlighted by running the sample source belo
 https://github.com/Andrew-Kang-G/strict-parser/blob/master/public/index.html
 
 or 
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/9/" target="_blank">LIVE DEMO - https://jsfiddle.net/AndrewKang/xtfjn8g3/9/</a>
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/17/" target="_blank">LIVE DEMO</a>
 
  
 
