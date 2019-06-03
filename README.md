@@ -31,10 +31,22 @@ import StrictParser from 'strict-parser';
 
 ``` javascript
 
-    /**
-     * @variable xmlStr is a html sample.
-     */ 
-  var xmlStr =
+    /* All Samples */
+
+    // A sample of 'Text editor(TextArea) & Plain texts'
+    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net';
+
+    // A sample of 'Text editor(ContentEditable)' 
+    var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
+
+    // A sample of 'XML (HTML)'
+    var xmlStr =
         'en.wikipedia.org/wiki/Wikipedia:About\n' +
         '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
         'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
@@ -46,15 +58,6 @@ import StrictParser from 'strict-parser';
         '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
-
-        
-    /**
-     * @variable textStr is a plain-text sample.
-    */ 
-    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span> abc.com/ad/fg/?kk=5 abc@daum.net';
         
 ```
 
@@ -63,16 +66,27 @@ import StrictParser from 'strict-parser';
 ##### 1. Text editor
   
 ``` javascript
+
+    /**
+     * @brief
+     * Distill all urls from normal text, tags, comments in html
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param clsName string required
+     * @param contentEditableMode boolean default false
+     * @return string
+     */
  var textStr_new = StrictParser.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
  ```
-You can check how url patterns are highlighted.
+You can check how url patterns are highlighted by running the sample source below.
+
 https://github.com/Andrew-Kang-G/strict-parser/blob/master/public/index.html
+
+or 
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/9/" target="_blank">LIVE DEMO - https://jsfiddle.net/AndrewKang/xtfjn8g3/9/</a>
+
  
- ###### console.log() 
- ``` javascript
-<span class="highlighted1">https://www.google.com/maps/place/USA/@36.2218457,...</span>&nbsp;&nbsp;<span class="highlighted1">tnae1ver.com:8000</span>on&nbsp;the&nbsp;internet&nbsp;&nbsp;Asterisk
-&nbsp;Have&nbsp;you&nbsp;visited&nbsp;<span class="highlighted1">http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&amp;kkk=5rk.,,</span>&nbsp;Have&nbsp;&lt;b&gt;you&lt;/b&gt;&nbsp;visited&nbsp;<span class="highlighted1">goasidaio.ac.kr?abd=5hell0?5...&amp;kkk=5rk.,.</span>&nbsp;<span class="highlighted1">packed1book.net</span>&nbsp;fakeshouldnotbedetected.url?abc=fake&nbsp;<span class="highlighted1">s5houl７十七日dbedetected.jp?japan=go&amp;html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt;</span>&nbsp;<span class="highlighted1">abc.com/ad/fg/?kk=5</span>&nbsp;abc@daum.net
- ```
+
  
 ##### 2. One url
   

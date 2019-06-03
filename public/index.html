@@ -1,30 +1,236 @@
 <html>
 
 <style>
-    .highlighted1 {
-        background-color: yellow;
+
+/* 1. TextArea*/
+
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+    *, *::before, *::after {
+        box-sizing: border-box;
     }
 
+    .container {
+        margin: 30px;
+        background-color: #f0f0f0;
+    }
+
+    .container, .backdrop, textarea {
+        width: 460px;
+        height: 180px;
+    }
+
+    .highlights, textarea {
+        padding: 10px;
+        font: 20px/28px 'Open Sans', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .container {
+        display: block;
+        margin: 0 auto;
+        transform: translateZ(0);
+        -webkit-text-size-adjust: none;
+    }
+
+    .backdrop {
+        position: absolute;
+        z-index: 1;
+        border: 2px solid #685972;
+        background-color: #fff;
+        overflow: auto;
+        pointer-events: none;
+        transition: transform 1s;
+    }
+
+    .highlights {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        color: transparent;
+    }
+
+    textarea {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        margin: 0;
+        border: 2px solid #74637f;
+        border-radius: 0;
+        color: #444;
+        background-color: transparent;
+        overflow: auto;
+        resize: none;
+        transition: transform 1s;
+    }
+
+    .highlighted1 {
+        border-radius: 3px;
+        color: transparent;
+        background-color: #b1d5e5;
+    }
+
+    button {
+        display: block;
+        width: 300px;
+        margin: 30px auto 0;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        background-color: #74637f;
+        font: 18px 'Opens Sans', sans-serif;
+        letter-spacing: 1px;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .perspective .backdrop {
+        transform: perspective(1500px) translateX(-125px) rotateY(45deg) scale(.9);
+    }
+
+    .perspective textarea {
+        transform: perspective(1500px) translateX(155px) rotateY(45deg) scale(1.1);
+    }
+
+    textarea:focus, button:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #c6aada;
+    }
+
+/* 2. ContentEditable  */
+    .highlighted2 {
+        background-color: yellow;
+    }
     div.editable {
         border: 1px solid black;
         height: 200px;
     }
-
     strong {
         font-weight: bold;
     }
+
 </style>
 
 <body>
-<p id="content"></p>
 
-<div id="ta" contenteditable="true"></div>
+<!-- 1. TextArea -->
+<h3>1. TextArea (recommended)</h3>
+<div class="container">
+    <div class="backdrop">
+        <div class="highlights"></div>
+    </div>
+    <textarea>test</textarea>
+</div>
 
+
+<button>Toggle Perspective</button>
+
+<!-- 2. ContentEditable -->
+<h3>2. ContentEditable</h3>
+<div id="ta" contenteditable="true" style="margin-top: 3%"></div>
 
 <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="../dist/strict-parser.bundle.js"></script>
 <script type="text/javascript">
 
+    // 1. TextArea - All tags are just string
+    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net';
+
+    //2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
+    var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
+
+    // This is a sample of ##### 4. XML (HTML) (README.md)
+    var xmlStr =
+        'en.wikipedia.org/wiki/Wikipedia:About\n' +
+        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
+        'plus.google.co.kr0에서.., \n' +
+        'https://plus.google.com/+google\n' +
+        'https://www.google.com/maps/place/USA/@36.2218457,...' +
+        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
+
+    // 1. TextArea
+    var $container = $('.container');
+    var $backdrop = $('.backdrop');
+    var $highlights = $('.highlights');
+    var $textarea = $('textarea');
+    var $toggle = $('button');
+
+    // Common
+    // yeah, browser sniffing sucks, but there are browser-specific quirks to handle that are not a matter of feature detection
+    var ua = window.navigator.userAgent.toLowerCase();
+    var isIE = !!ua.match(/msie|trident\/7|edge/);
+    var isWinPhone = ua.indexOf('windows phone') !== -1;
+    var isIOS = !isWinPhone && !!ua.match(/ipad|iphone|ipod/);
+
+    // 1. TextArea
+    function handleInput() {
+
+        var text = $textarea.val();
+
+        text = text.replace(/\n$/g, '\n\n');
+
+       let entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+        text = String(text).replace(/[&<>"'`=\/]/g, function (s) {
+            return entityMap[s];
+        });
+
+
+        let tg = StrictParser.TextEditorArea.addClassToAllUrls(text, 'highlighted1');
+
+        $highlights.html(tg);
+
+
+    }
+    function handleScroll() {
+
+        var scrollTop = $textarea.scrollTop();
+        $backdrop.scrollTop(scrollTop);
+
+        var scrollLeft = $textarea.scrollLeft();
+        $backdrop.scrollLeft(scrollLeft);
+    }
+    function bindEvents() {
+        $textarea.on({
+            'input': handleInput,
+            'scroll': handleScroll
+        });
+
+        $toggle.on('click', function () {
+            $container.toggleClass('perspective');
+        });
+    }
+    function fixIOS() {
+        // iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
+        $highlights.css({
+            'padding-left': '+=3px',
+            'padding-right': '+=3px'
+        });
+    }
+    if (isIOS) {
+        fixIOS();
+    }
+
+    //2. ContentEditable
     function getCaretCharacterOffsetWithin(element) {
         var caretOffset = 0;
         var doc = element.ownerDocument || element.document;
@@ -48,39 +254,21 @@
         }
         return caretOffset;
     }
-
-    function getCaretPosition (node) {
-        var range = window.getSelection().getRangeAt(0),
-            preCaretRange = range.cloneRange(),
-            caretPosition,
-            tmp = document.createElement("div");
-
-        preCaretRange.selectNodeContents(node);
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        tmp.appendChild(preCaretRange.cloneContents());
-        caretPosition = tmp.innerHTML.length;
-        return caretPosition;
-    }
-
     function setCaretPosition(element, offset) {
         var range = document.createRange();
         var sel = window.getSelection();
-
         //select appropriate node
         var currentNode = null;
         var previousNode = null;
-
         for (var i = 0; i < element.childNodes.length; i++) {
             //save previous node
             previousNode = currentNode;
-
             //get current node
             currentNode = element.childNodes[i];
             //if we get span or something else then we should get child node
             while(currentNode.childNodes.length > 0){
                 currentNode = currentNode.childNodes[0];
             }
-
             //calc offset in current node
             if (previousNode !== null) {
                 offset -= previousNode.length;
@@ -92,12 +280,10 @@
         }
         //move caret to specified offset
         if (currentNode !== null) {
-
-/*            let tmp = offset;
-            if (offset >= currentNode.length) {
-                tmp = currentNode.length;
-            }*/
-
+            /*            let tmp = offset;
+                        if (offset >= currentNode.length) {
+                            tmp = currentNode.length;
+                        }*/
             range.setStart(currentNode, offset);
             range.collapse(true);
             sel.removeAllRanges();
@@ -111,7 +297,6 @@
     function start() {
         startTime = new Date();
     };
-
     function end() {
         endTime = new Date();
         var timeDiff = endTime - startTime; //in ms
@@ -124,31 +309,13 @@
         console.log(seconds + " ms");
     }
 
-    var xmlStr =
-        'en.wikipedia.org/wiki/Wikipedia:About\n' +
-        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
-        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
-        'plus.google.co.kr0에서.., \n' +
-        'https://plus.google.com/+google\n' +
-        'https://www.google.com/maps/place/USA/@36.2218457,...' +
-        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
-        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
-        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
-        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
-
-    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'packed1book.net fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span> abc.com/ad/fg/?kk=5 abc@daum.net';
-
     start();
 
-/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
-    console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
+    /*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
+        console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
 
-    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));*/
-/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));*/
+        console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));*/
+    /*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));*/
 
     console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
     console.log('final_3_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllUrls(textStr), null, 2));
@@ -162,42 +329,42 @@
     end();
 
 
+    //2. ContentEditable
+    $('#ta').on("propertychange paste input", function (e) {
 
-    $('#ta').on("propertychange paste input", function(e) {
-
-
+        // ContentEditable
         if ($(this).text() != $(this).attr("origin")) {
 
-            console.log(e);
-
             let tg = this.innerHTML;
-
             var ele = document.getElementById('ta');
 
-            let textStr = StrictParser.TextEditorArea.addClassToAllUrls(tg, 'highlighted1');
-
+            let temp = StrictParser.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
             //console.log('re : ' + textStr);
-
             var position = getCaretCharacterOffsetWithin(ele);
 
+            setCaretPosition(ele, position);
+            $("#ta").html(temp);
+            setCaretPosition(ele, position);
 
-            setCaretPosition(ele, position);
-            $("#ta").html(textStr);
-            setCaretPosition(ele, position);
         }
-
-
 
     });
 
 
-    $(function(){
+    $(function () {
 
-        let entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
-        textStr = String(textStr).replace(/[&<>"'`=\/]/g, function (s) { return entityMap[s]; });
+        // 1. TextArea
+        bindEvents();
+        handleInput();
 
-        textStr = StrictParser.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
-        $("#ta").html(textStr);
+        $textarea.val(textStr);
+        handleInput();
+
+
+        //2. ContentEditable
+        let ts = StrictParser.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
+        $("#ta").html(ts);
+
 
     })
 

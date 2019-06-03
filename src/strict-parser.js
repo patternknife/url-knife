@@ -770,108 +770,104 @@ const TextEditorArea = {
      * @author Andrew Kang
      * @param textStr string required
      * @param clsName string required
+     * @param contentEditableMode boolean default false
      * @return string
      */
-    addClassToAllUrls(textStr, clsName) {
+    addClassToAllUrls(textStr, clsName, contentEditableMode) {
 
         if (!(textStr && typeof textStr === 'string')) {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
-        /* To apply the regex 'url_core_rx', make a space as it is */
-        textStr = textStr.replace(/&nbsp;/gi, ' ');
-        /* Html Contenteditable  */
-        textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
+        /* To apply the regex 'url_core_rx', make <div>,<br> a line return */
+        if(contentEditableMode && contentEditableMode === true){
+            //textStr = textStr.replace(/&nbsp;/gi, ' ');
+            textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
+            textStr = textStr.replace(/<br>/gi, '\n');
+        }
 
-        //console.log('txb : ' + textStr);
 
-        /* Strip elements with the 'clsName' */
         /* This needs to be optimized for the future */
         let t = Jquery('<p>'+ textStr + '</p>');
         t.find('.' + clsName).contents().unwrap();
-        textStr = t.html();
-
-        //console.log('tx : ' + textStr);
 
         const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
 
-        let obj = [];
+        t.each(function() {
 
-        /* normal text area */
-        let rx = new RegExp(url_core_rx, 'g');
 
-        let matches = [];
-        let match = {};
+            let txt = Jquery(this).html();
 
-        while ((match = rx.exec(textStr)) !== null) {
+            console.log(contentEditableMode + ' t1: ' + txt);
 
-            /* remove email patterns related to 'all_urls3_front' regex */
-            if (/^@/.test(match[0])) {
-                continue;
+            let obj = [];
+
+            /* normal text area */
+            let rx = new RegExp(url_core_rx, 'g');
+
+            let matches = [];
+            let match = {};
+
+            while ((match = rx.exec(txt)) !== null) {
+
+                /* remove email patterns related to 'all_urls3_front' regex */
+                if (/^@/.test(match[0])) {
+                    continue;
+                }
+
+                let mod_val = match[0];
+                mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+
+                let re = UrlArea.assortUrl(mod_val);
+                let st_idx = match.index;
+                let end_idx = match.index + match[0].length;
+
+
+                /* this part doesn't need to be highlighted */
+                if(re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0){
+                    end_idx -= re['removedTailOnUrl'].length;
+                }
+
+                obj.push({
+                    'value': re,
+                    'area': 'text',
+                    'index': {
+                        'start': st_idx,
+                        'end': end_idx
+                    }
+                });
             }
 
-            let mod_val = match[0];
-            mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+            //console.log('obj : ' + JSON.stringify(obj));
 
-            obj.push({
-                'value': UrlArea.assortUrl(mod_val),
-                'area': 'text',
-                'index': {
-                    'start': match.index,
-                    'end': match.index + match[0].length
-                }
+
+            /* Add the 'clsName' */
+            obj.reverse().forEach(function (val, idx) {
+                txt = UtilObj.replaceAt(txt, val['index']['end'], '</span>');
+                txt = UtilObj.replaceAt(txt, val['index']['start'], '<span class="' + clsName + '">');
+
             });
-        }
 
-        /* Add the 'clsName' */
-        obj.reverse().forEach(function (val, idx) {
-            textStr = UtilObj.replaceAt(textStr, val['index']['end'], '</span>');
-            textStr = UtilObj.replaceAt(textStr, val['index']['start'], '<span class="' + clsName + '">');
+            //console.log(contentEditableMode + ' t2 : ' + txt);
 
+            Jquery(this).text(txt);
         });
 
 
-        /* To apply the regex 'url_core_rx', we changed spaces and now change them back to &nbsp; */
-        // spaces on elements must be avoided
-        let el_matches = XmlArea.extractAllElements(textStr);
-        el_matches = el_matches.reverse();
+        textStr = t.text();
 
-        let space_matches = [];
-        let rx2 = new RegExp('[\\u0020]', 'g');
-        let match2 = {};
-        while ((match2 = rx2.exec(textStr)) !== null) {
 
-            space_matches.push({
-                'startIndex': match2.index,
-                'lastIndex': match2.index + match2[0].length
-            });
+        //console.log(contentEditableMode + ' t3 : ' + textStr);
 
+
+        if(contentEditableMode && contentEditableMode === true){
+            textStr = textStr.replace(/\n/gi, '<br>');
         }
-        space_matches.reverse().forEach(function (val, idx) {
-
-            let isInEl = false;
-            for (let a = 0; a < el_matches.length; a++) {
-
-                //console.log(el_matches[a]['startIndex'], val['startIndex'], val['lastIndex'], el_matches[a]['lastIndex']);
-
-                if (el_matches[a]['startIndex'] < val['startIndex'] && val['lastIndex'] < el_matches[a]['lastIndex']) {
-                    isInEl = true;
-                }
-
-            }
-
-            if (isInEl === false) {
-
-                textStr = UtilObj.replaceBetween(textStr, val['startIndex'], val['lastIndex'], '&nbsp;');
-
-            }
-        });
 
 
         return textStr;
 
-    },
-
+    }
 }
 /*
 *     Public
