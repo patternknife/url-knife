@@ -127,20 +127,34 @@ const RxGroup = {
 
     /* all_urls from validator.js */
     all_urls: '(?:' + RxGroup_P.all_protocols + '[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?',
-    /* additional possibilities */
-    all_urls2: '(?:(?:www\\.[^./\\n\\r\\t\\s]+\\.[^./\\n\\r\\t\\s]+|(?:[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+|\\blocalhost\\b)(?:\\:[0-9]+|))(?:/[\\S]+|))',
 
+
+    /* additional possibilities (localhost, ip nums without protocols) */
+    all_urls2:
+    '(?:[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+|\\blocalhost\\b)' +
+    // port or not
+    '(?:[\\t\\s]*:[\\t\\s]*[0-9]+|)' +
+    // uri, params
+    '(?:(?:(/|\\?|#)[^\\n\\r\\t\\s]*)|)',
+
+
+    /* additional possibilities (domain without protocols) */
     /* this is for ./ref/terms.js ('https://www.iana.org/domains/root/db') */
     all_urls3_front: '(?:@|)' +
     RxGroup_P.lang_char + '(?:\\.|(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.rfc3986_unreserved_no_alphaNums + '|' + RxGroup_P.lang_char + '))*\\.',
+    all_urls3_end : '(?:' + Terms.all_root_domains + '\\b)' +
+    '(?:' + Terms.all_root_domains  + '\\b|\\.)*' +
+    // port or not
+    '(?:[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[0-9]+|)' +
+    // uri, params
+    '(?:(?:(/|\\?|#)[^\\n\\r\\t\\s]*)|)',
+
 
     /* this is for ./ref/terms.js ('https://www.iana.org/domains/root/db') */
-    all_urls3_end: '(?:(?:\\/|\\?)[^\\n\\r\\t\\s]*|\\.[^\\n\\r\\t\\s]*|[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[0-9]+|\\b)',
+    all_urls3_end2: '(?:(?:\\/|\\?)[^\\n\\r\\t\\s]*|\\.[^\\n\\r\\t\\s]+|[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[0-9]+|\\b)',
     //all_urls3_end: '(?:(?:\\/|\\?)[\\n\\r\\t\\s]*[^\\s]*|(?:\\b))',
 
-    /* only uri */
-
-
+    /* only uri (in the future not yet)*/
     all_urls4:
     // 1. '/a...' (the first letter must be any lang char and nums)
     '(?:\\/' + '(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.lang_char + ')' + '[^/\\n\\r\\t\\s]*(?:\\/[^/\\n\\r\\t\\s]*|\\b))' +
@@ -148,7 +162,9 @@ const RxGroup = {
     // 2. 'abc/...' (the first letter must be any lang char and nums)
     '(?:(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.lang_char + ')' + '[^/\\n\\r\\t\\s]*\\/[^\\n\\r\\t\\s]*)',
 
-    all_emails: '(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))[\\n\\r\\t\\s]*@[\\n\\r\\t\\s]*((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{1,3}))'
+    all_emails: '(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))[\\n\\r\\t\\s]*@[\\n\\r\\t\\s]*((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{1,3}))',
+
+
 };
 
 
@@ -384,7 +400,7 @@ const XmlArea = {
             throw new ValidationError('the variable xmlStr must be a string type and not be null.');
         }
 
-        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + RxGroup.all_urls3_end;
 
 
         let obj = [];
@@ -706,7 +722,7 @@ const TextArea = {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
-        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + RxGroup.all_urls3_end;
 
         let obj = [];
 
@@ -791,7 +807,7 @@ const TextEditorArea = {
         let t = Jquery('<p>'+ textStr + '</p>');
         t.find('.' + clsName).contents().unwrap();
 
-        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + Terms.all_root_domains + RxGroup.all_urls3_end;
+        const url_core_rx = RxGroup.all_urls + '|' + RxGroup.all_urls2 + '|' + RxGroup.all_urls3_front + RxGroup.all_urls3_end;
 
         t.each(function() {
 
