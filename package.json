@@ -1,7 +1,7 @@
 {
   "name": "strict-parser",
-  "version": "1.3.5",
-  "description": "Strict-parser is an open source JavaScript library in order to parse certain patterns such as urls, emails, numbers, decimals on xml(or html) which is, as you are aware, divided into three areas - element, comments, text. You can obtain texts with certain patterns and get to know where they are on html.",
+  "version": "1.3.7",
+  "description": "Javascript URL(domain, uri, parameters, etc.), email parser using a powerful combination of regular expressions on XML, HTML or plain text",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",

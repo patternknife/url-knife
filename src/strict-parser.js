@@ -198,7 +198,7 @@ const XmlService = {
 
     extractAllPureComments(xmlStr) {
 
-        const rx = new RegExp(RxGroup.xml_comment, 'g');
+        const rx = new RegExp(RxGroup.xml_comment, 'gi');
 
         let matches = [];
         let match = {};
@@ -276,7 +276,7 @@ const UtilObj = {
             'endIndex': endIndex
         };
 
-        let rx = new RegExp(ptrn, 'g');
+        let rx = new RegExp(ptrn, 'gi');
         let match = {};
         while ((match = rx.exec(tg)) !== null) {
             endIndex -= match[0].length;
@@ -413,7 +413,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(url_core_rx, 'g');
+                let rx = new RegExp(url_core_rx, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -443,7 +443,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(url_core_rx, 'g');
+                let rx = new RegExp(url_core_rx, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -457,7 +457,7 @@ const XmlArea = {
 
 
                     /* attribute value - regex conflict case handler */
-                    let mod_val = match[0].replace(new RegExp('[\\u0022\\u0027](?:[\\t\\s]+|[\\t\\s]*/[\\t\\s]*)(?:>|)', 'g'), '');
+                    let mod_val = match[0].replace(new RegExp('[\\u0022\\u0027](?:[\\t\\s]+|[\\t\\s]*/[\\t\\s]*)(?:>|)', 'gi'), '');
 
                     mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
                     mod_val = mod_val.trim();
@@ -472,7 +472,7 @@ const XmlArea = {
             }
 
             /* 3. Remove all comments */
-            xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_comment, 'g'), '');
+            xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_comment, 'gi'), '');
 
             /* 4. Remove all elements */
             xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_element, "g"), '');
@@ -486,7 +486,7 @@ const XmlArea = {
 
 
         /* 5. normal text area */
-        let rx = new RegExp(url_core_rx, 'g');
+        let rx = new RegExp(url_core_rx, 'gi');
 
         let matches = [];
         let match = {};
@@ -548,7 +548,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(RxGroup.all_emails, 'g');
+                let rx = new RegExp(RxGroup.all_emails, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -569,7 +569,7 @@ const XmlArea = {
                         mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
 
                         let border = '';
-                        let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'g');
+                        let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'gi');
                         let is_mod_val_front_only_foreign_lang = true;
                         while ((match = rx_border.exec(mod_val_front)) !== null) {
 
@@ -598,7 +598,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(RxGroup.all_emails, 'g');
+                let rx = new RegExp(RxGroup.all_emails, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -606,7 +606,7 @@ const XmlArea = {
                 while ((match = rx.exec(el_matches[a].value)) !== null) {
 
                     /* attribute value - regex conflict case handler */
-                    let mod_val = match[0].replace(new RegExp('[\\u0022\\u0027](?:[\\t\\s]+|[\\t\\s]*/[\\t\\s]*)(?:>|)', 'g'), '');
+                    let mod_val = match[0].replace(new RegExp('[\\u0022\\u0027](?:[\\t\\s]+|[\\t\\s]*/[\\t\\s]*)(?:>|)', 'gi'), '');
 
                     mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
                     mod_val = mod_val.trim();
@@ -619,7 +619,7 @@ const XmlArea = {
                         mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
 
                         let border = '';
-                        let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'g');
+                        let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'gi');
                         let is_mod_val_front_only_foreign_lang = true;
                         while ((match = rx_border.exec(mod_val_front)) !== null) {
 
@@ -646,7 +646,7 @@ const XmlArea = {
             }
 
             /* 3. Remove all comments */
-            xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_comment, 'g'), '');
+            xmlStr = xmlStr.replace(new RegExp(RxGroup.xml_comment, 'gi'), '');
 
             /* 4. Remove all elements */
             const elementRegex = '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
@@ -655,7 +655,7 @@ const XmlArea = {
         }
 
         /* 5. normal text area */
-        let rx = new RegExp(RxGroup.all_emails, 'g');
+        let rx = new RegExp(RxGroup.all_emails, 'gi');
 
         let matches = [];
         let match = {};
@@ -675,7 +675,7 @@ const XmlArea = {
                 mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
 
                 let border = '';
-                let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'g');
+                let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'gi');
                 let is_mod_val_front_only_foreign_lang = true;
                 while ((match = rx_border.exec(mod_val_front)) !== null) {
 
@@ -727,7 +727,7 @@ const TextArea = {
         let obj = [];
 
         /* normal text area */
-        let rx = new RegExp(url_core_rx, 'g');
+        let rx = new RegExp(url_core_rx, 'gi');
 
         let matches = [];
         let match = {};
@@ -819,7 +819,7 @@ const TextEditorArea = {
             let obj = [];
 
             /* normal text area */
-            let rx = new RegExp(url_core_rx, 'g');
+            let rx = new RegExp(url_core_rx, 'gi');
 
             let matches = [];
             let match = {};
@@ -926,7 +926,7 @@ const UrlArea = {
             obj['url'] = url;
 
             // 2. protocol
-            let rx = new RegExp('^([a-zA-Z0-9]+):', 'g');
+            let rx = new RegExp('^([a-zA-Z0-9]+):', 'gi');
 
             let match = {};
             let isMatched = false;
@@ -942,7 +942,7 @@ const UrlArea = {
                         break;
                     }
 
-                    let rx2 = new RegExp(RxGroup_P.all_protocols, 'g');
+                    let rx2 = new RegExp(RxGroup_P.all_protocols, 'gi');
 
                     let match2 = {};
                     let isMatched2 = false;
@@ -968,7 +968,7 @@ const UrlArea = {
             url = url.replace(/^(?:[a-zA-Z0-9]+:\/\/)/g, '');
 
             // 4. Separate params
-            let rx3 = new RegExp('\\?(?:.|[\\n\\r\\t\\s])*$', 'g');
+            let rx3 = new RegExp('\\?(?:.|[\\n\\r\\t\\s])*$', 'gi');
             let match3 = {};
             while ((match3 = rx3.exec(url)) !== null) {
                 obj['onlyParams'] = match3[0];
@@ -980,7 +980,7 @@ const UrlArea = {
             }
 
             // 5. Separate uri
-            let rx2 = new RegExp('\\/(?:.|[\\n\\r\\t\\s])*$', 'g');
+            let rx2 = new RegExp('\\/(?:.|[\\n\\r\\t\\s])*$', 'gi');
             let match2 = {};
             while ((match2 = rx2.exec(url)) !== null) {
                 obj['onlyUri'] = match2[0];
@@ -1037,10 +1037,10 @@ const UrlArea = {
             if (obj['onlyParams'] === null) {
 
                 // removedTailOnUrl
-                let rm_part_matches = obj['url'].match(new RegExp(RxGroup_P.no_lang_char_num + '+$', 'g'));
+                let rm_part_matches = obj['url'].match(new RegExp(RxGroup_P.no_lang_char_num + '+$', 'gi'));
                 if (rm_part_matches) {
                     obj['removedTailOnUrl'] = rm_part_matches[0];
-                    obj['url'] = obj['url'].replace(new RegExp(RxGroup_P.no_lang_char_num + '+$', 'g'), '');
+                    obj['url'] = obj['url'].replace(new RegExp(RxGroup_P.no_lang_char_num + '+$', 'gi'), '');
                 }
 
             }
@@ -1051,7 +1051,7 @@ const UrlArea = {
 
                 if (obj['port'] === null) {
                     // this is a domain with no uri no params
-                    let onlyEnd = obj['url'].match(new RegExp('[^.]+$', 'g'));
+                    let onlyEnd = obj['url'].match(new RegExp('[^.]+$', 'gi'));
                     if (onlyEnd && onlyEnd.length > 0) {
 
                         // this is a root domain like com, ac
@@ -1067,7 +1067,7 @@ const UrlArea = {
                     }
                 } else {
                     // this is a domain with no uri no params
-                    let onlyEnd = obj['url'].match(new RegExp('[^:]+$', 'g'));
+                    let onlyEnd = obj['url'].match(new RegExp('[^:]+$', 'gi'));
                     if (onlyEnd && onlyEnd.length > 0) {
 
                         // this is a port num like 8000
