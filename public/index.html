@@ -134,10 +134,18 @@
 <script type="text/javascript">
 
     // 1. TextArea - All tags are just string
-    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+    var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
+        'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net';
+        'http://✪df.ws/123\n' +
+        'http://142.42.1.1:8080/\n' +
+        'https://foo_bar.example.com에서 만나요. \n' +
+        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
+        'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+
 
     //2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
@@ -151,7 +159,7 @@
         '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
         'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
         'plus.google.co.kr0에서.., \n' +
-        'https://plus.google.com/+google\n' +
+        'https://plus.google.com/\n' +
         'https://www.google.com/maps/place/USA/@36.2218457,...' +
         '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
         '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +

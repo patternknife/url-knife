@@ -34,10 +34,17 @@ import StrictParser from 'strict-parser';
     /* All Samples */
 
     // A sample of 'Text editor(TextArea) & Plain texts'
-    var textStr = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+    var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
+        'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net';
+        'http://✪df.ws/123\n' +
+        'http://142.42.1.1:8080/\n' +
+        'https://foo_bar.example.com에서 만나요. \n' +
+        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
+        'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
     // A sample of 'Text editor(ContentEditable)' 
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
@@ -83,7 +90,7 @@ You can check how url patterns are highlighted by running the sample source belo
 https://github.com/Andrew-Kang-G/strict-parser/blob/master/public/index.html
 
 or 
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/28/" target="_blank">LIVE DEMO</a>
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/33/" target="_blank">LIVE DEMO</a>
 
  
 
@@ -120,151 +127,311 @@ or
  ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
  ``` javascript
  [
-  {
-    "value": {
-      "url": "https://www.google.com/maps/place/USA/@36.2218457",
-      "removedTailOnUrl": ",...",
-      "protocol": "https",
-      "onlyDomain": "www.google.com",
-      "onlyParams": null,
-      "onlyUri": "/maps/place/USA/@36.2218457,...",
-      "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
-      "onlyParamsJsn": null,
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 0,
-      "end": 53
-    }
-  },
-  {
-    "value": {
-      "url": "tnae1ver.com:8000",
-      "removedTailOnUrl": "",
-      "protocol": null,
-      "onlyDomain": "tnae1ver.com",
-      "onlyParams": null,
-      "onlyUri": null,
-      "onlyUriWithParams": null,
-      "onlyParamsJsn": null,
-      "type": "domain",
-      "port": "8000"
-    },
-    "area": "text",
-    "index": {
-      "start": 54,
-      "end": 71
-    }
-  },
-  {
-    "value": {
-      "url": "http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-      "removedTailOnUrl": "",
-      "protocol": "http",
-      "onlyDomain": "goasidaio.ac.kr",
-      "onlyParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-      "onlyUri": null,
-      "onlyUriWithParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-      "onlyParamsJsn": {
-        "abd": "5안녕하세요?5...,.",
-        "kkk": "5rk.,,"
-      },
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 115,
-      "end": 166
-    }
-  },
-  {
-    "value": {
-      "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,.",
-      "removedTailOnUrl": "",
-      "protocol": null,
-      "onlyDomain": "goasidaio.ac.kr",
-      "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
-      "onlyUri": null,
-      "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
-      "onlyParamsJsn": {
-        "abd": "5hell0?5...",
-        "kkk": "5rk.,."
-      },
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 191,
-      "end": 233
-    }
-  },
-  {
-    "value": {
-      "url": "packed1book.net",
-      "removedTailOnUrl": "",
-      "protocol": null,
-      "onlyDomain": "packed1book.net",
-      "onlyParams": null,
-      "onlyUri": null,
-      "onlyUriWithParams": null,
-      "onlyParamsJsn": null,
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 234,
-      "end": 249
-    }
-  },
-  {
-    "value": {
-      "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>",
-      "removedTailOnUrl": "",
-      "protocol": null,
-      "onlyDomain": "s5houl７十七日dbedetected.jp",
-      "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>",
-      "onlyUri": null,
-      "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.net</span>",
-      "onlyParamsJsn": {
-        "japan": "go",
-        "html": "<span>가나다@pacbook.net</span>"
-      },
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 287,
-      "end": 354
-    }
-  },
-  {
-    "value": {
-      "url": "abc.com/ad/fg/?kk=5",
-      "removedTailOnUrl": "",
-      "protocol": null,
-      "onlyDomain": "abc.com",
-      "onlyParams": "?kk=5",
-      "onlyUri": "/ad/fg/",
-      "onlyUriWithParams": "/ad/fg/?kk=5",
-      "onlyParamsJsn": {
-        "kk": "5"
-      },
-      "type": "domain",
-      "port": null
-    },
-    "area": "text",
-    "index": {
-      "start": 355,
-      "end": 374
-    }
-  }
-]
+   {
+     "value": {
+       "url": "http://www.example.com/wpstyle/?p=364",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "www.example.com",
+       "onlyParams": "?p=364",
+       "onlyUri": "/wpstyle/",
+       "onlyUriWithParams": "/wpstyle/?p=364",
+       "onlyParamsJsn": {
+         "p": "364"
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 0,
+       "end": 37
+     }
+   },
+   {
+     "value": {
+       "url": "HTTP://foo.com/blah_blah_(wikipedia)",
+       "removedTailOnUrl": "",
+       "protocol": "HTTP",
+       "onlyDomain": "foo.com",
+       "onlyParams": null,
+       "onlyUri": "/blah_blah_(wikipedia)",
+       "onlyUriWithParams": "/blah_blah_(wikipedia)",
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 45,
+       "end": 81
+     }
+   },
+   {
+     "value": {
+       "url": "https://www.google.com/maps/place/USA/@36.2218457,...",
+       "removedTailOnUrl": "",
+       "protocol": "https",
+       "onlyDomain": "www.google.com",
+       "onlyParams": null,
+       "onlyUri": "/maps/place/USA/@36.2218457,...",
+       "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 82,
+       "end": 135
+     }
+   },
+   {
+     "value": {
+       "url": "tnae1ver.com:8000",
+       "removedTailOnUrl": "",
+       "protocol": null,
+       "onlyDomain": "tnae1ver.com",
+       "onlyParams": null,
+       "onlyUri": null,
+       "onlyUriWithParams": null,
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": "8000"
+     },
+     "area": "text",
+     "index": {
+       "start": 136,
+       "end": 153
+     }
+   },
+   {
+     "value": {
+       "url": "packed1book.net",
+       "removedTailOnUrl": ".",
+       "protocol": null,
+       "onlyDomain": "packed1book.net.",
+       "onlyParams": null,
+       "onlyUri": null,
+       "onlyUriWithParams": null,
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 184,
+       "end": 200
+     }
+   },
+   {
+     "value": {
+       "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>;",
+       "removedTailOnUrl": "",
+       "protocol": null,
+       "onlyDomain": "s5houl７十七日dbedetected.jp",
+       "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
+       "onlyUri": null,
+       "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
+       "onlyParamsJsn": {
+         "japan": "go",
+         "html": "<span>가나다@pacbook.net</span>;"
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 238,
+       "end": 306
+     }
+   },
+   {
+     "value": {
+       "url": "abc.com/ad/fg/?kk=5",
+       "removedTailOnUrl": "",
+       "protocol": null,
+       "onlyDomain": "abc.com",
+       "onlyParams": "?kk=5",
+       "onlyUri": "/ad/fg/",
+       "onlyUriWithParams": "/ad/fg/?kk=5",
+       "onlyParamsJsn": {
+         "kk": "5"
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 307,
+       "end": 326
+     }
+   },
+   {
+     "value": {
+       "url": "https://www.example.com/foo/?bar=baz&inga=42&quux",
+       "removedTailOnUrl": "",
+       "protocol": "https",
+       "onlyDomain": "www.example.com",
+       "onlyParams": "?bar=baz&inga=42&quux",
+       "onlyUri": "/foo/",
+       "onlyUriWithParams": "/foo/?bar=baz&inga=42&quux",
+       "onlyParamsJsn": {
+         "bar": "baz",
+         "inga": "42",
+         "quux": ""
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 339,
+       "end": 388
+     }
+   },
+   {
+     "value": {
+       "url": "http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "goasidaio.ac.kr",
+       "onlyParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+       "onlyUri": null,
+       "onlyUriWithParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+       "onlyParamsJsn": {
+         "abd": "5안녕하세요?5...,.",
+         "kkk": "5rk.,,"
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 406,
+       "end": 457
+     }
+   },
+   {
+     "value": {
+       "url": "http://✪df.ws/123",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "✪df.ws",
+       "onlyParams": null,
+       "onlyUri": "/123",
+       "onlyUriWithParams": "/123",
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 458,
+       "end": 475
+     }
+   },
+   {
+     "value": {
+       "url": "http://142.42.1.1:8080/",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "142.42.1.1",
+       "onlyParams": null,
+       "onlyUri": "/",
+       "onlyUriWithParams": "/",
+       "onlyParamsJsn": null,
+       "type": "ip",
+       "port": "8080"
+     },
+     "area": "text",
+     "index": {
+       "start": 476,
+       "end": 499
+     }
+   },
+   {
+     "value": {
+       "url": "https://foo_bar.example.com",
+       "removedTailOnUrl": "",
+       "protocol": "https",
+       "onlyDomain": "foo_bar.example.com",
+       "onlyParams": null,
+       "onlyUri": null,
+       "onlyUriWithParams": null,
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 500,
+       "end": 527
+     }
+   },
+   {
+     "value": {
+       "url": "http://foo.bar/?q=Test%20URL-encoded%20stuff",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "foo.bar",
+       "onlyParams": "?q=Test%20URL-encoded%20stuff",
+       "onlyUri": "/",
+       "onlyUriWithParams": "/?q=Test%20URL-encoded%20stuff",
+       "onlyParamsJsn": {
+         "q": "Test URL-encoded stuff"
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 536,
+       "end": 580
+     }
+   },
+   {
+     "value": {
+       "url": "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.comHave",
+       "removedTailOnUrl": "",
+       "protocol": "http",
+       "onlyDomain": "-.~_!$&'()*+,;=:%40:80%2f::::::@example.comHave",
+       "onlyParams": null,
+       "onlyUri": null,
+       "onlyUriWithParams": null,
+       "onlyParamsJsn": null,
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 582,
+       "end": 636
+     }
+   },
+   {
+     "value": {
+       "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,.",
+       "removedTailOnUrl": "",
+       "protocol": null,
+       "onlyDomain": "goasidaio.ac.kr",
+       "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
+       "onlyUri": null,
+       "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
+       "onlyParamsJsn": {
+         "abd": "5hell0?5...",
+         "kkk": "5rk.,."
+       },
+       "type": "domain",
+       "port": null
+     },
+     "area": "text",
+     "index": {
+       "start": 656,
+       "end": 698
+     }
+   }
+ ]
 ```
 ##### 4. XML (HTML)
 

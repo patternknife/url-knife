@@ -1631,8 +1631,21 @@
         }
     }
 
-    console.log(arrs);
-    console.log(JSON.stringify(arrs, null, 2));
+
+    arrs.sort(function(a, b){
+        // ASC  -> a.length - b.length
+        // DESC -> b.length - a.length
+        return b.length - a.length;
+    });
+
+    let arrs_str = '(?:';
+    arrs.forEach(function (val, idx) {
+        arrs_str += val + '|';
+    });
+
+
+    console.log(arrs_str);
+    //console.log(JSON.stringify(arrs, null, 2));
 
 
 </script>

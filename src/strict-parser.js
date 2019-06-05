@@ -125,25 +125,23 @@ const RxGroup = {
     /* Type C. </p> */
     '(?:<\\/' + '(?:' + RxGroup_P.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[^>]*?>)',
 
-    /* all_urls from validator.js */
-    all_urls: '(?:' + RxGroup_P.all_protocols + '[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?',
-
-
-    /* additional possibilities (localhost, ip nums without protocols) */
-    all_urls2:
-    '(?:[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+|\\blocalhost\\b)' +
+    /* possibilities (localhost, ip nums without protocols) */
+    all_urls:
+    '(?:' + RxGroup_P.all_protocols + '[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*)(?:[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+|\\blocalhost\\b)' +
     // port or not
     '(?:[\\t\\s]*:[\\t\\s]*[0-9]+|)' +
     // uri, params
     '(?:(?:(/|\\?|#)[^\\n\\r\\t\\s]*)|)',
 
+    /* all_urls from validator.js */
+    all_urls2: '(?:' + RxGroup_P.all_protocols + '[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?',
 
     /* additional possibilities (domain without protocols) */
     /* this is for ./ref/terms.js ('https://www.iana.org/domains/root/db') */
-    all_urls3_front: '(?:@|)' +
+    all_urls3_front: '(?:(?:' + RxGroup_P.all_protocols + '[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*/[\\n\\r\\t\\s]*)|@|)' +
     RxGroup_P.lang_char + '(?:\\.|(?:[0-9]|' + RxGroup_P.two_bytes_num + '|' + RxGroup_P.rfc3986_unreserved_no_alphaNums + '|' + RxGroup_P.lang_char + '))*\\.',
     all_urls3_end : '(?:' + Terms.all_root_domains + '\\b)' +
-    '(?:' + Terms.all_root_domains  + '\\b|\\.)*' +
+    '(?:' + Terms.all_root_domains  + '|\\.)*' +
     // port or not
     '(?:[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[0-9]+|)' +
     // uri, params
@@ -1034,7 +1032,7 @@ const UrlArea = {
 
 
             // If no params, we remove suffix in case that it is a meta character.
-            if (obj['onlyParams'] === null) {
+            if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 
                 // removedTailOnUrl
                 let rm_part_matches = obj['url'].match(new RegExp(RxGroup_P.no_lang_char_num + '+$', 'gi'));
