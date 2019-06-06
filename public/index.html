@@ -2,8 +2,7 @@
 
 <style>
 
-/* 1. TextArea*/
-
+    /* 1. TextArea*/
     @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
     *, *::before, *::after {
@@ -97,14 +96,16 @@
         box-shadow: 0 0 0 2px #c6aada;
     }
 
-/* 2. ContentEditable  */
+    /* 2. ContentEditable  */
     .highlighted2 {
         background-color: yellow;
     }
+
     div.editable {
         border: 1px solid black;
         height: 200px;
     }
+
     strong {
         font-weight: bold;
     }
@@ -188,7 +189,7 @@
 
         text = text.replace(/\n$/g, '\n\n');
 
-       let entityMap = {
+        let entityMap = {
             '&': '&amp;',
             '<': '&lt;',
             '>': '&gt;',
@@ -211,6 +212,7 @@
 
 
     }
+
     function handleScroll() {
 
         var scrollTop = $textarea.scrollTop();
@@ -219,6 +221,7 @@
         var scrollLeft = $textarea.scrollLeft();
         $backdrop.scrollLeft(scrollLeft);
     }
+
     function bindEvents() {
         $textarea.on({
             'input': handleInput,
@@ -229,6 +232,7 @@
             $container.toggleClass('perspective');
         });
     }
+
     function fixIOS() {
         // iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
         $highlights.css({
@@ -236,6 +240,7 @@
             'padding-right': '+=3px'
         });
     }
+
     if (isIOS) {
         fixIOS();
     }
@@ -264,6 +269,7 @@
         }
         return caretOffset;
     }
+
     function setCaretPosition(element, offset) {
         var range = document.createRange();
         var sel = window.getSelection();
@@ -276,7 +282,7 @@
             //get current node
             currentNode = element.childNodes[i];
             //if we get span or something else then we should get child node
-            while(currentNode.childNodes.length > 0){
+            while (currentNode.childNodes.length > 0) {
                 currentNode = currentNode.childNodes[0];
             }
             //calc offset in current node
@@ -307,6 +313,7 @@
     function start() {
         startTime = new Date();
     };
+
     function end() {
         endTime = new Date();
         var timeDiff = endTime - startTime; //in ms
@@ -321,15 +328,12 @@
 
     start();
 
-    /*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
-        console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));
-
-        console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));*/
-    /*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));*/
+/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
+    console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));*/
 
     console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
     console.log('final_3_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllUrls(textStr), null, 2));
-    console.log('final_3_2 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("http://www.goopplgo.com?abc=1"), null, 2));
+    console.log('final_3_2 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl(1), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
     console.log('final_3_4 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
 
