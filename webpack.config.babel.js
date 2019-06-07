@@ -7,9 +7,9 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		publicPath: '../dist/',
-		filename: 'strict-parser.bundle.js',
+		filename: 'pattern-dreamer.bundle.js',
 		chunkFilename: '[id].bundle.js',
         libraryTarget: 'var',
-        library: 'StrictParser'
+        library: 'PatternDreamer'
 	}
 };

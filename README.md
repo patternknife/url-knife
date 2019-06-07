@@ -1,8 +1,11 @@
-# Strict-parser
+# Pattern-dreamer
 
 ## Overview
 
-'Javascript URL(domain, uri, parameters, etc.), email parser using a powerful combination of regular expressions on XML, HTML or plain text'
+'Javascript URL, URI, Email parser using a powerful combination of regular expressions on XML, HTML or plain text'
+
+We have been able to parse URLs with no protocol from texts. Now, from ver. 1.4.0, 
+we can parse certain URIs with no domain from texts. Check '3.1 Plain texts (CERTAIN URIs)'.
 
 ## Installation
 
@@ -12,7 +15,7 @@ For ES5 users,
 <html>
        <body>
        	<p id="content"></p>
-       	<script src="../dist/strict-parser.bundle.js"></script>
+       	<script src="../dist/pattern-dreamer.bundle.js"></script>
        	<script type="text/javascript">
        
       
@@ -21,10 +24,10 @@ For ES5 users,
 </html>
 ```
 
-For ES6 npm users, do 'npm install --save strict-parser' on console.
+For ES6 npm users, do 'npm install --save pattern-dreamer' on console.
 
 ``` html
-import StrictParser from 'strict-parser';
+import PatternDreamer from 'pattern-dreamer';
 ```
 
 ## Syntax & Usage
@@ -33,7 +36,9 @@ import StrictParser from 'strict-parser';
 
     /* All Samples */
 
-    // A sample of 'Text editor(TextArea) & Plain texts'
+    // A sample of 'Text editor(TextArea, URL) & Plain texts'
+    // All of the urls below are detected except for 'fakeshouldnotbedetected.url?abc=fake' as the root domain 'url' does not exist in the world
+    // and even it does not have any protocols.
     var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
@@ -45,6 +50,10 @@ import StrictParser from 'strict-parser';
         'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+        
+   // A sample of 'Text editor(TextArea, URI) & Plain texts'
+    var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+                'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
 
     // A sample of 'Text editor(ContentEditable)' 
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
@@ -68,7 +77,7 @@ import StrictParser from 'strict-parser';
         
 ```
 
-#### Chapter 1. Parse urls in whatever situations !
+#### Chapter 1. Parse URLs, URIs in whatever situations !
 
 ##### 1. Text editor
   
@@ -83,33 +92,31 @@ import StrictParser from 'strict-parser';
      * @param contentEditableMode boolean default false
      * @return string
      */
- var textStr_new = StrictParser.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
+ var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
  ```
+
 You can check how url patterns are highlighted by running the sample source below.
 
-https://github.com/Andrew-Kang-G/strict-parser/blob/master/public/index.html
+https://github.com/Andrew-Kang-G/pattern-dreamer/blob/master/public/index.html
 
 or 
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
-
- 
-
  
 ##### 2. One url
   
 ``` javascript
- var url = StrictParser.UrlArea.assortUrl("http://www.goopplgo.com/?abc=1")
+ var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
  ```
  ###### console.log() 
  ``` javascript
-{
-  "url": "ssh://www.goopplgo.com/?abc=1",
+ {
+  "url": "xtp://gooppalgo.com/park/tree/?abc=1",
   "removedTailOnUrl": "",
-  "protocol": "ssh",
-  "onlyDomain": "www.goopplgo.com",
+  "protocol": "xtp (unknown protocol)",
+  "onlyDomain": "gooppalgo.com",
   "onlyParams": "?abc=1",
-  "onlyUri": "/",
-  "onlyUriWithParams": "/?abc=1",
+  "onlyUri": "/park/tree/",
+  "onlyUriWithParams": "/park/tree/?abc=1",
   "onlyParamsJsn": {
     "abc": "1"
   },
@@ -117,37 +124,210 @@ or
   "port": null
 }
  ```
-
-
-##### 3. Plain texts
+##### 3.1 Plain texts (CERTAIN URIs)
 
 ``` javascript
- var urls = StrictParser.TextArea.extractAllUrls(textStr),
+ var uris = PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]) 
+ // This detects all URIs containing 'nice/guy' or 'abc/def'
+ ```
+ ###### console.log() 
+ ``` javascript
+[
+  {
+    "uri_detected": {
+      "value": {
+        "url": "abc/def",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": null,
+        "onlyUri": "abc/def",
+        "onlyUriWithParams": "abc/def",
+        "onlyParamsJsn": null,
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 10,
+        "end": 17
+      }
+    },
+    "in_what_url": null
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "abc/def?a=5",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": "?a=5",
+        "onlyUri": "abc/def",
+        "onlyUriWithParams": "abc/def?a=5",
+        "onlyParamsJsn": {
+          "a": "5"
+        },
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 18,
+        "end": 29
+      }
+    },
+    "in_what_url": null
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "/123a/abc/def",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": null,
+        "onlyUri": "/123a/abc/def",
+        "onlyUriWithParams": "/123a/abc/def",
+        "onlyParamsJsn": null,
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 30,
+        "end": 43
+      }
+    },
+    "in_what_url": null
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "/abc/def?a=5&b=tkt",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": "?a=5&b=tkt",
+        "onlyUri": "/abc/def",
+        "onlyUriWithParams": "/abc/def?a=5&b=tkt",
+        "onlyParamsJsn": {
+          "a": "5",
+          "b": "tkt"
+        },
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 44,
+        "end": 62
+      }
+    },
+    "in_what_url": null
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "/abc/def?a=5&b=7",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": "?a=5&b=7",
+        "onlyUri": "/abc/def",
+        "onlyUriWithParams": "/abc/def?a=5&b=7",
+        "onlyParamsJsn": {
+          "a": "5",
+          "b": "7"
+        },
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 99,
+        "end": 115
+      }
+    },
+    "in_what_url": {
+      "value": {
+        "url": "https://google.com/abc/def?a=5&b=7",
+        "removedTailOnUrl": "",
+        "protocol": "https",
+        "onlyDomain": null,
+        "onlyParams": "?a=5&b=7",
+        "onlyUri": "https://google.com/abc/def",
+        "onlyUriWithParams": "https://google.com/abc/def?a=5&b=7",
+        "onlyParamsJsn": {
+          "a": "5",
+          "b": "7"
+        },
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 81,
+        "end": 115
+      }
+    }
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "nice/guy",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": null,
+        "onlyUri": "nice/guy",
+        "onlyUriWithParams": "nice/guy",
+        "onlyParamsJsn": null,
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 116,
+        "end": 124
+      }
+    },
+    "in_what_url": null
+  },
+  {
+    "uri_detected": {
+      "value": {
+        "url": "/or/nice/guy",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": null,
+        "onlyParams": null,
+        "onlyUri": "/or/nice/guy",
+        "onlyUriWithParams": "/or/nice/guy",
+        "onlyParamsJsn": null,
+        "type": "uri",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 128,
+        "end": 140
+      }
+    },
+    "in_what_url": null
+  }
+]
+```
+
+##### 3.2 Plain texts (URL)
+
+``` javascript
+ var urls = PatternDreamer.TextArea.extractAllUrls(textStr),
  ```
  ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
  ``` javascript
  [
-   {
-     "value": {
-       "url": "http://www.example.com/wpstyle/?p=364",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "www.example.com",
-       "onlyParams": "?p=364",
-       "onlyUri": "/wpstyle/",
-       "onlyUriWithParams": "/wpstyle/?p=364",
-       "onlyParamsJsn": {
-         "p": "364"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 0,
-       "end": 37
-     }
-   },
+ .... // List some of all detected ones
    {
      "value": {
        "url": "HTTP://foo.com/blah_blah_(wikipedia)",
@@ -184,25 +364,6 @@ or
      "index": {
        "start": 82,
        "end": 135
-     }
-   },
-   {
-     "value": {
-       "url": "tnae1ver.com:8000",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "tnae1ver.com",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": "8000"
-     },
-     "area": "text",
-     "index": {
-       "start": 136,
-       "end": 153
      }
    },
    {
@@ -248,150 +409,6 @@ or
    },
    {
      "value": {
-       "url": "abc.com/ad/fg/?kk=5",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "abc.com",
-       "onlyParams": "?kk=5",
-       "onlyUri": "/ad/fg/",
-       "onlyUriWithParams": "/ad/fg/?kk=5",
-       "onlyParamsJsn": {
-         "kk": "5"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 307,
-       "end": 326
-     }
-   },
-   {
-     "value": {
-       "url": "https://www.example.com/foo/?bar=baz&inga=42&quux",
-       "removedTailOnUrl": "",
-       "protocol": "https",
-       "onlyDomain": "www.example.com",
-       "onlyParams": "?bar=baz&inga=42&quux",
-       "onlyUri": "/foo/",
-       "onlyUriWithParams": "/foo/?bar=baz&inga=42&quux",
-       "onlyParamsJsn": {
-         "bar": "baz",
-         "inga": "42",
-         "quux": ""
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 339,
-       "end": 388
-     }
-   },
-   {
-     "value": {
-       "url": "http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "goasidaio.ac.kr",
-       "onlyParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-       "onlyUri": null,
-       "onlyUriWithParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
-       "onlyParamsJsn": {
-         "abd": "5안녕하세요?5...,.",
-         "kkk": "5rk.,,"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 406,
-       "end": 457
-     }
-   },
-   {
-     "value": {
-       "url": "http://✪df.ws/123",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "✪df.ws",
-       "onlyParams": null,
-       "onlyUri": "/123",
-       "onlyUriWithParams": "/123",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 458,
-       "end": 475
-     }
-   },
-   {
-     "value": {
-       "url": "http://142.42.1.1:8080/",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "142.42.1.1",
-       "onlyParams": null,
-       "onlyUri": "/",
-       "onlyUriWithParams": "/",
-       "onlyParamsJsn": null,
-       "type": "ip",
-       "port": "8080"
-     },
-     "area": "text",
-     "index": {
-       "start": 476,
-       "end": 499
-     }
-   },
-   {
-     "value": {
-       "url": "https://foo_bar.example.com",
-       "removedTailOnUrl": "",
-       "protocol": "https",
-       "onlyDomain": "foo_bar.example.com",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 500,
-       "end": 527
-     }
-   },
-   {
-     "value": {
-       "url": "http://foo.bar/?q=Test%20URL-encoded%20stuff",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "foo.bar",
-       "onlyParams": "?q=Test%20URL-encoded%20stuff",
-       "onlyUri": "/",
-       "onlyUriWithParams": "/?q=Test%20URL-encoded%20stuff",
-       "onlyParamsJsn": {
-         "q": "Test URL-encoded stuff"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 536,
-       "end": 580
-     }
-   },
-   {
-     "value": {
        "url": "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.comHave",
        "removedTailOnUrl": "",
        "protocol": "http",
@@ -431,16 +448,40 @@ or
        "end": 698
      }
    }
+....
  ]
 ```
-##### 4. XML (HTML)
+##### 5. XML (HTML)
 
 ``` javascript
- var urls = StrictParser.XmlArea.extractAllUrls(xmlStr);    
+ var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);    
 ```
 ###### console.log()
 ``` javascript
  [
+  .... // List some of all detected ones
+     {
+       "value": {
+         "url": "packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk",
+         "removedTailOnUrl": "",
+         "protocol": null,
+         "onlyDomain": "packed1book.net",
+         "onlyParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
+         "onlyUri": null,
+         "onlyUriWithParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
+         "onlyParamsJsn": {
+           "user": {
+             "name": {
+               "first": "tj",
+               "last": "holowaychuk"
+             }
+           }
+         },
+         "type": "domain",
+         "port": null
+       },
+       "area": "text"
+   },
    {
      "value": {
        "url": "adackedbooked.co.kr",
@@ -535,28 +576,6 @@ or
    },
    {
      "value": {
-       "url": "packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "packed1book.net",
-       "onlyParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
-       "onlyUri": null,
-       "onlyUriWithParams": "?user[name][first]=tj&user[name][last]=holowaychuk",
-       "onlyParamsJsn": {
-         "user": {
-           "name": {
-             "first": "tj",
-             "last": "holowaychuk"
-           }
-         }
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
        "url": "s5houl７十七日dbedetected.jp?japan=go-",
        "removedTailOnUrl": "",
        "protocol": null,
@@ -589,36 +608,6 @@ or
    },
    {
      "value": {
-       "url": "https://plus.google.com/+google",
-       "removedTailOnUrl": "",
-       "protocol": "https",
-       "onlyDomain": "plus.google.com",
-       "onlyParams": null,
-       "onlyUri": "/+google",
-       "onlyUriWithParams": "/+google",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "https://www.google.com/maps/place/USA/@36.2218457",
-       "removedTailOnUrl": ",...",
-       "protocol": "https",
-       "onlyDomain": "www.google.com",
-       "onlyParams": null,
-       "onlyUri": "/maps/place/USA/@36.2218457,...",
-       "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
        "url": "gigi.dau.ac.kr?mac=10",
        "removedTailOnUrl": "",
        "protocol": null,
@@ -633,147 +622,8 @@ or
        "port": null
      },
      "area": "text"
-   },
-   {
-     "value": {
-       "url": "dau.ac.kr?mac=10",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "dau.ac.kr",
-       "onlyParams": "?mac=10",
-       "onlyUri": null,
-       "onlyUriWithParams": "?mac=10",
-       "onlyParamsJsn": {
-         "mac": "10"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "구루.com",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "구루.com",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "http://ne1ver.com:8000?abc=1&dd=5",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "ne1ver.com",
-       "onlyParams": "?abc=1&dd=5",
-       "onlyUri": null,
-       "onlyUriWithParams": "?abc=1&dd=5",
-       "onlyParamsJsn": {
-         "abc": "1",
-         "dd": "5"
-       },
-       "type": "domain",
-       "port": "8000"
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "localhost:80",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "localhost",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "localhost",
-       "port": "80"
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "estonia.ee",
-       "removedTailOnUrl": "/",
-       "protocol": null,
-       "onlyDomain": "estonia.ee",
-       "onlyParams": null,
-       "onlyUri": "/",
-       "onlyUriWithParams": "/",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "estonia.ee",
-       "removedTailOnUrl": "?",
-       "protocol": null,
-       "onlyDomain": "estonia.ee",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "https://flaviocopes.com/how-to-inspect-javascript-object",
-       "removedTailOnUrl": "/",
-       "protocol": "https",
-       "onlyDomain": "flaviocopes.com",
-       "onlyParams": null,
-       "onlyUri": "/how-to-inspect-javascript-object/",
-       "onlyUriWithParams": "/how-to-inspect-javascript-object/",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "203.35.33.555:8000",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "203.35.33.555",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "ip",
-       "port": "8000"
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "goasidaioaaa.ac.kr",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "goasidaioaaa.ac.kr",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
    }
+    .....
  ]
 ```
 
@@ -790,7 +640,7 @@ or
      * @return array
      */
    
-     var emails = StrictParser.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
+     var emails = PatternDreamer.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
    
 ```
 ###### console.log()
@@ -822,7 +672,7 @@ or
 ##### 2. Plain texts
 
 ``` javascript
-var emails = StrictParser.TextArea.extractAllEmails(textStr),
+var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
  ```
  
  ###### console.log() 
@@ -852,7 +702,7 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
          * @return array
          *
          */
-    var elements = StrictParser.XmlArea.extractAllElements(xmlStr);   
+    var elements = PatternDreamer.XmlArea.extractAllElements(xmlStr);   
 ```
 ###### console.log() 
 ``` javascript
@@ -981,7 +831,7 @@ var emails = StrictParser.TextArea.extractAllEmails(textStr),
      * @param xmlStr string required
      * @return array
      */     
-    var comments = StrictParser.XmlArea.extractAllComments(xmlStr); 
+    var comments = PatternDreamer.XmlArea.extractAllComments(xmlStr); 
 ```
 ###### console.log() 
 ``` javascript

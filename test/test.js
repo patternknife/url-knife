@@ -1,4 +1,4 @@
-var StrictParser = function (u) {
+var PatternDreamer = function (u) {
     function e(A) {
         if (t[A]) return t[A].exports;
         var r = t[A] = {exports: {}, id: A, loaded: !1};
@@ -27,7 +27,7 @@ var StrictParser = function (u) {
 
     function t() {
         var u = Error.apply(this, arguments);
-        u.name = this.name = "StrictParserError", this.message = u.message, Object.defineProperty ? Object.defineProperty(this, "stack", {
+        u.name = this.name = "PatternDreamerError", this.message = u.message, Object.defineProperty ? Object.defineProperty(this, "stack", {
             get: function () {
                 return u.stack
             }, configurable: !0

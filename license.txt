@@ -1,5 +1,5 @@
-strict-parser
-https://github.com/Andrew-Kang-G/strict-parser
+pattern-dreamer
+https://github.com/Andrew-Kang-G/pattern-dreamer
 
 The MIT License (MIT)
 

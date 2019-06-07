@@ -113,7 +113,7 @@
 </style>
 
 <body>
-
+<h3>This is the tester for parsing capability, not a 'text-edtior'. In case that there are issues with colored parts, check 'console.log' first.</h3>
 <!-- 1. TextArea -->
 <h3>1. TextArea (recommended)</h3>
 <div class="container">
@@ -130,11 +130,12 @@
 <h3>2. ContentEditable</h3>
 <div id="ta" contenteditable="true" style="margin-top: 3%"></div>
 
-<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="../dist/strict-parser.bundle.js"></script>
+<script class="jsbin" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../dist/pattern-dreamer.bundle.js"></script>
 <script type="text/javascript">
 
-    // 1. TextArea - All tags are just string
+
+    // 1. TextArea (URL) - All tags are just string
     var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
@@ -148,11 +149,16 @@
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
 
-    //2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
+    // 1.2  TextArea (URI) - All tags are just string
+    var textStr1 = '/kabc/def abc/def abc/def?a=5 /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+        'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
+
+    // 2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
+
 
     // This is a sample of ##### 4. XML (HTML) (README.md)
     var xmlStr =
@@ -204,7 +210,7 @@
         });
 
 
-        let tg = StrictParser.TextEditorArea.addClassToAllUrls(text, 'highlighted1');
+        let tg = PatternDreamer.TextEditorArea.addClassToAllUrls(text, 'highlighted1');
 
         console.log(tg);
 
@@ -328,17 +334,20 @@
 
     start();
 
-/*    console.log('final_1 : ' + JSON.stringify(StrictParser.XmlArea.extractAllComments(xmlStr), null, 2));
-    console.log('final_2 : ' + JSON.stringify(StrictParser.XmlArea.extractAllElements(xmlStr), null, 2));*/
+/*    console.log('final_1 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllComments(xmlStr), null, 2));
+    console.log('final_2 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllElements(xmlStr), null, 2));*/
+    console.log('final_3_3 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
 
-    console.log('final_3 : ' + JSON.stringify(StrictParser.XmlArea.extractAllUrls(xmlStr), null, 2));
-    console.log('final_3_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllUrls(textStr), null, 2));
-    console.log('final_3_2 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl(1), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(StrictParser.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
+/*    console.log('final_3 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllUrls(xmlStr), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllUrls(textStr), null, 2));
+    //console.log('final_3_2 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl(1), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
 
-    console.log('final_4 : ' + JSON.stringify(StrictParser.XmlArea.extractAllEmails(xmlStr), null, 2));
-    console.log('final_4_1 : ' + JSON.stringify(StrictParser.TextArea.extractAllEmails(textStr), null, 2));
+    console.log('final_4 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllEmails(xmlStr), null, 2));
+    console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, false), null, 2));*/
+
 
     end();
 
@@ -352,7 +361,7 @@
             let tg = this.innerHTML;
             var ele = document.getElementById('ta');
 
-            let temp = StrictParser.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
+            let temp = PatternDreamer.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
             //console.log('re : ' + textStr);
             var position = getCaretCharacterOffsetWithin(ele);
 
@@ -376,7 +385,7 @@
 
 
         //2. ContentEditable
-        let ts = StrictParser.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
+        let ts = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
         $("#ta").html(ts);
 
 

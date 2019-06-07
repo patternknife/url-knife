@@ -1,7 +1,7 @@
 /*
 *
 *
-*   -- Strict-parser --
+*   -- Pattern-dreamer --
 *
 *   Copyright (c) 2019 Andrew Kang
 *
@@ -31,6 +31,6 @@
 
 * */
 
-import StrictParser from './controller';
+import PatternDreamer from './controller';
 
-export default StrictParser;
+export default PatternDreamer;

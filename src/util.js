@@ -1,6 +1,9 @@
 /*
 *     Private : Utils
 * */
+import Valid from "./valid";
+import {ValidationError} from './error-handler';
+
 const Text = {
 
     /* args - st : 대상 스트링, index : replacement가 삽입될 위치, replacement : 바뀌어지는 스트링 */
@@ -42,6 +45,41 @@ const Text = {
         obj['endIndex'] = endIndex;
 
         return obj;
+    },
+
+    urisToOne(uris){
+
+        let re = '';
+
+        for(let a=0; a < uris.length; a++){
+
+            let re_partial = '';
+            for(let b=0; b < uris[a].length; b++){
+
+                if (!(uris[a][b] && typeof uris[a][b] === 'string')) {
+                    throw new ValidationError('A value not in a string type has been found : ' + uris[a][b] + ' / loc in for clause : a=' + a + ' / b=' + b);
+                }
+
+                uris[a][b] = this.removeAllSpaces(uris[a][b]);
+
+                if(b < uris[a].length - 1){
+                    re_partial +=  uris[a][b] + '/';
+                }else{
+                    re_partial +=  uris[a][b];
+                }
+
+            }
+
+            if(a < uris.length - 1){
+                re +=  this.escapeRegex(re_partial) + '|';
+            }else{
+                re +=  this.escapeRegex(re_partial);
+            }
+
+        }
+
+        return re;
+
     }
 
 };
