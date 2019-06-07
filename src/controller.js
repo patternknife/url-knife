@@ -1,7 +1,7 @@
 import Jquery from 'jquery';
 
 
-import {ValidationError} from './error-handler';
+import ValidationError from './error-handler';
 
 import Util from './util';
 import Rx from './rx';

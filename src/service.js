@@ -1,5 +1,5 @@
 import Rx from './rx';
-import {ValidationError} from './error-handler';
+import ValidationError from './error-handler';
 import Valid from './valid';
 import Util from './util';
 

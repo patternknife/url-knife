@@ -2,10 +2,10 @@
 
 ## Overview
 
-'Javascript URL, URI, Email parser using a powerful combination of regular expressions on XML, HTML or plain text'
+'Javascript URL, URI, Email parser using a powerful combination of regular expressions on XML, HTML or plain texts'
 
 We have been able to parse URLs with no protocol from texts. Now, from ver. 1.4.0, 
-we can parse certain URIs with no domain from texts. Check '3.1 Plain texts (CERTAIN URIs)'.
+we can parse certain URIs with no domain from texts. Check '3.1 Plain texts (Certain URIs)'.
 
 ## Installation
 
@@ -124,7 +124,7 @@ or
   "port": null
 }
  ```
-##### 3.1 Plain texts (CERTAIN URIs)
+##### 3.1 Plain texts (Certain URIs)
 
 ``` javascript
  var uris = PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]) 

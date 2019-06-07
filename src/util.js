@@ -2,7 +2,7 @@
 *     Private : Utils
 * */
 import Valid from "./valid";
-import {ValidationError} from './error-handler';
+import ValidationError from './error-handler';
 
 const Text = {
 

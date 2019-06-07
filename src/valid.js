@@ -1,4 +1,4 @@
-import {ValidationError} from './error-handler';
+import ValidationError from './error-handler';
 
 /*
 *     Private : Validation Check
