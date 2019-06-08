@@ -36,7 +36,7 @@ import PatternDreamer from 'pattern-dreamer';
 
     /* All Samples */
 
-    // A sample of 'Text editor(TextArea, URL) & Plain texts'
+    // The sample of 'Text editor(TextArea, URL) & Plain texts'
     // All of the urls below are detected except for 'fakeshouldnotbedetected.url?abc=fake' as the root domain 'url' does not exist in the world
     // and even it does not have any protocols.
     var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
@@ -51,17 +51,17 @@ import PatternDreamer from 'pattern-dreamer';
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
         
-   // A sample of 'Text editor(TextArea, URI) & Plain texts'
+   // The sample of 'Text editor(TextArea, URI)'
     var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
                 'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
 
-    // A sample of 'Text editor(ContentEditable)' 
+    // The sample of 'Text editor(ContentEditable)' 
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
 
-    // A sample of 'XML (HTML)'
+    // The sample of 'XML (HTML)'
     var xmlStr =
         'en.wikipedia.org/wiki/Wikipedia:About\n' +
         '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +

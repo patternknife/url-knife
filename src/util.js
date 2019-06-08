@@ -3,6 +3,7 @@
 * */
 import Valid from "./valid";
 import ValidationError from './error-handler';
+import Rx from './rx';
 
 const Text = {
 
@@ -61,6 +62,9 @@ const Text = {
                 }
 
                 uris[a][b] = this.removeAllSpaces(uris[a][b]);
+                if(new RegExp('^' + Rx.Ancestors.no_lang_char_num, 'gi').test(uris[a][b])){
+                    throw new ValidationError('First letter must not be meta chars : not valid : ' + uris[a][b]);
+                }
 
                 if(b < uris[a].length - 1){
                     re_partial +=  uris[a][b] + '/';

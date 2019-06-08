@@ -105,7 +105,7 @@ const Text = {
             throw new ValidationError('the variable uris are not available');
         }
 
-        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\b|\\b)' + '(?:'+ uri_ptrn + ')' + Rx.Ancestors.url_params_or_not;
+        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|\\/|\\b)' + '(?:'+ uri_ptrn + ')' + Rx.Ancestors.url_params_or_not;
 
 
        // console.log('escaped_uri_ptrn : ' + uri_ptrn);
