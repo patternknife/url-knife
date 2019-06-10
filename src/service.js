@@ -99,16 +99,20 @@ const Text = {
 
         let uri_ptrn = Util.Text.urisToOne(uris);
 
-       // console.log('uri_ptrn : ' + uri_ptrn);
+        // console.log('uri_ptrn : ' + uri_ptrn);
 
-        if(!uri_ptrn){
+        if (!uri_ptrn) {
             throw new ValidationError('the variable uris are not available');
         }
 
-        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|\\/|\\b)' + '(?:'+ uri_ptrn + ')' + Rx.Ancestors.url_params_or_not;
+        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|'+
+            '(?:[0-9]|' + Rx.Ancestors.two_bytes_num + '|' + Rx.Ancestors.lang_char + ')'
+            +'[^/\\n\\r\\t\\s]*(?:[0-9]|' + Rx.Ancestors.two_bytes_num + '|' + Rx.Ancestors.lang_char + ')'
+            + '\\/|\\/|\\b)' +
+            '(?:' + uri_ptrn + ')' + Rx.Ancestors.url_params_or_not;
 
 
-       // console.log('escaped_uri_ptrn : ' + uri_ptrn);
+        // console.log('escaped_uri_ptrn : ' + uri_ptrn);
 
         let obj = [];
 
@@ -174,7 +178,9 @@ const Url = {
             url = Util.Text.removeAllSpaces(url);
 
 
-            Valid.failIfNotUrlPtrn(url);
+            if(!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)){
+                throw new ValidationError('This is neither an url nor an uri.');
+            }
 
 
             // 1. full url
@@ -242,6 +248,10 @@ const Url = {
             }
             url = url.replace(rx2, '');
 
+           if (obj['onlyUri'] === "/") {
+                obj['onlyUri'] = null;
+            }
+
             // 6.
             let onlyUri = obj['onlyUri'];
             let onlyParams = obj['onlyParams'];
@@ -280,7 +290,7 @@ const Url = {
 
 
             // 10. type : domain, ip, localhost
-            if (/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/.test(url)) {
+            if (new RegExp('^' + Rx.Ancestors.ip_v4, 'i').test(url)) {
                 obj['type'] = 'ip';
             } else if (/^localhost/i.test(url)) {
                 obj['type'] = 'localhost';
@@ -299,7 +309,46 @@ const Url = {
                     obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                 }
 
+            }else if(obj['onlyUri'] !== null && obj['onlyParams'] === null){
+
+                let rm_part_matches = new RegExp('\\/([^/\\n\\r\\t\\s]+?)(' + Rx.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
+
+                //console.log(obj['url'] + ' : ' + rm_part_matches[1]);
+
+                if (rm_part_matches) {
+                    if(rm_part_matches[1]){
+                        if(!new RegExp(Rx.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
+                            if(rm_part_matches[2]) {
+                                obj['removedTailOnUrl'] = rm_part_matches[2];
+                                obj['removedTailOnUrl'] = rm_part_matches[2];
+                                obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                            }
+                        }
+                    }
+
+                }
+
+            }else if(obj['onlyParams'] !== null){
+
+                let rm_part_matches = new RegExp('\\=([^=\\n\\r\\t\\s]+?)(' + Rx.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
+
+  /*              console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
+                console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
+
+                if (rm_part_matches) {
+                    if(rm_part_matches[1]){
+                        if(!new RegExp(Rx.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
+                            if(rm_part_matches[2]) {
+                                obj['removedTailOnUrl'] = rm_part_matches[2];
+                                obj['removedTailOnUrl'] = rm_part_matches[2];
+                                obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                            }
+                        }
+                    }
+
+                }
             }
+
 
 
             // If no uri no params, we remove suffix in case that it is non-alphabets.
@@ -343,18 +392,23 @@ const Url = {
             }
 
             // 12. uri like 'abc/def'
-            if(!new RegExp('^' + Rx.Ancestors.all_protocols + '|\\.' + Rx.Ancestors.all_root_domains + '\\/|\\?','gi').test(obj['onlyDomain'])){
+            //if(!new RegExp('^' + Rx.Ancestors.all_protocols + '|\\.' + Rx.Ancestors.all_root_domains + '\\/|\\?','gi').test(obj['onlyDomain'])){
+
+            if (!new RegExp(Rx.Children.url, 'gi').test(obj['url'])) {
 
                 obj['onlyDomain'] = null;
                 obj['type'] = 'uri';
 
-                if(!/^[/]/.test(obj['url'])) {
+                if (!/^[/]/.test(obj['url'])) {
 
                     obj['onlyUriWithParams'] = obj['url'];
                     obj['onlyUri'] = obj['url'].replace(/\?[^/]*$/gi, '');
                 }
-
             }
+
+
+
+            //}
 
         } catch (e) {
 

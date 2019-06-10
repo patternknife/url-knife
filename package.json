@@ -1,6 +1,6 @@
 {
   "name": "pattern-dreamer",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Javascript URL, URI, Email parser using a powerful combination of regular expressions on XML, HTML or plain texts",
   "main": "src/entry.js",
   "scripts": {

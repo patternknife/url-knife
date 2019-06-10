@@ -62,8 +62,10 @@ const Text = {
                 }
 
                 uris[a][b] = this.removeAllSpaces(uris[a][b]);
-                if(new RegExp('^' + Rx.Ancestors.no_lang_char_num, 'gi').test(uris[a][b])){
-                    throw new ValidationError('First letter must not be meta chars : not valid : ' + uris[a][b]);
+                if(b === 0) {
+                    if (new RegExp('^' + Rx.Ancestors.no_lang_char_num, 'i').test(uris[a][b])) {
+                        throw new ValidationError('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
+                    }
                 }
 
                 if(b < uris[a].length - 1){

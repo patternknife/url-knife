@@ -1,4 +1,5 @@
 import ValidationError from './error-handler';
+import Rx from './rx';
 
 /*
 *     Private : Validation Check
@@ -21,18 +22,32 @@ const Valid = {
 
     },
 
-    failIfNotUrlPtrn(v) {
+    isUrlPattern(v) {
 
-        v = this.checkAndTrimStr(v);
+        //v = this.checkAndTrimStr(v);
 
-        if (/\?\//.test(v)) {
-
+/*        if (/\?\//.test(v)) {
             throw new ValidationError('?/ is a wrong url pattern.');
+        }*/
 
+        if(!new RegExp('^' + Rx.Children.url ,'gi').test(v)){
+           return false;
         }
 
+        return true
 
-    }
+    },
+    isUriPattern(v) {
+
+        //v = this.checkAndTrimStr(v);
+
+        if(!new RegExp('^' + Rx.Descendants.all_uris ,'gi').test(v)){
+            return false;
+        }
+
+        return true
+
+    },
 
 };
 

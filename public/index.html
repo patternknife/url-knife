@@ -127,8 +127,8 @@
 <button>Toggle Perspective</button>
 
 <!-- 2. ContentEditable -->
-<h3>2. ContentEditable</h3>
-<div id="ta" contenteditable="true" style="margin-top: 3%"></div>
+<!--<h3>2. ContentEditable</h3>
+<div id="ta" contenteditable="true" style="margin-top: 3%"></div>-->
 
 <script class="jsbin" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="../dist/pattern-dreamer.bundle.js"></script>
@@ -136,7 +136,7 @@
 
 
     // 1. TextArea (URL) - All tags are just string
-    var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
+    var textStr = '"http ://www.example.com/wpstyle/?p=364" is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
         'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
@@ -146,11 +146,11 @@
         'https://foo_bar.example.com에서 만나요. \n' +
         'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk... ';
 
 
     // 1.2  TextArea (URI) - All tags are just string
-    var textStr1 = '#abc/def "fggffg/abc/def" "abc/def?a=5" /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+    var textStr1 = '#abc/def., "fggffg/abc/def.," "abc/def?a=5" /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
         'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
 
     // 2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
@@ -337,7 +337,7 @@
 /*    console.log('final_1 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllComments(xmlStr), null, 2));
     console.log('final_2 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllElements(xmlStr), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
-    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
+    //console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
 
 /*
     console.log('final_3 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllUrls(xmlStr), null, 2));
@@ -349,13 +349,15 @@
     console.log('final_4 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllEmails(xmlStr), null, 2));
     console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, false), null, 2));
 */
+    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("goasidaio.ac.kr?abd=5hell0?5...&kkk=rk.,.."), null, 2));
 
 
     end();
 
 
     //2. ContentEditable
-    $('#ta').on("propertychange paste input", function (e) {
+/*    $('#ta').on("propertychange paste input", function (e) {
 
         // ContentEditable
         if ($(this).text() != $(this).attr("origin")) {
@@ -373,7 +375,7 @@
 
         }
 
-    });
+    });*/
 
 
     $(function () {
@@ -387,8 +389,8 @@
 
 
         //2. ContentEditable
-        let ts = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
-        $("#ta").html(ts);
+/*        let ts = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
+        $("#ta").html(ts);*/
 
 
     })
