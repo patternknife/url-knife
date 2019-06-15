@@ -2,7 +2,9 @@
 
 ## Overview
 
-'Javascript URL, URI, Email parser using a powerful combination of regular expressions on XML, HTML or plain texts'
+Pattern-dreamer's dream is always to get certain patterns(URL, URI, e-mail...) most without false positives in a string.
+
+From ver. 1.5.5, the 'protocol://ip_v6' URL type is now available to be extracted. 
 
 We have been able to parse URLs with no protocol from texts. Now, from ver. 1.4.0, 
 we can parse certain URIs with no domain from texts. Check '3.1 Plain texts (Certain URIs)'.
@@ -32,14 +34,14 @@ import PatternDreamer from 'pattern-dreamer';
 
 ## Syntax & Usage
 
+
+#### Chapter 1. Get URLs, URIs in whatever situations !
+
+##### 1. Text editor
+  
 ``` javascript
 
-    /* All Samples */
-
-    // The sample of 'Text editor(TextArea, URL) & Plain texts'
-    // All of the urls below are detected except for 'fakeshouldnotbedetected.url?abc=fake' as the root domain 'url' does not exist in the world
-    // and even it does not have any protocols.
-    var textStr = 'http ://www.example.com/wpstyle/?p=364 is ok \n' +
+var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
         'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
@@ -51,48 +53,7 @@ import PatternDreamer from 'pattern-dreamer';
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
         
-   // The sample of 'Text editor(TextArea, URI)'
-    var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
-                'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
-
-    // The sample of 'Text editor(ContentEditable)' 
-    var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
-
-    // The sample of 'XML (HTML)'
-    var xmlStr =
-        'en.wikipedia.org/wiki/Wikipedia:About\n' +
-        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
-        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
-        'plus.google.co.kr0에서.., \n' +
-        'https://plus.google.com/+google\n' +
-        'https://www.google.com/maps/place/USA/@36.2218457,...' +
-        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
-        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
-        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
-        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
-        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
-        
-```
-
-#### Chapter 1. Parse URLs, URIs in whatever situations !
-
-##### 1. Text editor
-  
-``` javascript
-
-    /**
-     * @brief
-     * Distill all urls from normal text, tags, comments in html
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param clsName string required
-     * @param contentEditableMode boolean default false
-     * @return string
-     */
- var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
+var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
  ```
 
 You can check how url patterns are highlighted by running the sample source below.
@@ -105,7 +66,7 @@ or
 ##### 2. One url
   
 ``` javascript
- var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
+var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
  ```
  ###### console.log() 
  ``` javascript
@@ -127,11 +88,16 @@ or
 ##### 3.1 Plain texts (Certain URIs)
 
 ``` javascript
+
+var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+                'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
+                
  var uris = PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]) 
  // This detects all URIs containing 'nice/guy' or 'abc/def'
  ```
  ###### console.log() 
  ``` javascript
+ .... // Not all listed
 [
   {
     "uri_detected": {
@@ -322,144 +288,129 @@ or
 ##### 3.2 Plain texts (URL)
 
 ``` javascript
+    var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
+        'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
+        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+        'http://✪df.ws/123\n' +
+        'http://142.42.1.1:8080/\n' +
+        'https://foo_bar.example.com에서 만나요. \n' +
+        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
+        'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+        
  var urls = PatternDreamer.TextArea.extractAllUrls(textStr),
  ```
  ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
  ``` javascript
  [
- .... // List some of all detected ones
-   {
-     "value": {
-       "url": "HTTP://foo.com/blah_blah_(wikipedia)",
-       "removedTailOnUrl": "",
-       "protocol": "HTTP",
-       "onlyDomain": "foo.com",
-       "onlyParams": null,
-       "onlyUri": "/blah_blah_(wikipedia)",
-       "onlyUriWithParams": "/blah_blah_(wikipedia)",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 45,
-       "end": 81
-     }
-   },
-   {
-     "value": {
-       "url": "https://www.google.com/maps/place/USA/@36.2218457,...",
-       "removedTailOnUrl": "",
-       "protocol": "https",
-       "onlyDomain": "www.google.com",
-       "onlyParams": null,
-       "onlyUri": "/maps/place/USA/@36.2218457,...",
-       "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 82,
-       "end": 135
-     }
-   },
-   {
-     "value": {
-       "url": "packed1book.net",
-       "removedTailOnUrl": ".",
-       "protocol": null,
-       "onlyDomain": "packed1book.net.",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 184,
-       "end": 200
-     }
-   },
-   {
-     "value": {
-       "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>;",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "s5houl７十七日dbedetected.jp",
-       "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
-       "onlyUri": null,
-       "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
-       "onlyParamsJsn": {
-         "japan": "go",
-         "html": "<span>가나다@pacbook.net</span>;"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 238,
-       "end": 306
-     }
-   },
-   {
-     "value": {
-       "url": "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.comHave",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "-.~_!$&'()*+,;=:%40:80%2f::::::@example.comHave",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 582,
-       "end": 636
-     }
-   },
-   {
-     "value": {
-       "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,.",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "goasidaio.ac.kr",
-       "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
-       "onlyUri": null,
-       "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
-       "onlyParamsJsn": {
-         "abd": "5hell0?5...",
-         "kkk": "5rk.,."
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text",
-     "index": {
-       "start": 656,
-       "end": 698
-     }
-   }
+ // `Not all listed`
+  {
+    "value": {
+      "url": "http://[::1]:8000",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "[::1]",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "ip_v6",
+      "port": "8000"
+    },
+    "area": "text",
+    "index": {
+      "start": 0,
+      "end": 17
+    }
+  },
+  {
+    "value": {
+      "url": "http://www.example.com/wpstyle/?p=364",
+      "removedTailOnUrl": "\"",
+      "protocol": "http",
+      "onlyDomain": "www.example.com",
+      "onlyParams": "?p=364\"",
+      "onlyUri": "/wpstyle/",
+      "onlyUriWithParams": "/wpstyle/?p=364\"",
+      "onlyParamsJsn": {
+        "p": "364\""
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 21,
+      "end": 60
+    }
+  },
+  {
+    "value": {
+      "url": "HTTP://foo.com/blah_blah_(wikipedia)",
+      "removedTailOnUrl": "",
+      "protocol": "HTTP",
+      "onlyDomain": "foo.com",
+      "onlyParams": null,
+      "onlyUri": "/blah_blah_(wikipedia)",
+      "onlyUriWithParams": "/blah_blah_(wikipedia)",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 68,
+      "end": 104
+    }
+  },
+  {
+    "value": {
+      "url": "https://www.google.com/maps/place/USA/@36.2218457,...",
+      "removedTailOnUrl": "",
+      "protocol": "https",
+      "onlyDomain": "www.google.com",
+      "onlyParams": null,
+      "onlyUri": "/maps/place/USA/@36.2218457,...",
+      "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null,
+    },
+    "area": "text",
+    "index": {
+      "start": 105,
+      "end": 158
+    }
+  }
+....
 ....
  ]
 ```
 ##### 5. XML (HTML)
 
 ``` javascript
- var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);    
+    // The sample of 'XML (HTML)'
+var xmlStr =
+        'en.wikipedia.org/wiki/Wikipedia:About\n' +
+        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
+        'plus.google.co.kr0에서.., \n' +
+        'https://plus.google.com/+google\n' +
+        'https://www.google.com/maps/place/USA/@36.2218457,...' +
+        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
+        
+var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);    
 ```
 ###### console.log()
 ``` javascript
  [
-  .... // List some of all detected ones
+// Not all listed
      {
        "value": {
          "url": "packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk",
@@ -573,55 +524,6 @@ or
        "port": null
      },
      "area": "text"
-   },
-   {
-     "value": {
-       "url": "s5houl７十七日dbedetected.jp?japan=go-",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "s5houl７十七日dbedetected.jp",
-       "onlyParams": "?japan=go-",
-       "onlyUri": null,
-       "onlyUriWithParams": "?japan=go-",
-       "onlyParamsJsn": {
-         "japan": "go-"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "plus.google.co.kr",
-       "removedTailOnUrl": "0에서..,",
-       "protocol": null,
-       "onlyDomain": "plus.google.co.kr0에서..,",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
-   },
-   {
-     "value": {
-       "url": "gigi.dau.ac.kr?mac=10",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "gigi.dau.ac.kr",
-       "onlyParams": "?mac=10",
-       "onlyUri": null,
-       "onlyUriWithParams": "?mac=10",
-       "onlyParamsJsn": {
-         "mac": "10"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
    }
     .....
  ]
@@ -693,16 +595,21 @@ var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
 
 ##### 1. Elements
 ``` javascript
-        /**
-         *
-         * @brief
-         * Distill all opening tags with each 'elementName'.
-         * @author Andrew Kang
-         * @param xmlStr string required
-         * @return array
-         *
-         */
-    var elements = PatternDreamer.XmlArea.extractAllElements(xmlStr);   
+
+var xmlStr =
+        'en.wikipedia.org/wiki/Wikipedia:About\n' +
+        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
+        'plus.google.co.kr0에서.., \n' +
+        'https://plus.google.com/+google\n' +
+        'https://www.google.com/maps/place/USA/@36.2218457,...' +
+        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
+        
+var elements = PatternDreamer.XmlArea.extractAllElements(xmlStr);   
 ```
 ###### console.log() 
 ``` javascript
@@ -824,14 +731,21 @@ var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
  
 ##### 2. Comments
 ``` javascript
-    /**
-     * @brief
-     * Distill all comments.
-     * @author Andrew Kang
-     * @param xmlStr string required
-     * @return array
-     */     
-    var comments = PatternDreamer.XmlArea.extractAllComments(xmlStr); 
+
+var xmlStr =
+        'en.wikipedia.org/wiki/Wikipedia:About\n' +
+        '<body><p>packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk</p>\n' +
+        'fakeshouldnotbedetected.url?abc=fake -s5houl７十七日dbedetected.jp?japan=go- ' +
+        'plus.google.co.kr0에서.., \n' +
+        'https://plus.google.com/+google\n' +
+        'https://www.google.com/maps/place/USA/@36.2218457,...' +
+        '<img style=\' = > float : none ; height: 200px;max-width: 50%;margin-top : 3%\' alt="undefined" src="http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png"/>\n' +
+        '<!--how about adackedbooked.co.kr-the site?  请发邮件给我abc件给@navered.com ssh://www.aaa가.com" <p >--邮件给aa件给@daum.net</p> www.naver.com\n  <p style="width: 100%"></p>-->  "abc@daum.net"로 보내주세요. ' +
+        '-gigi.dau.ac.kr?mac=10 -dau.ac.kr?mac=10 <p id="abc" class="def xxx gh" style="<>">abcd@daum.co.kr에서 가나다@pacbook.net<span style="color: rgb(127,127,127);">Please align the paper to the left.</span>&nbsp;</p>\n' +
+        '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
+        'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
+           
+var comments = PatternDreamer.XmlArea.extractAllComments(xmlStr); 
 ```
 ###### console.log() 
 ``` javascript

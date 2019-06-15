@@ -289,9 +289,13 @@ const Url = {
             obj['onlyDomain'] = url;
 
 
+
             // 10. type : domain, ip, localhost
             if (new RegExp('^' + Rx.Ancestors.ip_v4, 'i').test(url)) {
                 obj['type'] = 'ip';
+            }else if (new RegExp('^' + Rx.Ancestors.ip_v6, 'i').test(url)) {
+                //console.log('r : ' + url);
+                obj['type'] = 'ip_v6';
             } else if (/^localhost/i.test(url)) {
                 obj['type'] = 'localhost';
             } else {
@@ -299,14 +303,38 @@ const Url = {
             }
 
 
-            // If no params, we remove suffix in case that it is a meta character.
+            // If no uris no params, we remove suffix in case that it is a meta character.
             if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 
-                // removedTailOnUrl
-                let rm_part_matches = obj['url'].match(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'));
-                if (rm_part_matches) {
-                    obj['removedTailOnUrl'] = rm_part_matches[0];
-                    obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                if(obj['type'] !== 'ip_v6') {
+                    // removedTailOnUrl
+                    let rm_part_matches = obj['url'].match(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'));
+                    if (rm_part_matches) {
+                        obj['removedTailOnUrl'] = rm_part_matches[0];
+                        obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                    }
+                }else{
+
+                    if(obj['port'] === null) {
+
+                        // removedTailOnUrl
+                        let rm_part_matches = obj['url'].match(new RegExp('[^\\u005D]+$', 'gi'));
+                        if (rm_part_matches) {
+                            obj['removedTailOnUrl'] = rm_part_matches[0];
+                            obj['url'] = obj['url'].replace(new RegExp('[^\\u005D]+$', 'gi'), '');
+                        }
+
+                    }else{
+
+                        // removedTailOnUrl
+                        let rm_part_matches = obj['url'].match(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'));
+                        if (rm_part_matches) {
+                            obj['removedTailOnUrl'] = rm_part_matches[0];
+                            obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                        }
+                    }
+
+
                 }
 
             }else if(obj['onlyUri'] !== null && obj['onlyParams'] === null){
@@ -350,50 +378,53 @@ const Url = {
             }
 
 
-
             // If no uri no params, we remove suffix in case that it is non-alphabets.
-            if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
+            // The regex below means "all except for '.'". It is for extracting all root domains, so non-domain types like ip are excepted.
+            if(obj['type'] === 'domain') {
 
-                if (obj['port'] === null) {
-                    // this is a domain with no uri no params
-                    let onlyEnd = obj['url'].match(new RegExp('[^.]+$', 'gi'));
-                    if (onlyEnd && onlyEnd.length > 0) {
+                if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 
-                        // this is a root domain like com, ac
-                        if (/[a-zA-Z]/.test(onlyEnd[0])) {
-                            if (/[^a-zA-Z]+$/.test(obj['url'])) {
+                    if (obj['port'] === null) {
 
-                                // remove non alphabets
-                                obj['removedTailOnUrl'] = obj['url'].match(/[^a-zA-Z]+$/)[0] + obj['removedTailOnUrl'];
-                                obj['url'] = obj['url'].replace(/[^a-zA-Z]+$/, '');
+                        let onlyEnd = obj['url'].match(new RegExp('[^.]+$', 'gi'));
+                        if (onlyEnd && onlyEnd.length > 0) {
+
+                            // this is a root domain only in English like com, ac
+                            // but the situation is like com가, ac나
+                            if (/^[a-zA-Z]+/.test(onlyEnd[0])) {
+
+                                if (/[^a-zA-Z]+$/.test(obj['url'])) {
+
+                                    // remove non alphabets
+                                    obj['removedTailOnUrl'] = obj['url'].match(/[^a-zA-Z]+$/)[0] + obj['removedTailOnUrl'];
+                                    obj['url'] = obj['url'].replace(/[^a-zA-Z]+$/, '');
+                                }
                             }
+
                         }
+                    } else {
+                        // this is a domain with no uri no params
+                        let onlyEnd = obj['url'].match(new RegExp('[^:]+$', 'gi'));
+                        if (onlyEnd && onlyEnd.length > 0) {
 
-                    }
-                } else {
-                    // this is a domain with no uri no params
-                    let onlyEnd = obj['url'].match(new RegExp('[^:]+$', 'gi'));
-                    if (onlyEnd && onlyEnd.length > 0) {
+                            // this is a port num like 8000
+                            if (/[0-9]/.test(onlyEnd[0])) {
+                                if (/[^0-9]+$/.test(obj['url'])) {
 
-                        // this is a port num like 8000
-                        if (/[0-9]/.test(onlyEnd[0])) {
-                            if (/[^0-9]+$/.test(obj['url'])) {
-
-                                // remove non numbers
-                                obj['removedTailOnUrl'] = obj['url'].match(/[^0-9]+$/)[0] + obj['removedTailOnUrl'];
-                                obj['url'] = obj['url'].replace(/[^0-9]+$/, '');
+                                    // remove non numbers
+                                    obj['removedTailOnUrl'] = obj['url'].match(/[^0-9]+$/)[0] + obj['removedTailOnUrl'];
+                                    obj['url'] = obj['url'].replace(/[^0-9]+$/, '');
+                                }
                             }
+
                         }
 
                     }
 
                 }
-
             }
-
             // 12. uri like 'abc/def'
             //if(!new RegExp('^' + Rx.Ancestors.all_protocols + '|\\.' + Rx.Ancestors.all_root_domains + '\\/|\\?','gi').test(obj['onlyDomain'])){
-
             if (!new RegExp(Rx.Children.url, 'gi').test(obj['url'])) {
 
                 obj['onlyDomain'] = null;
@@ -405,7 +436,6 @@ const Url = {
                     obj['onlyUri'] = obj['url'].replace(/\?[^/]*$/gi, '');
                 }
             }
-
 
 
             //}
