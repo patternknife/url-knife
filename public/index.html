@@ -114,7 +114,15 @@
 
 <body>
 <h3>This is the tester for parsing capability, not a 'text-edtior'. In case that there are issues with colored parts, check 'console.log' first.</h3>
+<h4> !!IMPORTANT <br>
+    The sample below is set to {
+    'ip_v4' : true,
+    'ip_v6' : true,
+    'localhost' : true,
+    'intranet' : false
+    }, but the default is all 'false'.</h4>
 <!-- 1. TextArea -->
+<h5>(In case of "noProtocolJsn['intranet']", some false positives can be caused)</h5>
 <h3>1. TextArea (recommended)</h3>
 <div class="container">
     <div class="backdrop">
@@ -135,10 +143,11 @@
 <script type="text/javascript">
 
 
-    // 1. TextArea (URL) - All tags are just string
-    var textStr = 'http://[::1]:8000에서 "http ://www.example.com/wpstyle/?p=364" is ok \n' +
+    // TextArea (URL) - All tags are just string
+    var textStr = 'If you visit "192.179.3.5?abc=2"..  \n' +
+        ' http://[::1]:8000에서 http://[::1]]] fakeshouldnotbedetected.urld?abc=fake "http ://www.example.com/wpstyle/?p=364" is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+        'the packed1book.net. s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
         'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'http://✪df.ws/123\n' +
@@ -210,7 +219,12 @@
         });
 
 
-        let tg = PatternDreamer.TextEditorArea.addClassToAllUrls(text, 'highlighted1');
+        let tg = PatternDreamer.TextEditorArea.addClassToAllUrls(text, 'highlighted1', false, {
+            'ip_v4' : true,
+            'ip_v6' : true,
+            'localhost' : true,
+            'intranet' : false
+        });
 
         console.log(tg);
 
@@ -349,7 +363,12 @@
     console.log('final_4 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllEmails(xmlStr), null, 2));
     console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, false), null, 2));
 */
-    console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllUrls(textStr), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllUrls(textStr, {
+        'ip_v4' : true,
+        'ip_v6' : false,
+        'localhost' : false,
+        'intranet' : true
+    }), null, 2));
     console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
     console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("goasidaio.ac.kr?abd=5hell0?5...&kkk=rk.,.."), null, 2));
 

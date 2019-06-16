@@ -1,5 +1,5 @@
 import ValidationError from './error-handler';
-import Rx from './rx';
+import Pattern from './pattern';
 
 /*
 *     Private : Validation Check
@@ -30,7 +30,7 @@ const Valid = {
             throw new ValidationError('?/ is a wrong url pattern.');
         }*/
 
-        if(!new RegExp('^' + Rx.Children.url ,'gi').test(v)){
+        if(!new RegExp('^' + Pattern.Children.url ,'gi').test(v)){
            return false;
         }
 
@@ -41,7 +41,7 @@ const Valid = {
 
         //v = this.checkAndTrimStr(v);
 
-        if(!new RegExp('^' + Rx.Descendants.all_uris ,'gi').test(v)){
+        if(!new RegExp('^' + Pattern.Descendants.all_uris ,'gi').test(v)){
             return false;
         }
 

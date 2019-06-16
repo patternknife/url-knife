@@ -3,7 +3,7 @@
 * */
 import Valid from "./valid";
 import ValidationError from './error-handler';
-import Rx from './rx';
+import Pattern from './pattern';
 
 const Text = {
 
@@ -63,7 +63,7 @@ const Text = {
 
                 uris[a][b] = this.removeAllSpaces(uris[a][b]);
                 if(b === 0) {
-                    if (new RegExp('^' + Rx.Ancestors.no_lang_char_num, 'i').test(uris[a][b])) {
+                    if (new RegExp('^' + Pattern.Ancestors.no_lang_char_num, 'i').test(uris[a][b])) {
                         throw new ValidationError('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
                     }
                 }

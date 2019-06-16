@@ -4,7 +4,7 @@ import Jquery from 'jquery';
 import ValidationError from './error-handler';
 
 import Util from './util';
-import Rx from './rx';
+import Pattern from './pattern';
 import Service from './service';
 
 import Valid from './valid';
@@ -98,13 +98,22 @@ const XmlArea = {
      * @author Andrew Kang
      * @param xmlStr string required
      * @param skipXml boolean (default : false)
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
      * @return array
      */
-    extractAllUrls(xmlStr, skipXml = false) {
+    extractAllUrls(xmlStr, skipXml = false, noProtocolJsn) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
             throw new ValidationError('the variable xmlStr must be a string type and not be null.');
         }
+
+        Pattern.Children.setUrlPattern(noProtocolJsn);
 
         let obj = [];
 
@@ -116,7 +125,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(Rx.Children.url, 'gi');
+                let rx = new RegExp(Pattern.Children.url, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -146,7 +155,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(Rx.Children.url, 'gi');
+                let rx = new RegExp(Pattern.Children.url, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -175,10 +184,10 @@ const XmlArea = {
             }
 
             /* 3. Remove all comments */
-            xmlStr = xmlStr.replace(new RegExp(Rx.Descendants.xml_comment, 'gi'), '');
+            xmlStr = xmlStr.replace(new RegExp(Pattern.Descendants.xml_comment, 'gi'), '');
 
             /* 4. Remove all elements */
-            xmlStr = xmlStr.replace(new RegExp(Rx.Descendants.xml_element, "g"), '');
+            xmlStr = xmlStr.replace(new RegExp(Pattern.Descendants.xml_element, "g"), '');
 
 
         }
@@ -188,7 +197,7 @@ const XmlArea = {
         //console.log('xmlStr : ' + xmlStr);
 
         /* 5. normal text area */
-        let rx = new RegExp(Rx.Children.url, 'gi');
+        let rx = new RegExp(Pattern.Children.url, 'gi');
 
         let matches = [];
         let match = {};
@@ -250,7 +259,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(Rx.Descendants.all_emails, 'gi');
+                let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -300,7 +309,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(Rx.Descendants.all_emails, 'gi');
+                let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -348,16 +357,16 @@ const XmlArea = {
             }
 
             /* 3. Remove all comments */
-            xmlStr = xmlStr.replace(new RegExp(Rx.Descendants.xml_comment, 'gi'), '');
+            xmlStr = xmlStr.replace(new RegExp(Pattern.Descendants.xml_comment, 'gi'), '');
 
             /* 4. Remove all elements */
-            const elementRegex = '(?:' + Rx.Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
-            xmlStr = xmlStr.replace(new RegExp(Rx.Descendants.xml_element, "g"), '');
+            const elementRegex = '(?:' + Pattern.Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)';
+            xmlStr = xmlStr.replace(new RegExp(Pattern.Descendants.xml_element, "g"), '');
 
         }
 
         /* 5. normal text area */
-        let rx = new RegExp(Rx.Descendants.all_emails, 'gi');
+        let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
 
         let matches = [];
         let match = {};
@@ -413,9 +422,21 @@ const TextArea = {
      * Distill all urls from normal text
      * @author Andrew Kang
      * @param textStr string required
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
      * @return array
      */
-    extractAllUrls(textStr) {
+    extractAllUrls(textStr, noProtocolJsn) {
+
+        Pattern.Children.setUrlPattern(noProtocolJsn);
+
+        //console.log('a : ' + Pattern.Children.url);
 
         return Service.Text.extractAllPureUrls(textStr);
 
@@ -482,7 +503,7 @@ const TextArea = {
 
                     let sanitizedUrl = obj[a]['value']['url'];
 
-                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Rx.Ancestors.all_root_domains +  ')', 'gi');
+                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Pattern.Ancestors.all_root_domains +  ')', 'gi');
                     let matches = [];
                     let match = {};
 
@@ -532,15 +553,32 @@ const TextEditorArea = {
      * @param textStr string required
      * @param clsName string required
      * @param contentEditableMode boolean default false
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
      * @return string
      */
-    addClassToAllUrls(textStr, clsName, contentEditableMode) {
+    addClassToAllUrls(textStr, clsName, contentEditableMode, noProtocolJsn) {
+
+        if(noProtocolJsn && typeof noProtocolJsn === 'object' &&
+            noProtocolJsn['ip_v4'] && typeof noProtocolJsn['ip_v4'] === 'boolean'){
+
+            //throw new ValidationError('Not a noProtocolJsn object');
+
+        }
+
+        Pattern.Children.setUrlPattern(noProtocolJsn);
 
         if (!(textStr && typeof textStr === 'string')) {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
-        /* To apply the regex 'Rx.Children.url', make <div>,<br> a line return */
+        /* To apply the regex 'Pattern.Children.url', make <div>,<br> a line return */
         if (contentEditableMode && contentEditableMode === true) {
             //textStr = textStr.replace(/&nbsp;/gi, ' ');
             textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
@@ -560,46 +598,7 @@ const TextEditorArea = {
 
             //console.log(contentEditableMode + ' t1: ' + txt);
 
-            let obj = [];
-
-            /* normal text area */
-            let rx = new RegExp(Rx.Children.url, 'gi');
-
-            let matches = [];
-            let match = {};
-
-            while ((match = rx.exec(txt)) !== null) {
-
-                /* remove email patterns related to 'all_urls3_front' regex */
-                if (/^@/.test(match[0])) {
-                    continue;
-                }
-
-                let mod_val = match[0];
-
-                /* this can affect indexes so commented */
-                //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
-
-                let re = Service.Url.assortUrl(mod_val);
-                let st_idx = match.index;
-                let end_idx = match.index + match[0].length;
-
-
-                /* this part doesn't need to be highlighted */
-                if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
-                    end_idx -= re['removedTailOnUrl'].length;
-                }
-
-                obj.push({
-                    'value': re,
-                    'area': 'text',
-                    'index': {
-                        'start': st_idx,
-                        'end': end_idx
-                    }
-                });
-            }
-
+            let obj = Service.Text.extractAllPureUrls(txt);
             //console.log('obj : ' + JSON.stringify(obj));
 
 

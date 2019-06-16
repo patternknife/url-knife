@@ -1,13 +1,97 @@
 # Pattern-dreamer
 
 ## Overview
+Pattern-dreamer's dream is always to get certain patterns(URL, URI, e-mail...) most without false positives in natural language texts.
 
-Pattern-dreamer's dream is always to get certain patterns(URL, URI, e-mail...) most without false positives in a string.
+## Update
+From ver. 1.6, it is available to extract 'ip_v4, ip_v6, localhost and intranet' even when they miss protocols such as 'http'.
 
+``` javascript
+    /**
+     * @brief
+     * Distill all urls from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
+     * @return array
+     */
+     
+ var sampleString = '192.179.3.5 
+ fakeshouldnotbedetected.urld?abc=fake
+ http://[::1]:8000에서
+  http ://www.example.com/wpstyle/?p=364 is ok... ';      
+  
+ var urls = PatternDreamer.TextArea.extractAllUrls(sampleString, {
+                    'ip_v4' : true,
+                    'ip_v6' : false,
+                    'localhost' : false,
+                    'intranet' : true
+                });
+ 
+ // Result
+  [   {
+        "value": {
+          "url": "192.179.3.5",
+          "removedTailOnUrl": "",
+          "protocol": null,
+          "onlyDomain": "192.179.3.5",
+          "onlyParams": null,
+          "onlyUri": null,
+          "onlyUriWithParams": null,
+          "onlyParamsJsn": null,
+          "type": "ip",
+          "port": null
+        },
+        "area": "text",
+        "index": {
+          "start": 0,
+          "end": 11
+        }
+      },
+      {
+      "value": {
+        "url": "fakeshouldnotbedetected.urld?abc=fake",
+        "removedTailOnUrl": "",
+        "protocol": null,
+        "onlyDomain": "fakeshouldnotbedetected.urld",
+        "onlyParams": "?abc=fake",
+        "onlyUri": null,
+        "onlyUriWithParams": "?abc=fake",
+        "onlyParamsJsn": {
+          "abc": "fake"
+        },
+        "type": "domain",
+        "port": null
+      },
+      "area": "text",
+      "index": {
+        "start": 14,
+        "end": 51
+      }
+     },
+ ... etc           
+ ``` 
+However, that is a matter of choice. For example, if you set noProtocolJsn['ip_v4'] to 'true',
+the string like '192.179.3.5' is extracted. If it is set to 'false', '192.179.3.5' is not extracted 
+but 'http://192.179.3.5' is still extracted, as the protocol 'http' is detected.
+
+If you set set noProtocolJsn['intranet'] to 'true', 'fakeshouldnotbedetected.urld?abc=fake' is detected.
+However, it should not be extracted, as the root domain 'urld' does not exist in the world. 
+The URL does not even have any protocols.
+
+In case of "noProtocolJsn['intranet']", some false positives can be caused. 
+  
 From ver. 1.5.5, the 'protocol://ip_v6' URL type is now available to be extracted. 
 
-We have been able to parse URLs with no protocol from texts. Now, from ver. 1.4.0, 
-we can parse certain URIs with no domain from texts. Check '3.1 Plain texts (Certain URIs)'.
+We have been able to extract missing protocol URLs from texts. Now, from ver. 1.4.0, 
+we can extract certain missing domain URIs from texts. Check '3.1 Plain texts (Certain URIs)'.
 
 ## Installation
 

@@ -1,4 +1,4 @@
-import Rx from './rx';
+import Pattern from './pattern';
 import ValidationError from './error-handler';
 import Valid from './valid';
 import Util from './util';
@@ -13,7 +13,7 @@ const Xml = {
 
     extractAllPureElements(xmlStr) {
 
-        const rx = new RegExp(Rx.Descendants.xml_element, "g");
+        const rx = new RegExp(Pattern.Descendants.xml_element, "g");
 
 
         let matches = [];
@@ -36,7 +36,7 @@ const Xml = {
 
     extractAllPureComments(xmlStr) {
 
-        const rx = new RegExp(Rx.Descendants.xml_comment, 'gi');
+        const rx = new RegExp(Pattern.Descendants.xml_comment, 'gi');
 
         let matches = [];
         let match = {};
@@ -61,32 +61,55 @@ const Text = {
 
     extractAllPureUrls(textStr) {
 
+        //console.log('a : ' + Pattern.Children.url);
+
         if (!(textStr && typeof textStr === 'string')) {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
         let obj = [];
 
-        let rx = new RegExp(Rx.Children.url, 'gi');
+        let rx = new RegExp(Pattern.Children.url, 'gi');
 
         let matches = [];
         let match = {};
 
         while ((match = rx.exec(textStr)) !== null) {
 
-            /* skip email patterns related to 'all_urls3_front' regex */
+            /* SKIP DEPENDENCY */
             if (/^@/.test(match[0])) {
                 continue;
             }
 
+            /* this can affect indexes so commented */
+            //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
+
+            let st_idx = match.index;
+            let end_idx = match.index + match[0].length;
+
             let mod_val = match[0];
+            let re = Url.assortUrl(mod_val);
+
+            /* SKIP DEPENDENCY */
+            if(new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + ')+$', 'i').test(re['onlyDomain'])){
+                // ip_v4 is OK
+                if(!new RegExp('^' + Pattern.Ancestors.ip_v4  +'$', 'i').test(re['onlyDomain'])){
+                    continue;
+                }
+            }
+
+
+            /* this part doesn't need to be included */
+            if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
+                end_idx -= re['removedTailOnUrl'].length;
+            }
 
             obj.push({
-                'value': Url.assortUrl(mod_val),
+                'value': re,
                 'area': 'text',
                 'index': {
-                    'start': match.index,
-                    'end': match.index + match[0].length
+                    'start': st_idx,
+                    'end': end_idx
                 }
             });
         }
@@ -106,10 +129,10 @@ const Text = {
         }
 
         uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|'+
-            '(?:[0-9]|' + Rx.Ancestors.two_bytes_num + '|' + Rx.Ancestors.lang_char + ')'
-            +'[^/\\n\\r\\t\\s]*(?:[0-9]|' + Rx.Ancestors.two_bytes_num + '|' + Rx.Ancestors.lang_char + ')'
+            '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+            +'[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
             + '\\/|\\/|\\b)' +
-            '(?:' + uri_ptrn + ')' + Rx.Ancestors.url_params_or_not;
+            '(?:' + uri_ptrn + ')' + Pattern.Ancestors.url_params_recommended;
 
 
         // console.log('escaped_uri_ptrn : ' + uri_ptrn);
@@ -203,7 +226,7 @@ const Url = {
                         break;
                     }
 
-                    let rx2 = new RegExp(Rx.Ancestors.all_protocols, 'gi');
+                    let rx2 = new RegExp(Pattern.Ancestors.all_protocols, 'gi');
 
                     let match2 = {};
                     let isMatched2 = false;
@@ -291,9 +314,9 @@ const Url = {
 
 
             // 10. type : domain, ip, localhost
-            if (new RegExp('^' + Rx.Ancestors.ip_v4, 'i').test(url)) {
-                obj['type'] = 'ip';
-            }else if (new RegExp('^' + Rx.Ancestors.ip_v6, 'i').test(url)) {
+            if (new RegExp('^' + Pattern.Ancestors.ip_v4, 'i').test(url)) {
+                obj['type'] = 'ip_v4';
+            }else if (new RegExp('^' + Pattern.Ancestors.ip_v6, 'i').test(url)) {
                 //console.log('r : ' + url);
                 obj['type'] = 'ip_v6';
             } else if (/^localhost/i.test(url)) {
@@ -308,10 +331,10 @@ const Url = {
 
                 if(obj['type'] !== 'ip_v6') {
                     // removedTailOnUrl
-                    let rm_part_matches = obj['url'].match(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'));
+                    let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
                     if (rm_part_matches) {
                         obj['removedTailOnUrl'] = rm_part_matches[0];
-                        obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                        obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                     }
                 }else{
 
@@ -327,10 +350,10 @@ const Url = {
                     }else{
 
                         // removedTailOnUrl
-                        let rm_part_matches = obj['url'].match(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'));
+                        let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
                         if (rm_part_matches) {
                             obj['removedTailOnUrl'] = rm_part_matches[0];
-                            obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                            obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                         }
                     }
 
@@ -339,17 +362,17 @@ const Url = {
 
             }else if(obj['onlyUri'] !== null && obj['onlyParams'] === null){
 
-                let rm_part_matches = new RegExp('\\/([^/\\n\\r\\t\\s]+?)(' + Rx.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
+                let rm_part_matches = new RegExp('\\/([^/\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
                 //console.log(obj['url'] + ' : ' + rm_part_matches[1]);
 
                 if (rm_part_matches) {
                     if(rm_part_matches[1]){
-                        if(!new RegExp(Rx.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
+                        if(!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
                             if(rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
-                                obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                                obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                             }
                         }
                     }
@@ -358,18 +381,18 @@ const Url = {
 
             }else if(obj['onlyParams'] !== null){
 
-                let rm_part_matches = new RegExp('\\=([^=\\n\\r\\t\\s]+?)(' + Rx.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
+                let rm_part_matches = new RegExp('\\=([^=\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
   /*              console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
                 console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
 
                 if (rm_part_matches) {
                     if(rm_part_matches[1]){
-                        if(!new RegExp(Rx.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
+                        if(!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
                             if(rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
-                                obj['url'] = obj['url'].replace(new RegExp(Rx.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                                obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                             }
                         }
                     }
@@ -424,8 +447,8 @@ const Url = {
                 }
             }
             // 12. uri like 'abc/def'
-            //if(!new RegExp('^' + Rx.Ancestors.all_protocols + '|\\.' + Rx.Ancestors.all_root_domains + '\\/|\\?','gi').test(obj['onlyDomain'])){
-            if (!new RegExp(Rx.Children.url, 'gi').test(obj['url'])) {
+            //if(!new RegExp('^' + Pattern.Ancestors.all_protocols + '|\\.' + Pattern.Ancestors.all_root_domains + '\\/|\\?','gi').test(obj['onlyDomain'])){
+            if (!new RegExp(Pattern.Children.url, 'gi').test(obj['url'])) {
 
                 obj['onlyDomain'] = null;
                 obj['type'] = 'uri';
