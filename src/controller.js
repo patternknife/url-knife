@@ -540,7 +540,27 @@ const TextArea = {
 
         return obj_final;
 
-    }
+    },
+
+    /**
+     * @brief
+     * Distill all 'strings before and after the colon'
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param delimiter string
+     * @return array
+     */
+    extractAllStrBfAfColon(textStr, delimiter) {
+
+        if (delimiter && typeof delimiter !== 'string') {
+            throw new ValidationError('Delimiter must be string type');
+        }
+
+        Pattern.Children.setStrBfAfColonDelimiter(delimiter);
+
+        return Service.Text.extractAllPureStrBfAfColon(textStr, delimiter);
+
+    },
 
 };
 
@@ -548,7 +568,7 @@ const TextEditorArea = {
 
     /**
      * @brief
-     * Distill all urls from normal text, tags, comments in html
+     * Distill all urls
      * @author Andrew Kang
      * @param textStr string required
      * @param clsName string required

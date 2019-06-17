@@ -91,9 +91,9 @@ const Text = {
             let re = Url.assortUrl(mod_val);
 
             /* SKIP DEPENDENCY */
-            if(new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + ')+$', 'i').test(re['onlyDomain'])){
+            if (new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + ')+$', 'i').test(re['onlyDomain'])) {
                 // ip_v4 is OK
-                if(!new RegExp('^' + Pattern.Ancestors.ip_v4  +'$', 'i').test(re['onlyDomain'])){
+                if (!new RegExp('^' + Pattern.Ancestors.ip_v4 + '$', 'i').test(re['onlyDomain'])) {
                     continue;
                 }
             }
@@ -128,9 +128,9 @@ const Text = {
             throw new ValidationError('the variable uris are not available');
         }
 
-        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|'+
+        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
             '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
-            +'[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+            + '[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
             + '\\/|\\/|\\b)' +
             '(?:' + uri_ptrn + ')' + Pattern.Ancestors.url_params_recommended;
 
@@ -164,6 +164,68 @@ const Text = {
             });
         }
 
+
+        return obj;
+
+    },
+
+    extractAllPureStrBfAfColon(textStr, delimiter) {
+
+        if (!(textStr && typeof textStr === 'string')) {
+            throw new ValidationError('the variable textStr must be a string type and not be null.');
+        }
+        let isDelimiter = false;
+        if (delimiter && typeof delimiter === 'string') {
+            isDelimiter = true;
+        }
+
+
+        let obj = [];
+
+        let rx = new RegExp(Pattern.Children.strBfAfColon, 'gi');
+
+        let matches = [];
+        let match = {};
+
+        while ((match = rx.exec(textStr)) !== null) {
+
+
+            let st_idx = match.index;
+            let end_idx = match.index + match[0].length;
+
+            let mod_val = match[0];
+
+
+            if (new RegExp('^([^:]+):([^:]+)$', 'i').test(mod_val)) {
+
+                let matches2 = new RegExp('^([^:]+):([^:]+)$', 'i').exec(mod_val);
+
+                let m2_1 =  null;
+                if(matches2[1]){
+                    m2_1 = matches2[1].trim();
+                }
+
+                let m2_2 =  null;
+                if(matches2[2]){
+                    m2_2 = matches2[2].trim();
+                    if(isDelimiter === true) {
+                        m2_2 = m2_2.replace(new RegExp(Util.Text.escapeRegex(delimiter) + '$', 'gi'), '');
+                    }
+                    m2_2 = m2_2.trim();
+                }
+
+
+                obj.push({
+                    'value': {'original': mod_val.trim(), 'left': m2_1, 'right': m2_2},
+                    'area': 'text',
+                    'index': {
+                        'start': st_idx,
+                        'end': end_idx
+                    }
+                });
+            }
+
+        }
 
         return obj;
 
@@ -201,7 +263,7 @@ const Url = {
             url = Util.Text.removeAllSpaces(url);
 
 
-            if(!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)){
+            if (!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)) {
                 throw new ValidationError('This is neither an url nor an uri.');
             }
 
@@ -271,7 +333,7 @@ const Url = {
             }
             url = url.replace(rx2, '');
 
-           if (obj['onlyUri'] === "/") {
+            if (obj['onlyUri'] === "/") {
                 obj['onlyUri'] = null;
             }
 
@@ -312,11 +374,10 @@ const Url = {
             obj['onlyDomain'] = url;
 
 
-
             // 10. type : domain, ip, localhost
             if (new RegExp('^' + Pattern.Ancestors.ip_v4, 'i').test(url)) {
                 obj['type'] = 'ip_v4';
-            }else if (new RegExp('^' + Pattern.Ancestors.ip_v6, 'i').test(url)) {
+            } else if (new RegExp('^' + Pattern.Ancestors.ip_v6, 'i').test(url)) {
                 //console.log('r : ' + url);
                 obj['type'] = 'ip_v6';
             } else if (/^localhost/i.test(url)) {
@@ -329,16 +390,16 @@ const Url = {
             // If no uris no params, we remove suffix in case that it is a meta character.
             if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 
-                if(obj['type'] !== 'ip_v6') {
+                if (obj['type'] !== 'ip_v6') {
                     // removedTailOnUrl
                     let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
                     if (rm_part_matches) {
                         obj['removedTailOnUrl'] = rm_part_matches[0];
                         obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                     }
-                }else{
+                } else {
 
-                    if(obj['port'] === null) {
+                    if (obj['port'] === null) {
 
                         // removedTailOnUrl
                         let rm_part_matches = obj['url'].match(new RegExp('[^\\u005D]+$', 'gi'));
@@ -347,7 +408,7 @@ const Url = {
                             obj['url'] = obj['url'].replace(new RegExp('[^\\u005D]+$', 'gi'), '');
                         }
 
-                    }else{
+                    } else {
 
                         // removedTailOnUrl
                         let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
@@ -360,16 +421,16 @@ const Url = {
 
                 }
 
-            }else if(obj['onlyUri'] !== null && obj['onlyParams'] === null){
+            } else if (obj['onlyUri'] !== null && obj['onlyParams'] === null) {
 
                 let rm_part_matches = new RegExp('\\/([^/\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
                 //console.log(obj['url'] + ' : ' + rm_part_matches[1]);
 
                 if (rm_part_matches) {
-                    if(rm_part_matches[1]){
-                        if(!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
-                            if(rm_part_matches[2]) {
+                    if (rm_part_matches[1]) {
+                        if (!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])) {
+                            if (rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
@@ -379,17 +440,17 @@ const Url = {
 
                 }
 
-            }else if(obj['onlyParams'] !== null){
+            } else if (obj['onlyParams'] !== null) {
 
                 let rm_part_matches = new RegExp('\\=([^=\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
-  /*              console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
-                console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
+                /*              console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
+                              console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
 
                 if (rm_part_matches) {
-                    if(rm_part_matches[1]){
-                        if(!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])){
-                            if(rm_part_matches[2]) {
+                    if (rm_part_matches[1]) {
+                        if (!new RegExp(Pattern.Ancestors.no_lang_char_num, 'gi').test(rm_part_matches[1])) {
+                            if (rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
@@ -403,7 +464,7 @@ const Url = {
 
             // If no uri no params, we remove suffix in case that it is non-alphabets.
             // The regex below means "all except for '.'". It is for extracting all root domains, so non-domain types like ip are excepted.
-            if(obj['type'] === 'domain') {
+            if (obj['type'] === 'domain') {
 
                 if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 

@@ -110,6 +110,11 @@
         font-weight: bold;
     }
 
+    .web_console
+    {
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
 </style>
 
 <body>
@@ -123,7 +128,7 @@
     }, but the default is all 'false'.</h4>
 <!-- 1. TextArea -->
 <h5>(In case of "noProtocolJsn['intranet']", some false positives can be caused)</h5>
-<h3>1. TextArea (recommended)</h3>
+<h3>TextArea (recommended)</h3>
 <div class="container">
     <div class="backdrop">
         <div class="highlights"></div>
@@ -133,7 +138,7 @@
 
 
 <button>Toggle Perspective</button>
-
+<pre id="logger" class="web_console"></pre>
 <!-- 2. ContentEditable -->
 <!--<h3>2. ContentEditable</h3>
 <div id="ta" contenteditable="true" style="margin-top: 3%"></div>-->
@@ -144,22 +149,18 @@
 
 
     // TextArea (URL) - All tags are just string
-    var textStr = 'If you visit "192.179.3.5?abc=2"..  \n' +
-        ' http://[::1]:8000에서 http://[::1]]] fakeshouldnotbedetected.urld?abc=fake "http ://www.example.com/wpstyle/?p=364" is ok \n' +
+    var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'the packed1book.net. s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
-        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
+        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'http://✪df.ws/123\n' +
         'http://142.42.1.1:8080/\n' +
-        'https://foo_bar.example.com에서 만나요. \n' +
-        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk... ';
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
 
     // 1.2  TextArea (URI) - All tags are just string
-    var textStr1 = '/abc/def "fggffg/abc/def.," "abc/def?a=5" /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+    var textStr1 = 'abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
         'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
 
     // 2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
@@ -168,6 +169,9 @@
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=&lt;span&gt;가나다@pacbook.net&lt;/span&gt; abc.com/ad/fg/?kk=5 abc@daum.net';
 
+    // Strings before and after the colon
+    var textStr3 = 'olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec, ' +
+        'jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec \n nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec, kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec\n';
 
     // This is a sample of ##### 4. XML (HTML) (README.md)
     var xmlStr =
@@ -200,7 +204,14 @@
     // 1. TextArea
     function handleInput() {
 
+
         var text = $textarea.val();
+        $('#logger').html(JSON.stringify(PatternDreamer.TextArea.extractAllUrls(text, {
+            'ip_v4' : true,
+            'ip_v6' : true,
+            'localhost' : true,
+            'intranet' : false
+        }), null, 2));
 
         text = text.replace(/\n$/g, '\n\n');
 
@@ -223,12 +234,14 @@
             'ip_v4' : true,
             'ip_v6' : true,
             'localhost' : true,
-            'intranet' : false
+            'intranet' : true
         });
 
         console.log(tg);
 
         $highlights.html(tg);
+
+
 
 
     }
@@ -365,14 +378,14 @@
 */
     console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllUrls(textStr, {
         'ip_v4' : true,
-        'ip_v6' : false,
-        'localhost' : false,
-        'intranet' : true
+        'ip_v6' : true,
+        'localhost' : true,
+        'intranet' : false
     }), null, 2));
-    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("goasidaio.ac.kr?abd=5hell0?5...&kkk=rk.,.."), null, 2));
+    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 
-
+    console.log('final_6 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllStrBfAfColon(textStr3, ','), null, 2));
     end();
 
 

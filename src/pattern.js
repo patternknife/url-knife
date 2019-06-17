@@ -1,3 +1,5 @@
+import Util from './util';
+
 const Ancestors = {
 
     /* The three properties must be considered together if one of them is modified */
@@ -81,7 +83,7 @@ const Descendants = {
 
     /* this is for ./ref/terms.js ('https://www.iana.org/domains/root/db') */
     all_urls3_front: Ancestors.protocol_recommended +
-    Ancestors.lang_char + '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*\\.',
+    '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')' + '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*\\.',
 
     all_urls3_end: '(?:' + Ancestors.all_root_domains + '\\b)' +
     '(?:' + Ancestors.all_root_domains + '|\\.)*' +
@@ -91,7 +93,7 @@ const Descendants = {
     Ancestors.url_params_recommended,
 
     // [SKIP DEPENDENT]
-    intranet: Ancestors.lang_char +
+    intranet: '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')' +
     '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*\\.' +
     '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))+',
 
@@ -109,12 +111,12 @@ const Descendants = {
 
 };
 
-/* With the legacy of their Ancestors, Children changes  */
+/* With the legacy of Ancestors and Descendants, Children changes  */
 let Children = {
 
     // 1. URL
 
-    setUrlPattern (noProtocolJsn){
+    setUrlPattern(noProtocolJsn) {
         this.url = noProtocolJsn;
     },
     // This is the recommended standard.
@@ -133,15 +135,15 @@ let Children = {
                 is_p = false;
             }
             if (noProtocolJsn['ip_v6']) {
-                no_p += Ancestors.ip_v6+ '|';
+                no_p += Ancestors.ip_v6 + '|';
                 is_p = false;
             }
             if (noProtocolJsn['localhost']) {
-                no_p += Ancestors.localhost+ '|';
+                no_p += Ancestors.localhost + '|';
                 is_p = false;
             }
             if (noProtocolJsn['intranet']) {
-                no_p += Descendants.intranet+ '|';
+                no_p += Descendants.intranet + '|';
                 is_p = false;
             }
             no_p = no_p.replace(/\|$/, '');
@@ -172,7 +174,48 @@ let Children = {
             return this._url;
         }
 
-    }
+    },
+
+    // 2. StrBfAfColon
+    setStrBfAfColonDelimiter(d) {
+        this.strBfAfColon = d;
+    },
+    // This is the recommended standard.
+    get s() {
+        return '(?:' +
+            '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+[\\n\\r]|' +
+            '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+[\\t\\s]|' +
+            '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+[,]|' +
+            '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+$' +
+            ')(?![\\n\\r\\t\\s]*:)';
+    },
+    get strBfAfColon() {
+
+        if (!this._strBfAfColon) {
+            return this.s;
+        } else {
+            return this._strBfAfColon;
+        }
+
+    },
+    set strBfAfColon(d) {
+
+        if (d && typeof d === 'string') {
+
+            this._strBfAfColon =  '(?:' +
+                '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+' + Util.Text.escapeRegex(d)  +'|' +
+                '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+[\\n\\r]|' +
+                '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+[\\t\\s]|' +
+                '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+$' +
+                ')(?![\\n\\r\\t\\s]*:)';
+
+        } else {
+
+            this._strBfAfColon = this.s;
+
+        }
+    },
+
 
 };
 

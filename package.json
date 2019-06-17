@@ -1,7 +1,7 @@
 {
   "name": "pattern-dreamer",
-  "version": "1.5.5",
-  "description": "Javascript URL, URI, Email extractor using a robust combination of regular expressions",
+  "version": "1.7.0",
+  "description": "Javascript 'url, uri, e-mail, strings before and after the colon' extractor using a robust combination of regular expressions",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -16,7 +16,8 @@
     "parser",
     "url",
     "uri",
-    "email"
+    "email",
+    "missing protocol"
   ],
   "author": "Andrew Kang",
   "license": "MIT",

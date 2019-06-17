@@ -1,9 +1,32 @@
 # Pattern-dreamer
 
 ## Overview
-Pattern-dreamer's dream is always to get certain patterns(URL, URI, e-mail...) most without false positives in natural language texts.
+Pattern-dreamer always challenges patterns hard to be extracted in texts.  
+Currently it handles five patterns 
+(url, uri, domain, email, strings before and after the colon).
+
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
 ## Update
+From ver. 1.7, 'Strings before and after the colon' is now available to be extracted. 
+``` javascript
+
+    var sampleTxt = 'olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec, ' +
+        'jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec \n nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec, 
+        kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec\n';
+    
+    /**
+     * @brief
+     * Distill all 'strings before and after the colon'
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param delimiter string
+     * @return array
+     */
+    var sbacs = PatternDreamer.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
+ ```
+[Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
+ 
 From ver. 1.6, it is available to extract 'ip_v4, ip_v6, localhost and intranet' even when they miss protocols such as 'http'.
 
 ``` javascript
@@ -117,27 +140,50 @@ import PatternDreamer from 'pattern-dreamer';
 ```
 
 ## Syntax & Usage
+[Chapter 1. URL, URI](#chapter-1.-url,-uri)
+
+[Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
+
+[Chapter 3. Email](#chapter-3.-email)
+
+[Chapter 4. Elements and Comment](#chapter-4.-elements-and-comment)
 
 
-#### Chapter 1. Get URLs, URIs in whatever situations !
+
+
+#### Chapter 1. URL, URI
 
 ##### 1. Text editor
   
 ``` javascript
 
-var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
-        'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
-        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'http://✪df.ws/123\n' +
-        'http://142.42.1.1:8080/\n' +
-        'https://foo_bar.example.com에서 만나요. \n' +
-        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
-        'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
-        
-var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr, 'highlighted1');
+var sampleText = "If you visit "192.179.3.5?abc=2"..  
+                   http://[::1]:8000.... "
+
+    /**
+     * @brief
+     * Distill all urls
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param clsName string required
+     * @param contentEditableMode boolean default false
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
+     * @return string
+     */
+             
+var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(sampleText, 'highlighted1', false, {
+                              'ip_v4' : true,
+                              'ip_v6' : true,
+                              'localhost' : true,
+                              'intranet' : false
+                          });
  ```
 
 You can check how url patterns are highlighted by running the sample source below.
@@ -173,16 +219,15 @@ var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1
 
 ``` javascript
 
-var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
+var sampleText = ' abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
                 'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
                 
- var uris = PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]) 
+ var uris = PatternDreamer.TextArea.extractCertainUris(sampleText, [['abc', 'def'], ['nice','guy']]) 
  // This detects all URIs containing 'nice/guy' or 'abc/def'
  ```
  ###### console.log() 
  ``` javascript
- .... // Not all listed
-[
+ [
   {
     "uri_detected": {
       "value": {
@@ -199,32 +244,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       },
       "area": "text",
       "index": {
-        "start": 10,
-        "end": 17
-      }
-    },
-    "in_what_url": null
-  },
-  {
-    "uri_detected": {
-      "value": {
-        "url": "abc/def?a=5",
-        "removedTailOnUrl": "",
-        "protocol": null,
-        "onlyDomain": null,
-        "onlyParams": "?a=5",
-        "onlyUri": "abc/def",
-        "onlyUriWithParams": "abc/def?a=5",
-        "onlyParamsJsn": {
-          "a": "5"
-        },
-        "type": "uri",
-        "port": null
-      },
-      "area": "text",
-      "index": {
-        "start": 18,
-        "end": 29
+        "start": 0,
+        "end": 7
       }
     },
     "in_what_url": null
@@ -245,8 +266,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       },
       "area": "text",
       "index": {
-        "start": 30,
-        "end": 43
+        "start": 8,
+        "end": 21
       }
     },
     "in_what_url": null
@@ -270,8 +291,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       },
       "area": "text",
       "index": {
-        "start": 44,
-        "end": 62
+        "start": 22,
+        "end": 40
       }
     },
     "in_what_url": null
@@ -282,7 +303,7 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
         "url": "/abc/def?a=5&b=7",
         "removedTailOnUrl": "",
         "protocol": null,
-        "onlyDomain": null,
+        "onlyDomain": "",
         "onlyParams": "?a=5&b=7",
         "onlyUri": "/abc/def",
         "onlyUriWithParams": "/abc/def?a=5&b=7",
@@ -290,35 +311,36 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
           "a": "5",
           "b": "7"
         },
-        "type": "uri",
+        "type": "domain",
         "port": null
       },
       "area": "text",
       "index": {
-        "start": 99,
-        "end": 115
+        "start": 77,
+        "end": 93
       }
-    },
+    }, 
+    // *** In case the full-url is detected
     "in_what_url": {
       "value": {
         "url": "https://google.com/abc/def?a=5&b=7",
         "removedTailOnUrl": "",
         "protocol": "https",
-        "onlyDomain": null,
+        "onlyDomain": "google.com",
         "onlyParams": "?a=5&b=7",
-        "onlyUri": "https://google.com/abc/def",
-        "onlyUriWithParams": "https://google.com/abc/def?a=5&b=7",
+        "onlyUri": "/abc/def",
+        "onlyUriWithParams": "/abc/def?a=5&b=7",
         "onlyParamsJsn": {
           "a": "5",
           "b": "7"
         },
-        "type": "uri",
+        "type": "domain",
         "port": null
       },
       "area": "text",
       "index": {
-        "start": 81,
-        "end": 115
+        "start": 59,
+        "end": 93
       }
     }
   },
@@ -338,8 +360,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       },
       "area": "text",
       "index": {
-        "start": 116,
-        "end": 124
+        "start": 94,
+        "end": 102
       }
     },
     "in_what_url": null
@@ -360,8 +382,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       },
       "area": "text",
       "index": {
-        "start": 128,
-        "end": 140
+        "start": 106,
+        "end": 118
       }
     },
     "in_what_url": null
@@ -375,21 +397,57 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
     var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
-        'https://www.example.com/foo/?bar=baz&inga=42&quux\n' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'http://✪df.ws/123\n' +
         'http://142.42.1.1:8080/\n' +
-        'https://foo_bar.example.com에서 만나요. \n' +
-        'http://foo.bar/?q=Test%20URL-encoded%20stuff \n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
-        
- var urls = PatternDreamer.TextArea.extractAllUrls(textStr),
+ 
+     /**
+      * @brief
+      * Distill all urls from normal text
+      * @author Andrew Kang
+      * @param textStr string required
+      * @param noProtocolJsn object
+      *    default :  {
+                 'ip_v4' : false,
+                 'ip_v6' : false,
+                 'localhost' : false,
+                 'intranet' : false
+             }
+       
+ var urls = PatternDreamer.TextArea.extractAllUrls(textStr, {
+                    'ip_v4' : true,
+                    'ip_v6' : false,
+                    'localhost' : false,
+                    'intranet' : true
+})
  ```
  ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
  ``` javascript
- [
- // `Not all listed`
+[
+  // As noProtocolJsn['intranet'] is set to true, the fake url below has been detected 
+  {
+    "value": {
+      "url": "fakeshouldnotbedetected.url?abc=fake",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "fakeshouldnotbedetected.url",
+      "onlyParams": "?abc=fake",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abc=fake",
+      "onlyParamsJsn": {
+        "abc": "fake"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 222,
+      "end": 258
+    }
+  },
   {
     "value": {
       "url": "http://[::1]:8000",
@@ -412,22 +470,22 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
   {
     "value": {
       "url": "http://www.example.com/wpstyle/?p=364",
-      "removedTailOnUrl": "\"",
+      "removedTailOnUrl": "",
       "protocol": "http",
       "onlyDomain": "www.example.com",
-      "onlyParams": "?p=364\"",
+      "onlyParams": "?p=364",
       "onlyUri": "/wpstyle/",
-      "onlyUriWithParams": "/wpstyle/?p=364\"",
+      "onlyUriWithParams": "/wpstyle/?p=364",
       "onlyParamsJsn": {
-        "p": "364\""
+        "p": "364"
       },
       "type": "domain",
       "port": null
     },
     "area": "text",
     "index": {
-      "start": 21,
-      "end": 60
+      "start": 20,
+      "end": 58
     }
   },
   {
@@ -445,8 +503,8 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
     },
     "area": "text",
     "index": {
-      "start": 68,
-      "end": 104
+      "start": 66,
+      "end": 102
     }
   },
   {
@@ -460,17 +518,198 @@ var textStr1 = '/abc/def abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
       "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
       "onlyParamsJsn": null,
       "type": "domain",
-      "port": null,
+      "port": null
     },
     "area": "text",
     "index": {
-      "start": 105,
-      "end": 158
+      "start": 103,
+      "end": 156
+    }
+  },
+  {
+    "value": {
+      "url": "tnae1ver.com:8000",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "tnae1ver.com",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": "8000"
+    },
+    "area": "text",
+    "index": {
+      "start": 157,
+      "end": 174
+    }
+  },
+  {
+    "value": {
+      "url": "packed1book.net",
+      "removedTailOnUrl": ".",
+      "protocol": null,
+      "onlyDomain": "packed1book.net.",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 205,
+      "end": 220
+    }
+  },
+ 
+  {
+    "value": {
+      "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>;",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "s5houl７十七日dbedetected.jp",
+      "onlyParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
+      "onlyUri": null,
+      "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.net</span>;",
+      "onlyParamsJsn": {
+        "japan": "go",
+        "html": "<span>가나다@pacbook.net</span>;"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 259,
+      "end": 327
+    }
+  },
+  {
+    "value": {
+      "url": "abc.com/ad/fg/?kk=5",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "abc.com",
+      "onlyParams": "?kk=5",
+      "onlyUri": "/ad/fg/",
+      "onlyUriWithParams": "/ad/fg/?kk=5",
+      "onlyParamsJsn": {
+        "kk": "5"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 328,
+      "end": 347
+    }
+  },
+  {
+    "value": {
+      "url": "http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk",
+      "removedTailOnUrl": ".,,",
+      "protocol": "http",
+      "onlyDomain": "goasidaio.ac.kr",
+      "onlyParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=5안녕하세요?5...,.&kkk=5rk.,,",
+      "onlyParamsJsn": {
+        "abd": "5안녕하세요?5...,.",
+        "kkk": "5rk.,,"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 377,
+      "end": 425
+    }
+  },
+  {
+    "value": {
+      "url": "http://✪df.ws/123",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "✪df.ws",
+      "onlyParams": null,
+      "onlyUri": "/123",
+      "onlyUriWithParams": "/123",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 429,
+      "end": 446
+    }
+  },
+  {
+    "value": {
+      "url": "http://142.42.1.1:8080",
+      "removedTailOnUrl": "/",
+      "protocol": "http",
+      "onlyDomain": "142.42.1.1",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "ip_v4",
+      "port": "8080"
+    },
+    "area": "text",
+    "index": {
+      "start": 447,
+      "end": 469
+    }
+  },
+  {
+    "value": {
+      "url": "http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "-.~_!$&'()*+,;=:%40:80%2f::::::@example.com",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 471,
+      "end": 521
+    }
+  },
+  {
+    "value": {
+      "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk",
+      "removedTailOnUrl": ".,.",
+      "protocol": null,
+      "onlyDomain": "goasidaio.ac.kr",
+      "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyParamsJsn": {
+        "abd": "5hell0?5...",
+        "kkk": "5rk.,."
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 546,
+      "end": 585
     }
   }
-....
-....
- ]
+]
 ```
 ##### 5. XML (HTML)
 
@@ -531,89 +770,86 @@ var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);
        "port": null
      },
      "area": "comment"
-   },
-   {
-     "value": {
-       "url": "ssh://www.aaa가.com",
-       "removedTailOnUrl": "",
-       "protocol": "ssh",
-       "onlyDomain": "www.aaa가.com",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "comment"
-   },
-   {
-     "value": {
-       "url": "www.naver.com",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "www.naver.com",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "comment"
-   },
-   {
-     "value": {
-       "url": "http://www.aaa가가.com/image/showWorkOrderImg?fileName=12345.png",
-       "removedTailOnUrl": "",
-       "protocol": "http",
-       "onlyDomain": "www.aaa가가.com",
-       "onlyParams": "?fileName=12345.png",
-       "onlyUri": "/image/showWorkOrderImg",
-       "onlyUriWithParams": "/image/showWorkOrderImg?fileName=12345.png",
-       "onlyParamsJsn": {
-         "fileName": "12345.png"
-       },
-       "type": "domain",
-       "port": null
-     },
-     "area": "element : img"
-   },
-   {
-     "value": {
-       "url": "https://www.aadc给s.cn",
-       "removedTailOnUrl": "",
-       "protocol": "https",
-       "onlyDomain": "www.aadc给s.cn",
-       "onlyParams": null,
-       "onlyUri": null,
-       "onlyUriWithParams": null,
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "element : p"
-   },
-   {
-     "value": {
-       "url": "en.wikipedia.org/wiki/Wikipedia:About",
-       "removedTailOnUrl": "",
-       "protocol": null,
-       "onlyDomain": "en.wikipedia.org",
-       "onlyParams": null,
-       "onlyUri": "/wiki/Wikipedia:About",
-       "onlyUriWithParams": "/wiki/Wikipedia:About",
-       "onlyParamsJsn": null,
-       "type": "domain",
-       "port": null
-     },
-     "area": "text"
    }
     .....
  ]
 ```
+#### Chapter 2. Strings before and after the colon
 
-#### Chapter 2. Parse emails in whatever situations !
+
+##### 1. Plain texts
+
+``` javascript
+
+    var sampleTxt = 'olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec, ' +
+        'jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec \n nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec, 
+        kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec\n';
+    
+    /**
+     * @brief
+     * Distill all 'strings before and after the colon'
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param delimiter string
+     * @return array
+     */
+    var sbacs = PatternDreamer.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
+ ```
+ ###### console.log()
+ ``` javascript
+ [
+   {
+     "value": {
+       "original": "olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec,",
+       "left": "olah billo",
+       "right": "78517700-1f01-11e3-a6b7-3c970e02b4ec"
+     },
+     "area": "text",
+     "index": {
+       "start": 0,
+       "end": 48
+     }
+   },
+   {
+     "value": {
+       "original": "jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec",
+       "left": "jiglo piglo",
+       "right": "68517700-1f \n 01-11e3-a6b7-3c970e02b4ec"
+     },
+     "area": "text",
+     "index": {
+       "start": 48,
+       "end": 102
+     }
+   },
+   {
+     "value": {
+       "original": "nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec,",
+       "left": "nimho james",
+       "right": "98517700-1f01-11e3-a6b7-3c970e02b4ec"
+     },
+     "area": "text",
+     "index": {
+       "start": 102,
+       "end": 152
+     }
+   },
+   {
+     "value": {
+       "original": "kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec",
+       "left": "kathy ruck",
+       "right": "38517700-1f01-11e3-a6b7-3c970e02b4ec"
+     },
+     "area": "text",
+     "index": {
+       "start": 152,
+       "end": 201
+     }
+   }
+ ]
+ ```
+
+#### Chapter 3. Email
 
 ##### 1. XML (HTML)
 ``` javascript
@@ -675,7 +911,7 @@ var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
 ]
 ```
 
-#### Chapter 3. Parse elements and comments from XML(HTML) !
+#### Chapter 4. Elements and Comment
 
 ##### 1. Elements
 ``` javascript
