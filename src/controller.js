@@ -259,7 +259,7 @@ const XmlArea = {
             /* 1. comment */
             for (let a = 0; a < cmt_matches.length; a++) {
 
-                let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
+                let rx = new RegExp(Pattern.Children.email, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -309,7 +309,7 @@ const XmlArea = {
             /* 2. element */
             for (let a = 0; a < el_matches.length; a++) {
 
-                let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
+                let rx = new RegExp(Pattern.Children.email, 'gi');
 
                 let matches = [];
                 let match = {};
@@ -327,7 +327,7 @@ const XmlArea = {
                     /* prefixSanitizer */
                     if (final_prefixSanitizer === true) {
 
-                        mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
+                        //mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
 
                         let border = '';
                         let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'gi');
@@ -366,7 +366,7 @@ const XmlArea = {
         }
 
         /* 5. normal text area */
-        let rx = new RegExp(Pattern.Descendants.all_emails, 'gi');
+        let rx = new RegExp(Pattern.Children.email, 'gi');
 
         let matches = [];
         let match = {};
@@ -383,7 +383,7 @@ const XmlArea = {
             /* prefixSanitizer */
             if (final_prefixSanitizer === true) {
 
-                mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
+                //mod_val = mod_val.replace(new RegExp('^[^0-9\\p{L}]+', 'u'), '');
 
                 let border = '';
                 let rx_border = new RegExp('^[^a-zA-Z0-9]+([a-zA-Z0-9])', 'gi');
@@ -416,6 +416,22 @@ const XmlArea = {
 
 const TextArea = {
 
+    /**
+     * @brief
+     * Distill all urls including fuzzy matched ones from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @return array
+     */
+    extractAllFuzzyUrls(textStr) {
+
+        //Pattern.Children.setUrlPattern(noProtocolJsn);
+
+        //console.log('a : ' + Pattern.Children.url);
+
+        return Service.Text.extractAllFuzzyUrls(textStr);
+
+    },
 
     /**
      * @brief
@@ -433,6 +449,7 @@ const TextArea = {
      * @return array
      */
     extractAllUrls(textStr, noProtocolJsn) {
+
 
         Pattern.Children.setUrlPattern(noProtocolJsn);
 
@@ -453,7 +470,7 @@ const TextArea = {
      */
     extractAllEmails(textStr, prefixSanitizer) {
 
-        return XmlArea.extractAllEmails(textStr, null, true);
+        return Service.Text.extractAllPureEmails(textStr, prefixSanitizer);
 
     },
 
@@ -585,13 +602,6 @@ const TextEditorArea = {
      */
     addClassToAllUrls(textStr, clsName, contentEditableMode, noProtocolJsn) {
 
-        if(noProtocolJsn && typeof noProtocolJsn === 'object' &&
-            noProtocolJsn['ip_v4'] && typeof noProtocolJsn['ip_v4'] === 'boolean'){
-
-            //throw new ValidationError('Not a noProtocolJsn object');
-
-        }
-
         Pattern.Children.setUrlPattern(noProtocolJsn);
 
         if (!(textStr && typeof textStr === 'string')) {
@@ -661,12 +671,22 @@ const UrlArea = {
      * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
      */
     assortUrl(url) {
+
         return Service.Url.assortUrl(url);
     }
 
-
 };
 
+
+const EmailArea = {
+
+    assortEmail(email) {
+
+        return Service.Email.assortEmail(email);
+    }
+
+
+}
 
 export default {
 

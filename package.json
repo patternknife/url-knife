@@ -1,7 +1,7 @@
 {
   "name": "pattern-dreamer",
-  "version": "1.7.0",
-  "description": "Javascript 'url, uri, e-mail, strings before and after the colon' extractor using a robust combination of regular expressions",
+  "version": "2.0.0",
+  "description": "Javascript 'url, fuzzy url, uri, domain, e-mail, strings before and after the colon' extractor using a robust combination of regular expressions",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -12,12 +12,11 @@
     "url": "git+https://github.com/Andrew-Kang-G/pattern-dreamer.git"
   },
   "keywords": [
-    "extractor",
-    "parser",
-    "url",
-    "uri",
-    "email",
-    "missing protocol"
+    "url extractor",
+    "url parser",
+    "fuzzy url",
+    "uri parser",
+    "email"
   ],
   "author": "Andrew Kang",
   "license": "MIT",

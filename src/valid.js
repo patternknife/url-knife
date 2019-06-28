@@ -6,7 +6,7 @@ import Pattern from './pattern';
 * */
 const Valid = {
 
-    checkAndTrimStr(sth) {
+    checkIfStrOrFailAndTrimStr(sth) {
 
         if (!(sth && typeof sth === 'string')) {
 
@@ -19,6 +19,22 @@ const Valid = {
         }
 
         return sth;
+
+    },
+
+    isFuzzyUrlPattern(v) {
+
+        //v = this.checkAndTrimStr(v);
+
+        /*        if (/\?\//.test(v)) {
+                    throw new ValidationError('?/ is a wrong url pattern.');
+                }*/
+
+        if(!new RegExp('^' + Pattern.Children.fuzzy_url() ,'gi').test(v)){
+            return false;
+        }
+
+        return true
 
     },
 
@@ -48,6 +64,35 @@ const Valid = {
         return true
 
     },
+
+    isEmailPattern(v) {
+
+        if(!new RegExp('^' + Pattern.Children.email ,'gi').test(v)){
+            return false;
+        }
+
+        return true
+
+    },
+
+    checkIfProtocolJsnObjOrFail(noProtocolJsn){
+
+        if(!(noProtocolJsn && typeof noProtocolJsn === 'object' &&
+                noProtocolJsn.hasOwnProperty('ip_v4') && typeof noProtocolJsn['ip_v4'] === 'boolean' &&
+                noProtocolJsn.hasOwnProperty('ip_v6')  && typeof noProtocolJsn['ip_v6'] === 'boolean' &&
+                noProtocolJsn.hasOwnProperty('localhost') && typeof noProtocolJsn['localhost'] === 'boolean' &&
+                noProtocolJsn.hasOwnProperty('intranet') && typeof noProtocolJsn['intranet'] === 'boolean'
+            )){
+
+            throw new ValidationError('Not a "noProtocolJsn{' +
+                '\'ip_v4\' : [boolean],' +
+                '\'ip_v6\' : [boolean],' +
+                '\'localhost\' : [boolean],' +
+                '\'intranet\' : [boolean]' +
+                '}" object');
+
+        }
+    }
 
 };
 

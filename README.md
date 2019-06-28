@@ -2,30 +2,22 @@
 
 ## Overview
 Pattern-dreamer always challenges patterns hard to be extracted in texts.  
-Currently it handles five patterns 
-(url, uri, domain, email, strings before and after the colon).
+Currently it handles six patterns 
+(url, uri, fuzzy url, domain, email, strings before and after the colon).
 
+#### URL extractor
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
+
+#### Fuzzy URL extractor (beta, parameters, uris in urls not yet fully considered)
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
 ## Update
-From ver. 1.7, 'Strings before and after the colon' is now available to be extracted. 
-``` javascript
+From ver. 2.0, the new function '.extractAllFuzzyUrls()' is available as a beta version. This will help us to extract all urls even in wrong formats possibly caused by human errors.   
+Also, the return format of 'PatternDreamer.TextArea.extractAllEmails' has been changed.
 
-    var sampleTxt = 'olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec, ' +
-        'jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec \n nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec, 
-        kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec\n';
-    
-    /**
-     * @brief
-     * Distill all 'strings before and after the colon'
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param delimiter string
-     * @return array
-     */
-    var sbacs = PatternDreamer.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
- ```
-[Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
+From ver. 1.7, 'Strings before and after the colon' is now available to be extracted. 
+
+[Go to the Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
  
 From ver. 1.6, it is available to extract 'ip_v4, ip_v6, localhost and intranet' even when they miss protocols such as 'http'.
 
@@ -390,8 +382,294 @@ var sampleText = ' abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
   }
 ]
 ```
+##### 3.2 Plain texts (Fuzzy URL)
 
-##### 3.2 Plain texts (URL)
+``` javascript
+    var textStr = '123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.ex ample;com/wpstyle/?p=364  ssh h::/;/ww.example.com/wpstyle/?p=364 is ok \n' +
+                          'HT TP:// foo, co,.kr/blah_blah_(wikipedia) https://www.google .org :8005/maps/place/USA/@36.2218457,... tnae1ver.co. jp;8000on the internet  Asterisk\n ' +
+                          'the packed1book.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;' +
+                          ' abc,com//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr?abd=55...,.&kkk=5rk.,, ' +
+                          'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+ 
+     /**
+      * @brief
+     * Distill all urls including fuzzy matched ones from normal text
+      * @author Andrew Kang
+      * @param textStr string required
+      * @param noProtocolJsn object
+      *    default :  {
+                 'ip_v4' : false,
+                 'ip_v6' : false,
+                 'localhost' : false,
+                 'intranet' : false
+             }
+       
+ var urls = PatternDreamer.TextArea.extractAllFuzzyUrls(textStr)
+ ```
+ ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
+ ``` javascript
+[
+  {
+    "value": {
+      "url": "xtp://--[::1]:8000",
+      "normalizedUrl": "ftp://[::1]:8000",
+      "removedTailOnUrl": "",
+      "protocol": "ftp",
+      "onlyDomain": "[::1]",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "ip_v6",
+      "port": "8000"
+    },
+    "area": "text",
+    "index": {
+      "start": 7,
+      "end": 25
+    }
+  },
+  {
+    "value": {
+      "url": "h ttpp ;//-www.ex ample;com/wpstyle/?p=364",
+      "normalizedUrl": "http://www.example.com/wpstyle/?p=364",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "www.example.com",
+      "onlyParams": "?p=364",
+      "onlyUri": "/wpstyle/",
+      "onlyUriWithParams": "/wpstyle/?p=364",
+      "onlyParamsJsn": {
+        "p": "364"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 28,
+      "end": 70
+    }
+  },
+  {
+    "value": {
+      "url": "ssh h::/;/ww.example.com/wpstyle/?p=364",
+      "normalizedUrl": "ssh://ww.example.com/wpstyle/?p=364",
+      "removedTailOnUrl": "",
+      "protocol": "ssh",
+      "onlyDomain": "ww.example.com",
+      "onlyParams": "?p=364",
+      "onlyUri": "/wpstyle/",
+      "onlyUriWithParams": "/wpstyle/?p=364",
+      "onlyParamsJsn": {
+        "p": "364"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 72,
+      "end": 111
+    }
+  },
+  {
+    "value": {
+      "url": "HT TP:// foo, co,.kr/blah_blah_(wikipedia)",
+      "normalizedUrl": "http://foo.co.kr/blah_blah_(wikipedia)",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "foo.co.kr",
+      "onlyParams": null,
+      "onlyUri": "/blah_blah_(wikipedia)",
+      "onlyUriWithParams": "/blah_blah_(wikipedia)",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 119,
+      "end": 161
+    }
+  },
+  {
+    "value": {
+      "url": "https://www.google .org :8005/maps/place/USA/@36.2218457,...",
+      "normalizedUrl": "http://www.google.org:8005/maps/place/USA/@36.2218457,...",
+      "removedTailOnUrl": "",
+      "protocol": "http",
+      "onlyDomain": "www.google.org",
+      "onlyParams": null,
+      "onlyUri": "/maps/place/USA/@36.2218457,...",
+      "onlyUriWithParams": "/maps/place/USA/@36.2218457,...",
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": "8005"
+    },
+    "area": "text",
+    "index": {
+      "start": 162,
+      "end": 222
+    }
+  },
+  {
+    "value": {
+      "url": "tnae1ver.co. jp;8000",
+      "normalizedUrl": "tnae1ver.co.jp:8000",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "tnae1ver.co.jp",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": "8000"
+    },
+    "area": "text",
+    "index": {
+      "start": 223,
+      "end": 243
+    }
+  },
+  {
+    "value": {
+      "url": "packed1book.net",
+      "normalizedUrl": "packed1book.net",
+      "removedTailOnUrl": ".",
+      "protocol": null,
+      "onlyDomain": "packed1book.net",
+      "onlyParams": null,
+      "onlyUri": null,
+      "onlyUriWithParams": null,
+      "onlyParamsJsn": null,
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 274,
+      "end": 290
+    }
+  },
+  {
+    "value": {
+      "url": "fakeshouldnotbedetected.url?abc=fake",
+      "normalizedUrl": "fakeshouldnotbedetected.url?abc=fake",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "fakeshouldnotbedetected.url",
+      "onlyParams": "?abc=fake",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abc=fake",
+      "onlyParamsJsn": {
+        "abc": "fake"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 310,
+      "end": 346
+    }
+  },
+  {
+    "value": {
+      "url": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;",
+      "normalizedUrl": "s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "s5houl７十七日dbedetected.jp",
+      "onlyParams": "?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;",
+      "onlyUri": null,
+      "onlyUriWithParams": "?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;",
+      "onlyParamsJsn": {
+        "japan": "go",
+        "html": "<span>가나다@pacbook.travelersinsurance</span>;"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 347,
+      "end": 430
+    }
+  },
+  {
+    "value": {
+      "url": "abc,com//ad/fg/?kk=5",
+      "normalizedUrl": "abc.com//ad/fg/?kk=5",
+      "removedTailOnUrl": "",
+      "protocol": null,
+      "onlyDomain": "abc.com",
+      "onlyParams": "?kk=5",
+      "onlyUri": "//ad/fg/",
+      "onlyUriWithParams": "//ad/fg/?kk=5",
+      "onlyParamsJsn": {
+        "kk": "5"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 431,
+      "end": 451
+    }
+  },
+  {
+    "value": {
+      "url": "http://agoasidaio.ac.kr?abd=55...,.&kkk=5rk",
+      "normalizedUrl": "http://agoasidaio.ac.kr?abd=55...,.&kkk=5rk.,,",
+      "removedTailOnUrl": ".,,",
+      "protocol": "http",
+      "onlyDomain": "agoasidaio.ac.kr",
+      "onlyParams": "?abd=55...,.&kkk=5rk.,,",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=55...,.&kkk=5rk.,,",
+      "onlyParamsJsn": {
+        "abd": "55...,.",
+        "kkk": "5rk.,,"
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 482,
+      "end": 525
+    }
+  },
+  {
+    "value": {
+      "url": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk",
+      "normalizedUrl": "goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,.",
+      "removedTailOnUrl": ".,.",
+      "protocol": null,
+      "onlyDomain": "goasidaio.ac.kr",
+      "onlyParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyUri": null,
+      "onlyUriWithParams": "?abd=5hell0?5...&kkk=5rk.,.",
+      "onlyParamsJsn": {
+        "abd": "5hell0?5...",
+        "kkk": "5rk.,."
+      },
+      "type": "domain",
+      "port": null
+    },
+    "area": "text",
+    "index": {
+      "start": 553,
+      "end": 592
+    }
+  }
+]
+```
+
+##### 3.3 Plain texts (URL)
 
 ``` javascript
     var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
@@ -711,7 +989,7 @@ var sampleText = ' abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
   }
 ]
 ```
-##### 5. XML (HTML)
+##### 4. XML (HTML)
 
 ``` javascript
     // The sample of 'XML (HTML)'
@@ -781,117 +1059,77 @@ var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);
 
 ``` javascript
 
-    var sampleTxt = 'olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec, ' +
-        'jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec \n nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec, 
-        kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec\n';
+    var sampleTxt = 'olah billo:78517700-1f01- 11e3-a6b7-3c970e02b4ec, ' +
+      'jiglo piglo:68517700-1f\t01-11e3-a6b7-3c970e02b4ec \n ' +
+     'nimho james: 98517700-1f01-11e3 -a6b7-3c970e02b4ec\tkathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec';
     
     /**
      * @brief
      * Distill all 'strings before and after the colon'
      * @author Andrew Kang
      * @param textStr string required
-     * @param delimiter string
+     * @param delimiter string (If no delimiter, the next priority is a line return, followed by a tab and space)
      * @return array
      */
     var sbacs = PatternDreamer.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
  ```
  ###### console.log()
  ``` javascript
- [
-   {
-     "value": {
-       "original": "olah billo:78517700-1f01-11e3-a6b7-3c970e02b4ec,",
-       "left": "olah billo",
-       "right": "78517700-1f01-11e3-a6b7-3c970e02b4ec"
-     },
-     "area": "text",
-     "index": {
-       "start": 0,
-       "end": 48
-     }
-   },
-   {
-     "value": {
-       "original": "jiglo piglo:68517700-1f \n 01-11e3-a6b7-3c970e02b4ec",
-       "left": "jiglo piglo",
-       "right": "68517700-1f \n 01-11e3-a6b7-3c970e02b4ec"
-     },
-     "area": "text",
-     "index": {
-       "start": 48,
-       "end": 102
-     }
-   },
-   {
-     "value": {
-       "original": "nimho james:98517700-1f01-11e3-a6b7-3c970e02b4ec,",
-       "left": "nimho james",
-       "right": "98517700-1f01-11e3-a6b7-3c970e02b4ec"
-     },
-     "area": "text",
-     "index": {
-       "start": 102,
-       "end": 152
-     }
-   },
-   {
-     "value": {
-       "original": "kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec",
-       "left": "kathy ruck",
-       "right": "38517700-1f01-11e3-a6b7-3c970e02b4ec"
-     },
-     "area": "text",
-     "index": {
-       "start": 152,
-       "end": 201
-     }
-   }
- ]
+[
+  {
+    "value": {
+      "original": "olah billo:78517700-1f01- 11e3-a6b7-3c970e02b4ec,",
+      "left": "olah billo",
+      "right": "78517700-1f01- 11e3-a6b7-3c970e02b4ec"
+    },
+    "area": "text",
+    "index": {
+      "start": 0,
+      "end": 49
+    }
+  },
+  {
+    "value": {
+      "original": "jiglo piglo:68517700-1f\t01-11e3-a6b7-3c970e02b4ec",
+      "left": "jiglo piglo",
+      "right": "68517700-1f\t01-11e3-a6b7-3c970e02b4ec"
+    },
+    "area": "text",
+    "index": {
+      "start": 49,
+      "end": 101
+    }
+  },
+  {
+    "value": {
+      "original": "nimho james: 98517700-1f01-11e3 -a6b7-3c970e02b4ec",
+      "left": "nimho james",
+      "right": "98517700-1f01-11e3 -a6b7-3c970e02b4ec"
+    },
+    "area": "text",
+    "index": {
+      "start": 101,
+      "end": 153
+    }
+  },
+  {
+    "value": {
+      "original": "kathy ruck:38517700-1f01-11e3-a6b7-3c970e02b4ec",
+      "left": "kathy ruck",
+      "right": "38517700-1f01-11e3-a6b7-3c970e02b4ec"
+    },
+    "area": "text",
+    "index": {
+      "start": 153,
+      "end": 201
+    }
+  }
+]
  ```
 
 #### Chapter 3. Email
 
-##### 1. XML (HTML)
-``` javascript
-    /**
-     * @brief
-     * Distill all emails from normal text, tags, comments in html
-     * @author Andrew Kang
-     * @param xmlStr string required
-     * @param prefixSanitizer boolean (default : true)
-     * @return array
-     */
-   
-     var emails = PatternDreamer.XmlArea.extractAllEmails(xmlStr, prefixSanitizer);    
-   
-```
-###### console.log()
-``` javascript
-[
-  {
-    "value": "abc件给@navered.com",
-    "area": "comment"
-  },
-  {
-    "value": "aa件给@daum.net",
-    "area": "comment"
-  },
-  {
-    "value": "abc@daum.net",
-    "area": "text"
-  },
-  {
-    "value": "abcd@daum.co.kr",
-    "area": "text"
-  },
-  {
-    "value": "가나다@pacbook.net",
-    "area": "text"
-  }
-] 
-```
-
-##### 2. Plain texts
+##### 1. Plain texts
 
 ``` javascript
 var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
@@ -901,15 +1139,21 @@ var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
  ``` javascript
 [
   {
-    "value": "가나다@pacbook.net",
-    "area": "text"
+    "value": {
+      "email": "가나다@apacbook.ac.kr",
+      "removedTailOnEmail": null,
+      "type": "domain"
+    },
+    "area": "text",
+    "index": {
+      "start": 222,
+      "end": 240
+    }
   },
-  {
-    "value": "abc@daum.net",
-    "area": "text"
-  }
-]
+  .....
+  
 ```
+
 
 #### Chapter 4. Elements and Comment
 
