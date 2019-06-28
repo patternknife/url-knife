@@ -1,6 +1,6 @@
 {
   "name": "pattern-dreamer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Javascript 'url, fuzzy url, uri, domain, e-mail, strings before and after the colon' extractor using a robust combination of regular expressions",
   "main": "src/entry.js",
   "scripts": {

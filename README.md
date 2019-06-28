@@ -9,7 +9,7 @@ Currently it handles six patterns
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
 #### Fuzzy URL extractor (beta, parameters, uris in urls not yet fully considered)
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
+<a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
 
 ## Update
 From ver. 2.0, the new function '.extractAllFuzzyUrls()' is available as a beta version. This will help us to extract all urls even in wrong formats possibly caused by human errors.   
