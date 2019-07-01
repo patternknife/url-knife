@@ -49,6 +49,17 @@ const Ancestors = {
     all_keypad_meta_chars: '[~,./<>?;:"\'`!@#$%^&*()\\[\\]{}_+=|\\\\-]',
     /* '/ , # , ?' excepted from the 'all_keypad_meta_chars' */
     all_keypad_meta_chars_without_delimiters: '[~,.<>;:"\'`!@$%^&*()\\[\\]{}_+=|\\\\-]',
+
+    get fuzzy_allowance_standard() {
+        return '(?:[\\n\\r\\t\\s]*|'+ this.all_existences +'{0,6})';
+    },
+    get fuzzy_allowance_standard2() {
+        return '(?:[\\n\\r\\t\\s]*|'+ Ancestors.all_keypad_meta_chars +'{0,6})';
+    },
+
+    get fuzzy_allowance_standard3() {
+        return '(?:[\\n\\r\\t\\s]*|(?:' +  Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,6})';
+    }
 };
 
 const Descendants = {
@@ -71,7 +82,8 @@ const Descendants = {
     },
 
     fuzzy_localhost: '(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s])*localhost',
-    fuzzy_port_recommended: '(?:(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[:;]*(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[0-9]+|)',
+    fuzzy_port_recommended: '(?:'+ Ancestors.fuzzy_allowance_standard2 +'[:;]*' + Ancestors.fuzzy_allowance_standard2 + '[0-9]+|)',
+    //fuzzy_port_recommended: '(?:(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[:;]*(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[0-9]+|)',
     fuzzy_port_must: '(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[:;]*(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[0-9]+',
     fuzzy_url_params_recommended: '(?:(?:[\\n\\r\\t\\s]*(/|\\?|#)+[^\\n\\r\\t\\s]*)|)',
 
@@ -126,7 +138,8 @@ const Descendants = {
 
     fuzzy_protocols2: '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.lang_char + ')+',
 
-    fuzzy_protocol_domain_delimiter: '(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)[:;]' + Ancestors.all_existences + '{0,6}\\/',
+    fuzzy_protocol_domain_delimiter: '(?:(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)[:;]' + Ancestors.all_existences + '{0,6}|' +
+    '(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)\\/'+ Ancestors.fuzzy_allowance_standard3  + '*)\\/',
 
     get fuzzy_url_body_end() {
         return '(?:(?:' + this.fuzzy_ip_v4 + '|' + this.fuzzy_localhost + '|' + this.fuzzy_ip_v6 + ')' +
@@ -218,9 +231,9 @@ const Descendants = {
     Ancestors.url_params_recommended,
 
     // [SKIP DEPENDENT]
-    intranet: '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')' +
-    '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*\\.' +
-    '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))+',
+    intranet: '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')+?\\.' +
+    '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.lang_char + ')+' +
+    '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*',
 
     /* only uri (in the future not yet)*/
     all_uris:
@@ -255,8 +268,8 @@ let Children = {
             // Missing-protocol
             '(?:' + Descendants.fuzzy_url_body2 + Descendants.fuzzy_domain_end + Descendants.fuzzy_port_recommended + Descendants.fuzzy_url_params_recommended + ')|' +
             // Special
-            '(?:(?:' + Descendants.fuzzy_ip_v4 + '|' + Descendants.fuzzy_ip_v6_independent + '|' + Ancestors.localhost + '|' + Descendants.intranet + ')' + Ancestors.port_recommended +
-            Ancestors.url_params_recommended + ')'
+            '(?:(?:' + Descendants.fuzzy_ip_v4 + '|' + Descendants.fuzzy_ip_v6_independent + '|' + Ancestors.localhost + '|' + Descendants.intranet  +')' + Descendants.fuzzy_port_recommended +
+            Descendants.fuzzy_url_params_recommended + ')'
     },
 
     // 1. URL

@@ -472,7 +472,9 @@ const Url = {
 
                     obj['type'] = 'ip_v4';
 
-                    domain_temp = domain_temp.replace(new RegExp('[^0-9\\.]', 'g'), '');
+                    domain_temp = domain_temp.replace(new RegExp('^[^0-9]+', 'g'), '');
+                    domain_temp = domain_temp.replace(new RegExp('[^0-9]+$', 'g'), '');
+                    domain_temp = domain_temp.replace(new RegExp('[^0-9]+', 'g'), '.');
 
                 } else if (new RegExp(Pattern.Descendants.fuzzy_ip_v6, 'i').test(domain_temp)) {
 
@@ -788,8 +790,7 @@ const Url = {
 
 
             if (!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)) {
-                console.log('Error url : ' + url);
-                throw new ValidationError('This is neither an url nor an uri.');
+                throw new ValidationError('This is neither an url nor an uri.' + ' / Error url : ' + url);
             }
 
 
