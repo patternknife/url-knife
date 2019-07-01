@@ -138,7 +138,6 @@ const Text = {
         return costs[s2.length];
     },
 
-
     indexOfMax(arr) {
 
         if (arr.length === 0) {

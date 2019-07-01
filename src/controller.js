@@ -424,7 +424,6 @@ const TextArea = {
      * @return array
      */
     extractAllFuzzyUrls(textStr) {
-
         //Pattern.Children.setUrlPattern(noProtocolJsn);
 
         //console.log('a : ' + Pattern.Children.url);
@@ -659,7 +658,7 @@ const TextEditorArea = {
         return textStr;
 
     }
-}
+};
 
 const UrlArea = {
 

@@ -435,6 +435,7 @@ const Url = {
 
                     protocol_arrs.forEach(function (val, idx) {
                         score_arrs.push(Util.Text.similarity(val, match[1]));
+               //         console.log('url : ' + url + 'aa : ' + Util.Text.similarity(val, match[1]), val, match[1]);
                     });
 
                     //console.log('sa : ' + score_arrs);
@@ -527,7 +528,20 @@ const Url = {
                 port_str= ':' + port_str;
             }
 
-            obj['normalizedUrl'] = protocol_str + obj['onlyDomain'] + port_str + modified_url;
+            let onlyDomain_str = obj['onlyDomain'];
+            if(!onlyDomain_str){
+                onlyDomain_str = '';
+            }
+
+            /* Now, only the end part of a domain is left */
+            /* Consecutive param delimiters should be replaced into one */
+            modified_url  = modified_url.replace(/[/]{2,}/gi, '/');
+            modified_url  = modified_url.replace(/(.*?)[?]{2,}([^/]*?(?:=|$))(.*)/i, function(match, $1, $2, $3){
+                //console.log(modified_url + ' a :' + $1 + '?' + $2 + $3);
+                return $1 + '?' + $2 + $3;
+            });
+
+            obj['normalizedUrl'] = protocol_str + onlyDomain_str + port_str + modified_url;
 
 
             //console.log('modified_url3 : ' +  modified_url);
@@ -544,6 +558,7 @@ const Url = {
                 let rx3 = new RegExp('\\?(?:.|[\\n\\r\\t\\s])*$', 'gi');
                 let match3 = {};
                 while ((match3 = rx3.exec(modified_url)) !== null) {
+
                     obj['onlyParams'] = match3[0];
                 }
                 modified_url = modified_url.replace(rx3, '');
