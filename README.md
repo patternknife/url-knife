@@ -17,7 +17,7 @@ Also, the return format of 'PatternDreamer.TextArea.extractAllEmails' has been c
 
 From ver. 1.7, 'Strings before and after the colon' is now available to be extracted. 
 
-[Go to the Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
+[Go to the Chapter 2. Strings before and after the colon](#chapter-2-strings-before-and-after-the-colon)
  
 From ver. 1.6, it is available to extract 'ip_v4, ip_v6, localhost and intranet' even when they miss protocols such as 'http'.
 
@@ -132,13 +132,13 @@ import PatternDreamer from 'pattern-dreamer';
 ```
 
 ## Syntax & Usage
-[Chapter 1. URL, URI](#chapter-1.-url,-uri)
+[Chapter 1. URL, URI](#chapter-1-url,-uri)
 
-[Chapter 2. Strings before and after the colon](#chapter-2.-strings-before-and-after-the-colon)
+[Chapter 2. Strings before and after the colon](#chapter-2-strings-before-and-after-the-colon)
 
-[Chapter 3. Email](#chapter-3.-email)
+[Chapter 3. Email](#chapter-3-email)
 
-[Chapter 4. Elements and Comment](#chapter-4.-elements-and-comment)
+[Chapter 4. Elements and Comment](#chapter-4-elements-and-comment)
 
 
 
