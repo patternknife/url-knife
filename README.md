@@ -1,5 +1,4 @@
-# Pattern-dreamer
-
+# Pattern-dreamer [![NPM version](https://img.shields.io/npm/v/pattern-dreamer.svg)](https://www.npmjs.com/package/pattern-dreamer)
 ## Overview
 Pattern-dreamer always challenges patterns hard to be extracted in texts.  
 Currently it handles six patterns 
