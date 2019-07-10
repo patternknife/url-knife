@@ -56,9 +56,11 @@ const Ancestors = {
     get fuzzy_allowance_standard2() {
         return '(?:[\\n\\r\\t\\s]*|'+ Ancestors.all_keypad_meta_chars +'{0,6})';
     },
-
     get fuzzy_allowance_standard3() {
         return '(?:[\\n\\r\\t\\s]*|(?:' +  Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,6})';
+    },
+    get fuzzy_allowance_standard4() {
+        return '(?:[\\n\\r\\t\\s]*|(?:' +  Ancestors.all_keypad_meta_chars + '|' + Ancestors.lang_char +'|[\\n\\r\\t\\s]){0,6})';
     }
 };
 
@@ -82,10 +84,15 @@ const Descendants = {
     },
 
     fuzzy_localhost: '(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s])*localhost',
-    fuzzy_port_recommended: '(?:'+ Ancestors.fuzzy_allowance_standard2 +'[:;]*' + Ancestors.fuzzy_allowance_standard2 + '[0-9]+|)',
+    fuzzy_port_recommended: '(?:'+ Ancestors.fuzzy_allowance_standard3 +'[:;]*' + Ancestors.fuzzy_allowance_standard3 + '[0-9]+|)',
     //fuzzy_port_recommended: '(?:(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[:;]*(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[0-9]+|)',
     fuzzy_port_must: '(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[:;]*(?:' + Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,3}[0-9]+',
-    fuzzy_url_params_recommended: '(?:(?:[\\n\\r\\t\\s]*(/|\\?|#)+[^\\n\\r\\t\\s]*)|)',
+
+    fuzzy_url_params_recommended: '(?:(?:' + Ancestors.fuzzy_allowance_standard4 + '(/|\\?|#)+[^\\n\\r\\t\\s]*)|)',
+    /* In development */
+/*    fuzzy_uri_recommended: '(?:[^/]+(?:/[^\\n\\r\\t\\s/]+|.+/[^\\n\\r\\t\\s]*)|)',
+    fuzzy_params_recommended: '(?:[^?]+(?:\\?[^\\n\\r\\t\\s\\?]+|.+&[^\\n\\r\\t\\s]*)|)',
+    fuzzy_fragment_recommended: '(?:[^#]+(?:/[^\\n\\r\\t\\s#]+|.+#[^\\n\\r\\t\\s]*)|)',*/
 
     get fuzzy_protocols() {
 
@@ -136,7 +143,7 @@ const Descendants = {
 
     },
 
-    fuzzy_protocols2: '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.lang_char + ')+',
+    fuzzy_protocols2: '(?:[a-zA-Z])+',
 
     fuzzy_protocol_domain_delimiter: '(?:(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)[:;]' + Ancestors.all_existences + '{0,6}|' +
     '(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)\\/'+ Ancestors.fuzzy_allowance_standard3  + '*)\\/',
@@ -162,9 +169,58 @@ const Descendants = {
             ')';
     },
 
+    get fuzzy_root_domains() {
+
+        let alls = Ancestors.all_root_domains;
+        alls = alls.replace(/^\(\?:|\)$/, '');
+
+        let arrs = alls.split('|');
+
+        let whole_rx = '(?:';
+        for (let a = 0; a < arrs.length; a++) {
+
+            let full_rx = '(?:[0-9]|[\\n\\r\\t\\s]|' + Ancestors.all_keypad_meta_chars + '|';
+
+            let part_arrs = [];
+            let part_rx = '[';
+
+            let one = arrs[a];
+            for (let b = 0; b < one.length; b++) {
+
+                let cr = one.charAt(b);
+
+                part_rx += cr;
+                part_arrs.push(cr);
+
+            }
+
+            part_rx += ']';
+
+            full_rx += part_rx + '|)';
+
+            for (let c = 0; c < part_arrs.length; c++) {
+
+                if (c < part_arrs.length - 1) {
+                    whole_rx += part_arrs[c] + full_rx;
+                } else {
+                    whole_rx += part_arrs[c];
+                }
+            }
+
+            if (a < arrs.length - 1) {
+                whole_rx += '|';
+            }
+        }
+
+        //console.log('w : ' + whole_rx);
+
+        return whole_rx;
+
+    },
+
     fuzzy_domain_end:
     '(?:[\\n\\r\\t\\s]|' + Ancestors.all_keypad_meta_chars_without_delimiters + '){0,3}' + Ancestors.all_keypad_meta_chars_without_delimiters +
-    '(?:' + Ancestors.all_root_domains + '\\b)' +
+    '(?:' + Ancestors.all_root_domains + ')' +
     '(?:' + Ancestors.all_root_domains + '|(?:' + Ancestors.all_keypad_meta_chars_without_delimiters + '|[\\n\\r\\t\\s]){0,3})*',
 
     fuzzy_url_body2:
@@ -253,11 +309,11 @@ const Descendants = {
     '[^\\n\\r\\t\\s@]+\\.' + '(?:' + Ancestors.all_root_domains + '\\b)' +
     '(?:' + Ancestors.all_root_domains + '|\\.)*)',
 
-    colon_base: '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+'
+    colon_base: '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+',
 
 };
 
-/* With the legacy of Ancestors and Descendants, Children changes  */
+/* With the legacy of Ancestors and Descendants, Children have created the final patterns used in 'service.js' */
 let Children = {
 
     // 0. Fuzzy URL
@@ -268,7 +324,7 @@ let Children = {
             // Missing-protocol
             '(?:' + Descendants.fuzzy_url_body2 + Descendants.fuzzy_domain_end + Descendants.fuzzy_port_recommended + Descendants.fuzzy_url_params_recommended + ')|' +
             // Special
-            '(?:(?:' + Descendants.fuzzy_ip_v4 + '|' + Descendants.fuzzy_ip_v6_independent + '|' + Ancestors.localhost + '|' + Descendants.intranet  +')' + Descendants.fuzzy_port_recommended +
+            '(?:(?:' + Descendants.fuzzy_ip_v4 + '|' + Descendants.fuzzy_ip_v6_independent + '|' + Ancestors.localhost + ')' + Descendants.fuzzy_port_recommended +
             Descendants.fuzzy_url_params_recommended + ')'
     },
 

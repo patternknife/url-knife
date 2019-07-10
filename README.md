@@ -7,7 +7,7 @@ Currently it handles six patterns
 #### URL extractor
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
-#### Fuzzy URL extractor (beta, parameters, uris in urls not yet fully considered)
+#### Fuzzy URL extractor
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
 
 ## Update
@@ -382,6 +382,7 @@ var sampleText = ' abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
 ]
 ```
 ##### 3.2 Plain texts (Fuzzy URL)
+###### This does not detect intranets due to false positives. If you need to extract intranets, go to 3.3 Plain texts (URL) below. 
 
 ``` javascript
 var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.ex ample;com    -/wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
@@ -395,13 +396,7 @@ var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.e
      * Distill all urls including fuzzy matched ones from normal text
       * @author Andrew Kang
       * @param textStr string required
-      * @param noProtocolJsn object
-      *    default :  {
-                 'ip_v4' : false,
-                 'ip_v6' : false,
-                 'localhost' : false,
-                 'intranet' : false
-             }
+        
        
  var urls = PatternDreamer.TextArea.extractAllFuzzyUrls(textStr)
  ```

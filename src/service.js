@@ -65,6 +65,9 @@ const Text = {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
+        // To increase the accuracy of applying regexes...
+        textStr = textStr.replace(/[\n\r\t\s]{2,}/, ' ');
+
         let obj = [];
 
         let rx = new RegExp(Pattern.Children.fuzzy_url(), 'gi');
@@ -89,7 +92,9 @@ const Text = {
             let re = Url.normalizeUrl(mod_val);
 
             /* SKIP DEPENDENCY */
-            if (new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + ')+$', 'i').test(re['url'])) {
+
+            // Decimals
+            if (new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + '|[\\n\\r\\t\\s])+$', 'i').test(re['url'])) {
                 // ip_v4 is OK
                 if (!new RegExp('^' + Pattern.Ancestors.ip_v4 + '$', 'i').test(re['onlyDomain'])) {
                     continue;
@@ -98,17 +103,17 @@ const Text = {
 
 
             /* this part doesn't need to be included */
-            if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
+   /*         if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
                 end_idx -= re['removedTailOnUrl'].length;
-            }
+            }*/
 
             obj.push({
                 'value': re,
-                'area': 'text',
-                'index': {
+                'area': 'text'
+          /*      'index': {
                     'start': st_idx,
                     'end': end_idx
-                }
+                }*/
             });
         }
 
@@ -542,6 +547,18 @@ const Url = {
                 //console.log(modified_url + ' a :' + $1 + '?' + $2 + $3);
                 return $1 + '?' + $2 + $3;
             });
+
+
+            /* 'modified_url' must start with '/,?,#' */
+            let rx_modified_url = new RegExp('(?:\\/|\\?|\\#)', 'i');
+            let match_modified_url = {};
+            if ((match_modified_url = rx_modified_url.exec(modified_url)) !== null) {
+
+                modified_url = modified_url.replace(new RegExp('^.*?(' + Util.Text.escapeRegex(match_modified_url[0]) + '.*)$', 'i'), function(match, $1){
+                    return $1;
+                });
+            }
+
 
             obj['normalizedUrl'] = protocol_str + onlyDomain_str + port_str + modified_url;
 
@@ -1046,6 +1063,8 @@ const Url = {
                     obj['onlyUri'] = obj['url'].replace(/\?[^/]*$/gi, '');
                 }
             }
+
+           //obj['normalizedUrl'] = this.normalizeUrl(obj['url'])['normalizedUrl'];
 
 
             //}

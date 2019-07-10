@@ -1,6 +1,6 @@
 {
   "name": "pattern-dreamer",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "Url parser, extractor, normalizer, url from text, fuzzy url, uri extractor, email extractor... Extract and normalize patterns !",
   "main": "src/entry.js",
   "scripts": {
