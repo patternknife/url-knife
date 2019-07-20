@@ -144,7 +144,7 @@
 <div id="ta" contenteditable="true" style="margin-top: 3%"></div>-->
 
 <script class="jsbin" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="../dist/pattern-dreamer.bundle.js"></script>
+<script src="../dist/pattern-extractor.bundle.js"></script>
 <script type="text/javascript">
 
 
@@ -210,7 +210,7 @@
             'intranet' : false,
         };
 
-        $('#logger').html(JSON.stringify(PatternDreamer.TextArea.extractAllUrls(text, nJsnObj), null, 2));
+        $('#logger').html(JSON.stringify(PatternExtractor.TextArea.extractAllUrls(text, nJsnObj), null, 2));
 
         text = text.replace(/\n$/g, '\n\n');
 
@@ -229,7 +229,7 @@
         });
 
 
-        let tg = PatternDreamer.TextEditorArea.addClassToAllUrls(text, 'highlighted1', false, nJsnObj);
+        let tg = PatternExtractor.TextEditorArea.addClassToAllUrls(text, 'highlighted1', false, nJsnObj);
 
         console.log(tg);
 
@@ -355,22 +355,22 @@
 
     start();
 
-/*    console.log('final_1 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllComments(xmlStr), null, 2));
-    console.log('final_2 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllElements(xmlStr), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
-    //console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
+/*    console.log('final_1 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllComments(xmlStr), null, 2));
+    console.log('final_2 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllElements(xmlStr), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
+    //console.log('final_5 : ' + JSON.stringify(PatternExtractor.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
 
 /*
-    console.log('final_3 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllUrls(xmlStr), null, 2));
-    console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllUrls(textStr), null, 2));
-    //console.log('final_3_2 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl(1), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
+    console.log('final_3 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllUrls(xmlStr), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllUrls(textStr), null, 2));
+    //console.log('final_3_2 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl(1), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
 
-    console.log('final_4 : ' + JSON.stringify(PatternDreamer.XmlArea.extractAllEmails(xmlStr), null, 2));
-    console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, false), null, 2));
+    console.log('final_4 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllEmails(xmlStr), null, 2));
+    console.log('final_4_1 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllEmails(textStr, false), null, 2));
 */
-   // console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, false), null, 2));
+   // console.log('final_4_1 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllEmails(textStr, false), null, 2));
     // Strings before and after the colon
     var textStr3 = 'olah billo:78517700-1f01- 11e3-a6b7-3c970e02b4ec, \n' +
             'The guy above ......... \n ' +
@@ -379,16 +379,16 @@
 
     var textStr5 = '142 .42.1.1,:,,8080 123.45xtp://--[::1]:8000에서 httt //-www.ex ample;comm                      /wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
     'h ttp:/://132 .42.,1.1 HT TP:// foo, co,.kr/blah_blah_(wikipedia) localhost   :80 https://www.google .org :8005/maps/place/USA/@36.2218457,... tnae1ver.co. jp;8000on the internet  Asterisk\n ' +
-    'the packed1book.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;' +
-    ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr?abd=55...,.&kkk=5rk.,, ' +
+    'the packed1book,ac,.kr,.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;' +
+    ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
     'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
-    console.log('final_3_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
-/*    console.log('final_5 : ' + JSON.stringify(PatternDreamer.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(PatternDreamer.UrlArea.assortUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
+/*    console.log('final_5 : ' + JSON.stringify(PatternExtractor.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 
-    console.log('final_6 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllStrBfAfColon(textStr3, ','), null, 2));
-    console.log('final_4_1 : ' + JSON.stringify(PatternDreamer.TextArea.extractAllEmails(textStr, true), null, 2));*/
+    console.log('final_6 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllStrBfAfColon(textStr3, ','), null, 2));
+    console.log('final_4_1 : ' + JSON.stringify(PatternExtractor.TextArea.extractAllEmails(textStr, true), null, 2));*/
     end();
 
 
@@ -401,7 +401,7 @@
             let tg = this.innerHTML;
             var ele = document.getElementById('ta');
 
-            let temp = PatternDreamer.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
+            let temp = PatternExtractor.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
             //console.log('re : ' + textStr);
             var position = getCaretCharacterOffsetWithin(ele);
 
@@ -425,7 +425,7 @@
 
 
         //2. ContentEditable
-/*        let ts = PatternDreamer.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
+/*        let ts = PatternExtractor.TextEditorArea.addClassToAllUrls(textStr2, 'highlighted2', true);
         $("#ta").html(ts);*/
 
 

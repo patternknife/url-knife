@@ -1,6 +1,6 @@
-# Pattern-dreamer [![NPM version](https://img.shields.io/npm/v/pattern-dreamer.svg)](https://www.npmjs.com/package/pattern-dreamer)
+# Pattern-extractor [![NPM version](https://img.shields.io/npm/v/pattern-extractor.svg)](https://www.npmjs.com/package/pattern-extractor)
 ## Overview
-Pattern-dreamer always challenges patterns hard to be extracted in texts.  
+Pattern-extractor always challenges patterns hard to be extracted in texts.  
 Currently it handles six patterns 
 (url, uri, fuzzy url, domain, email, strings before and after the colon).
 
@@ -12,7 +12,7 @@ Currently it handles six patterns
 
 ## Update
 From ver. 2.0, the new function '.extractAllFuzzyUrls()' is available as a beta version. This will help us to extract all urls even in wrong formats possibly caused by human errors.   
-Also, the return format of 'PatternDreamer.TextArea.extractAllEmails' has been changed.
+Also, the return format of 'PatternExtractor.TextArea.extractAllEmails' has been changed.
 
 From ver. 1.7, 'Strings before and after the colon' is now available to be extracted. 
 
@@ -42,7 +42,7 @@ From ver. 1.6, it is available to extract 'ip_v4, ip_v6, localhost and intranet'
  http://[::1]:8000에서
   http ://www.example.com/wpstyle/?p=364 is ok... ';      
   
- var urls = PatternDreamer.TextArea.extractAllUrls(sampleString, {
+ var urls = PatternExtractor.TextArea.extractAllUrls(sampleString, {
                     'ip_v4' : true,
                     'ip_v6' : false,
                     'localhost' : false,
@@ -115,7 +115,7 @@ For ES5 users,
 <html>
        <body>
        	<p id="content"></p>
-       	<script src="../dist/pattern-dreamer.bundle.js"></script>
+       	<script src="../dist/pattern-extractor.bundle.js"></script>
        	<script type="text/javascript">
        
       
@@ -124,10 +124,10 @@ For ES5 users,
 </html>
 ```
 
-For ES6 npm users, do 'npm install --save pattern-dreamer' on console.
+For ES6 npm users, do 'npm install --save pattern-extractor' on console.
 
 ``` html
-import PatternDreamer from 'pattern-dreamer';
+import PatternExtractor from 'pattern-extractor';
 ```
 
 ## Syntax & Usage
@@ -169,7 +169,7 @@ var sampleText = "If you visit "192.179.3.5?abc=2"..
      * @return string
      */
              
-var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(sampleText, 'highlighted1', false, {
+var textStr_new = PatternExtractor.TextEditorArea.addClassToAllUrls(sampleText, 'highlighted1', false, {
                               'ip_v4' : true,
                               'ip_v6' : true,
                               'localhost' : true,
@@ -179,7 +179,7 @@ var textStr_new = PatternDreamer.TextEditorArea.addClassToAllUrls(sampleText, 'h
 
 You can check how url patterns are highlighted by running the sample source below.
 
-https://github.com/Andrew-Kang-G/pattern-dreamer/blob/master/public/index.html
+https://github.com/Andrew-Kang-G/pattern-extractor/blob/master/public/index.html
 
 or 
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
@@ -187,7 +187,7 @@ or
 ##### 2. One url
   
 ``` javascript
-var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
+var url = PatternExtractor.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
  ```
  ###### console.log() 
  ``` javascript
@@ -213,7 +213,7 @@ var url = PatternDreamer.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1
 var sampleText = ' abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
                 'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
                 
- var uris = PatternDreamer.TextArea.extractCertainUris(sampleText, [['abc', 'def'], ['nice','guy']]) 
+ var uris = PatternExtractor.TextArea.extractCertainUris(sampleText, [['abc', 'def'], ['nice','guy']]) 
  // This detects all URIs containing 'nice/guy' or 'abc/def'
  ```
  ###### console.log() 
@@ -398,7 +398,7 @@ var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.e
       * @param textStr string required
         
        
- var urls = PatternDreamer.TextArea.extractAllFuzzyUrls(textStr)
+ var urls = PatternExtractor.TextArea.extractAllFuzzyUrls(textStr)
  ```
  ##### console.log() ( To print them out, JSON.stringify(urls, null, 2) )
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
@@ -428,7 +428,7 @@ var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.e
                  'intranet' : false
              }
        
- var urls = PatternDreamer.TextArea.extractAllUrls(textStr, {
+ var urls = PatternExtractor.TextArea.extractAllUrls(textStr, {
                     'ip_v4' : true,
                     'ip_v6' : false,
                     'localhost' : false,
@@ -456,7 +456,7 @@ var xmlStr =
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
         
-var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);    
+var urls = PatternExtractor.XmlArea.extractAllUrls(xmlStr);    
 ```
 ###### console.log()
 ``` javascript
@@ -521,7 +521,7 @@ var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);
      * @param delimiter string (If no delimiter, the next priority is a line return, followed by a tab and space)
      * @return array
      */
-    var sbacs = PatternDreamer.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
+    var sbacs = PatternExtractor.TextArea.extractAllStrBfAfColon(sampleTxt, ',');
  ```
  ###### console.log()
  ``` javascript
@@ -582,7 +582,7 @@ var urls = PatternDreamer.XmlArea.extractAllUrls(xmlStr);
 ##### 1. Plain texts
 
 ``` javascript
-var emails = PatternDreamer.TextArea.extractAllEmails(textStr),
+var emails = PatternExtractor.TextArea.extractAllEmails(textStr),
  ```
  
  ###### console.log() 
@@ -623,7 +623,7 @@ var xmlStr =
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
         
-var elements = PatternDreamer.XmlArea.extractAllElements(xmlStr);   
+var elements = PatternExtractor.XmlArea.extractAllElements(xmlStr);   
 ```
 ###### console.log() 
 ``` javascript
@@ -759,7 +759,7 @@ var xmlStr =
         '<p> 구루.com <img style="float:none;height: 200px;margin-top : 3%" src="/image/showWorkOrderImg?fileName=123456.png" alt="undefined" abc/></p>\n' +
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
            
-var comments = PatternDreamer.XmlArea.extractAllComments(xmlStr); 
+var comments = PatternExtractor.XmlArea.extractAllComments(xmlStr); 
 ```
 ###### console.log() 
 ``` javascript

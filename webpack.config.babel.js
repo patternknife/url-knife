@@ -7,9 +7,9 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		publicPath: '../dist/',
-		filename: 'pattern-dreamer.bundle.js',
+		filename: 'pattern-extractor.bundle.js',
 		chunkFilename: '[id].bundle.js',
         libraryTarget: 'var',
-        library: 'PatternDreamer'
+        library: 'PatternExtractor'
 	}
 };

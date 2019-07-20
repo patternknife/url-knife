@@ -1,7 +1,7 @@
 {
-  "name": "pattern-dreamer",
-  "version": "2.1.0",
-  "description": "Url parser, extractor, normalizer, url from text, fuzzy url, uri extractor, email extractor... Extract and normalize patterns !",
+  "name": "pattern-extractor",
+  "version": "2.2.0",
+  "description": "Url, fuzzy url, uri extractor, email extractor... Extract and normalize patterns !",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Andrew-Kang-G/pattern-dreamer.git"
+    "url": "git+https://github.com/Andrew-Kang-G/pattern-extractor.git"
   },
   "keywords": [
     "get",
@@ -27,9 +27,9 @@
   "author": "Andrew Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Andrew-Kang-G/pattern-dreamer/issues"
+    "url": "https://github.com/Andrew-Kang-G/pattern-extractor/issues"
   },
-  "homepage": "https://github.com/Andrew-Kang-G/pattern-dreamer#readme",
+  "homepage": "https://github.com/Andrew-Kang-G/pattern-extractor#readme",
   "devDependencies": {
     "chai": "^3.3.0",
     "gulp": "^3.9.0",

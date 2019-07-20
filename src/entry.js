@@ -1,7 +1,7 @@
 /*
 *
 *
-*   -- Pattern-dreamer --
+*   -- Pattern-extractor --
 *
 *   Copyright (c) 2019 Andrew Kang
 *
@@ -31,6 +31,6 @@
 
 * */
 
-import PatternDreamer from './controller';
+import PatternExtractor from './controller';
 
-export default PatternDreamer;
+export default PatternExtractor;

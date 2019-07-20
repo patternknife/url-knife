@@ -78,9 +78,9 @@ const Text = {
         while ((match = rx.exec(textStr)) !== null) {
 
             /* SKIP DEPENDENCY */
-            if (/^@/.test(match[0])) {
+ /*           if (/^@/.test(match[0])) {
                 continue;
-            }
+            }*/
 
             /* this can affect indexes so commented */
             //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
@@ -456,7 +456,7 @@ const Url = {
 
 
             // Domain
-            let rx1 = new RegExp('^' + Pattern.Descendants.fuzzy_url_body, 'gi');
+            let rx1 = new RegExp('^' + Pattern.Descendants.fuzzy_only_domain, 'gi');
             let match1 = {};
             while ((match1 = rx1.exec(modified_url)) !== null) {
 
@@ -467,9 +467,6 @@ const Url = {
 
                 //console.log('domain_temp : ' + domain_temp);
 
-                // ,com ,co,.kr ...
-                domain_temp = domain_temp.replace(new RegExp
-                ('' + Pattern.Ancestors.all_keypad_meta_chars_without_delimiters + '+(' + Pattern.Ancestors.all_root_domains + ')', 'gi'), '.$1');
 
 
                 // decide domain type
@@ -494,6 +491,30 @@ const Url = {
                     domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
 
                 } else {
+
+                    // ,com ,co,.kr ...
+                    domain_temp = domain_temp.replace(new RegExp
+                    ('' + Pattern.Ancestors.all_keypad_meta_chars_without_delimiters + '+'+ '(' + Pattern.Ancestors.all_root_domains + '|[a-zA-Z]+)', 'gi'), '.$1');
+
+                    let domain_temp_root_domain_match = new RegExp('\\.([^.]+)$', 'i').exec(domain_temp);
+                    if(domain_temp_root_domain_match !== null){
+                        if(domain_temp_root_domain_match[1]){
+
+                            let score_arrs = [];
+                            let root_domains_arrs = Pattern.Ancestors.all_root_domains_arrs;
+
+                            root_domains_arrs.forEach(function (val, idx) {
+                                score_arrs.push(Util.Text.similarity(val, domain_temp_root_domain_match[1]));
+                            });
+
+                            //console.log('sa : ' + score_arrs);
+
+                            let root_domain = root_domains_arrs[Util.Text.indexOfMax(score_arrs)];
+
+                            domain_temp = domain_temp.replace(new RegExp('\\.([^.]+)$', 'i'), '.' + root_domain)
+                        }
+                    }
+
 
                     obj['type'] = 'domain';
 
@@ -559,6 +580,23 @@ const Url = {
                 });
             }
 
+ /*           let rx_root_domain = new RegExp('\\.[^.]+$', 'i');
+            let match_root_domain = {};
+            if ((match_root_domain = rx_root_domain.exec(onlyDomain_str)) !== null) {
+
+                if(match_root_domain[0]) {
+
+                    let rx_root_domain_sub = new RegExp(Pattern.Ancestors.all_root_domains, 'i');
+                    let match_root_domain_sub = {};
+                    if ((match_root_domain_sub = rx_root_domain_sub.exec(match_root_domain[0])) !== null) {
+
+                        onlyDomain_str = onlyDomain_str.replace(rx_root_domain, '.' + match_root_domain_sub[0]);
+
+                    }
+
+                }
+
+            }*/
 
             obj['normalizedUrl'] = protocol_str + onlyDomain_str + port_str + modified_url;
 
@@ -1162,7 +1200,7 @@ const Email = {
         }
 
     }
-}
+};
 
 
 export default {
