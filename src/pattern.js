@@ -48,7 +48,9 @@ const Ancestors = {
     port_must: '(?:[\\t\\s]*:[\\t\\s]*[0-9]+)',
 
     port_recommended: '(?:[\\t\\s]*:[\\t\\s]*[0-9]+|)',
+
     url_params_recommended: '(?:(?:(/|\\?|#)[^\\n\\r\\t\\s]*)|)',
+    url_params_must: '(?:(/|\\?|#)[^\\n\\r\\t\\s]*)',
 
     all_keypad_meta_chars: '[~,./<>?;:"\'`!@#$%^&*()\\[\\]{}_+=|\\\\-]',
     /* / , # , ?, @ = excepted from the 'all_keypad_meta_chars' */
@@ -238,12 +240,6 @@ const Descendants = {
     '(?:[0-9]|' + Ancestors.lang_char + ')'
     + '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')+?',
 
-    /*    fuzzy_url_body2:
-        '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')' +
-        '(?:\\.|(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + '))*\\.',*/
-
-/*    fuzzy_domain_end2: '(?:' + Ancestors.all_root_domains + '\\b)' +
-    '(?:' + Ancestors.all_root_domains + '|\\.)*',*/
 
 
     xml_comment: '<\\!--(?:.|[\\n\\r\\t])*?-->',
@@ -270,6 +266,9 @@ const Descendants = {
 
     /* Type C. </p> */
     '(?:<\\/' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[^>]*?>)',
+
+
+
 
     /* protocol://localhost, ip v4, v6 with protocols */
     all_urls:
@@ -309,6 +308,8 @@ const Descendants = {
     '|' +
     // 2. 'abc/...' (the first letter must be any lang char and nums)
     '(?:(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.lang_char + ')' + '[^/\\n\\r\\t\\s]*(?:(/|\\?|#)[^\\n\\r\\t\\s]*))',
+
+
 
 
     // https://cs.chromium.org/chromium/src/third_party/blink/web_tests/fast/forms/resources/ValidityState-typeMismatch-email.js?q=ValidityState-typeMismatch-email.js&sq=package:chromium&dr

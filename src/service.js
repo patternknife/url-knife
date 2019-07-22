@@ -180,24 +180,39 @@ const Text = {
 
     },
 
-    extractCertainPureUris(textStr, uris) {
+    extractCertainPureUris(textStr, uris, endBoundary) {
 
         let uri_ptrn = Util.Text.urisToOne(uris);
 
-        // console.log('uri_ptrn : ' + uri_ptrn);
+         //console.log('uri_ptrn : ' + uri_ptrn);
 
         if (!uri_ptrn) {
             throw new ValidationError('the variable uris are not available');
         }
 
-        uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
-            '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
-            + '[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
-            + '\\/|\\/|\\b)' +
-            '(?:' + uri_ptrn + ')' + Pattern.Ancestors.url_params_recommended;
+        if(endBoundary){
 
 
-        // console.log('escaped_uri_ptrn : ' + uri_ptrn);
+            uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
+                '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+                + '[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+                + '\\/|\\/|\\b)' +
+                '(?:' + uri_ptrn + ')' +
+
+                '(?:' + Pattern.Ancestors.url_params_must + '|[\\n\\r\\t\\s]|$)'
+
+            ;
+
+        }else{
+
+            uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
+                '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+                + '[^/\\n\\r\\t\\s]*(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
+                + '\\/|\\/|\\b)' +
+                '(?:' + uri_ptrn + ')' + Pattern.Ancestors.url_params_recommended;
+        }
+
+        //console.log('escaped_uri_ptrn : ' + uri_ptrn);
 
         let obj = [];
 
@@ -210,9 +225,9 @@ const Text = {
         while ((match = rx.exec(textStr)) !== null) {
 
             /* remove email patterns related to 'all_urls3_front' regex */
-            if (/^@/.test(match[0])) {
+        /*    if (/^@/.test(match[0])) {
                 continue;
-            }
+            }*/
 
             let mod_val = match[0];
 

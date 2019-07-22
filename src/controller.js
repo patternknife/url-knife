@@ -481,15 +481,17 @@ const TextArea = {
      * @param textStr string required
      * @param uris array required
      * for example, [['a','b'], ['c','d']]
+     * If you use {number}, this means 'only number' ex) [['a','{number}'], ['c','d']]
+     * @param endBoundary boolean (default : false)
      * @return array
      */
-    extractCertainUris(textStr, uris) {
+    extractCertainUris(textStr, uris, endBoundary) {
 
         if (!(textStr && typeof textStr === 'string')) {
             throw new ValidationError('the variable textStr must be a string type and not be null.');
         }
 
-        let obj = Service.Text.extractCertainPureUris(textStr, uris);
+        let obj = Service.Text.extractCertainPureUris(textStr, uris, endBoundary);
         let obj2 = Service.Text.extractAllPureUrls(textStr);
 
 
@@ -672,6 +674,18 @@ const UrlArea = {
     assortUrl(url) {
 
         return Service.Url.assortUrl(url);
+    },
+
+    /**
+     * @brief
+     * Assort an url into each type.
+     * @author Andrew Kang
+     * @param url string required
+     * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
+     */
+    normalizeUrl(url) {
+
+        return Service.Url.normalizeUrl(url);
     }
 
 };

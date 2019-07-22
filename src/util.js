@@ -62,9 +62,14 @@ const Text = {
                 }
 
                 uris[a][b] = this.removeAllSpaces(uris[a][b]);
+
                 if (b === 0) {
                     if (new RegExp('^' + Pattern.Ancestors.no_lang_char_num, 'i').test(uris[a][b])) {
-                        throw new ValidationError('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
+
+                        if(uris[a][b] !== "{number}"){
+                            throw new ValidationError('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
+                        }
+
                     }
                 }
 
@@ -83,6 +88,11 @@ const Text = {
             }
 
         }
+
+        // {number} symbol
+        re = re.replace(/\\\{number\\\}/gi, '[0-9]+');
+
+        //console.log('re : ' + re);
 
         return re;
 

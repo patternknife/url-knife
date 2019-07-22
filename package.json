@@ -1,7 +1,7 @@
 {
   "name": "pattern-extractor",
-  "version": "2.2.0",
-  "description": "Url, fuzzy url, uri extractor, email extractor... Extract and normalize patterns !",
+  "version": "2.3.0",
+  "description": "Extract and normalize patterns such as url, fuzzy url, url without protocols, uri, email, from natural language texts.",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -14,11 +14,11 @@
   "keywords": [
     "get",
     "url",
+    "extract",
     "fuzzy url",
     "uri",
 	"email",
 	"colon",
-    "extract",
 	"find",
 	"scrape",
 	"text",

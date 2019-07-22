@@ -160,8 +160,8 @@
 
 
     // 1.2  TextArea (URI) - All tags are just string
-    var textStr1 = 'abc/def /123a/abc/def /abc/def?a=5&b=tkt /xyj/asff' +
-        'kds/sdsd https://google.com/abc/def?a=5&b=7 nice/guy bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
+    var textStr1 = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에서 abc/53 abc/533/ka abc/53a/ka /123a/abc/556/dd /abc/123?a=5&b=tkt /xyj/asff' +
+        'a333/kak  nice/guy/ bad/or/nice/guy ssh://nice.guy.com/?a=dkdfl';
 
     // 2. ContentEditable - <b> : tags to render / &lt;b&gt; : just string
     var textStr2 = 'https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
@@ -355,6 +355,9 @@
 
     start();
 
+    console.log('final_5 : ' + JSON.stringify(PatternExtractor.TextArea.extractCertainUris(textStr1, [['{number}', 'kak'], ['nice','guy'],['abc', '{number}']], true), null, 2));
+
+    //console.log('final_3_3 : ' + JSON.stringify(PatternExtractor.UrlArea.normalizeUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
 /*    console.log('final_1 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllComments(xmlStr), null, 2));
     console.log('final_2 : ' + JSON.stringify(PatternExtractor.XmlArea.extractAllElements(xmlStr), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(PatternExtractor.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
