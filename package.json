@@ -1,7 +1,7 @@
 {
-  "name": "pattern-extractor",
+  "name": "extract-normalize-urls",
   "version": "2.3.0",
-  "description": "Extract and normalize patterns such as url, fuzzy url, url without protocols, uri, email, from natural language texts.",
+  "description": "Extract and normalize urls, fuzzy urls, urls without protocols, uris in natural language texts.",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -9,27 +9,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Andrew-Kang-G/pattern-extractor.git"
+    "url": "git+https://github.com/Andrew-Kang-G/extract-normalize-urls.git"
   },
   "keywords": [
     "get",
-    "url",
     "extract",
+    "normalize",
+    "scrape",
     "fuzzy url",
+    "url",
     "uri",
-	"email",
-	"colon",
-	"find",
-	"scrape",
 	"text",
 	"string"
   ],
   "author": "Andrew Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Andrew-Kang-G/pattern-extractor/issues"
+    "url": "https://github.com/Andrew-Kang-G/extract-normalize-urls/issues"
   },
-  "homepage": "https://github.com/Andrew-Kang-G/pattern-extractor#readme",
+  "homepage": "https://github.com/Andrew-Kang-G/extract-normalize-urls#readme",
   "devDependencies": {
     "chai": "^3.3.0",
     "gulp": "^3.9.0",

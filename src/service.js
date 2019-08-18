@@ -9,53 +9,6 @@ fup.queryString = require("querystringparser");
 /*
 *     Private : Processing
 * */
-const Xml = {
-
-    extractAllPureElements(xmlStr) {
-
-        const rx = new RegExp(Pattern.Descendants.xml_element, "g");
-
-
-        let matches = [];
-        let match = {};
-        while ((match = rx.exec(xmlStr)) !== null) {
-
-            //console.log(match[0].split(/[\t\s]+|>/)[0]);
-            matches.push({
-                'value': match[0],
-                'elementName': match[0].split(/[\t\s]+|>/)[0].replace(/^</, ''),
-                'startIndex': match.index,
-                'lastIndex': match.index + match[0].length - 1
-            })
-
-        }
-
-        return matches;
-
-    },
-
-    extractAllPureComments(xmlStr) {
-
-        const rx = new RegExp(Pattern.Descendants.xml_comment, 'gi');
-
-        let matches = [];
-        let match = {};
-
-        while ((match = rx.exec(xmlStr)) !== null) {
-
-            matches.push({
-                'value': match[0],
-                'startIndex': match.index,
-                'lastIndex': match.index + match[0].length - 1
-            })
-
-        }
-
-        return matches;
-
-    },
-
-};
 
 const Text = {
 
@@ -241,68 +194,6 @@ const Text = {
             });
         }
 
-
-        return obj;
-
-    },
-
-    extractAllPureStrBfAfColon(textStr, delimiter) {
-
-        if (!(textStr && typeof textStr === 'string')) {
-            throw new ValidationError('the variable textStr must be a string type and not be null.');
-        }
-        let isDelimiter = false;
-        if (delimiter && typeof delimiter === 'string') {
-            isDelimiter = true;
-        }
-
-
-        let obj = [];
-
-        let rx = new RegExp(Pattern.Children.strBfAfColon, 'gi');
-
-        let matches = [];
-        let match = {};
-
-        while ((match = rx.exec(textStr)) !== null) {
-
-
-            let st_idx = match.index;
-            let end_idx = match.index + match[0].length;
-
-            let mod_val = match[0];
-
-
-            if (new RegExp('^([^:]+):([^:]+)$', 'i').test(mod_val)) {
-
-                let matches2 = new RegExp('^([^:]+):([^:]+)$', 'i').exec(mod_val);
-
-                let m2_1 =  null;
-                if(matches2[1]){
-                    m2_1 = matches2[1].trim();
-                }
-
-                let m2_2 =  null;
-                if(matches2[2]){
-                    m2_2 = matches2[2].trim();
-                    if(isDelimiter === true) {
-                        m2_2 = m2_2.replace(new RegExp(Util.Text.escapeRegex(delimiter) + '$', 'gi'), '');
-                    }
-                    m2_2 = m2_2.trim();
-                }
-
-
-                obj.push({
-                    'value': {'original': mod_val.trim(), 'left': m2_1, 'right': m2_2},
-                    'area': 'text',
-                    'index': {
-                        'start': st_idx,
-                        'end': end_idx
-                    }
-                });
-            }
-
-        }
 
         return obj;
 
@@ -1217,8 +1108,55 @@ const Email = {
     }
 };
 
+const Xml = {
+
+    extractAllPureElements(xmlStr) {
+
+        const rx = new RegExp(Pattern.Descendants.xml_element, "g");
+
+
+        let matches = [];
+        let match = {};
+        while ((match = rx.exec(xmlStr)) !== null) {
+
+            //console.log(match[0].split(/[\t\s]+|>/)[0]);
+            matches.push({
+                'value': match[0],
+                'elementName': match[0].split(/[\t\s]+|>/)[0].replace(/^</, ''),
+                'startIndex': match.index,
+                'lastIndex': match.index + match[0].length - 1
+            })
+
+        }
+
+        return matches;
+
+    },
+
+    extractAllPureComments(xmlStr) {
+
+        const rx = new RegExp(Pattern.Descendants.xml_comment, 'gi');
+
+        let matches = [];
+        let match = {};
+
+        while ((match = rx.exec(xmlStr)) !== null) {
+
+            matches.push({
+                'value': match[0],
+                'startIndex': match.index,
+                'lastIndex': match.index + match[0].length - 1
+            })
+
+        }
+
+        return matches;
+
+    },
+
+};
 
 export default {
 
-    Xml, Text, Url
+    Text, Url,  Xml
 }

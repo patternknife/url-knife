@@ -1,5 +1,5 @@
-pattern-extractor
-https://github.com/Andrew-Kang-G/pattern-extractor
+extract-normalize-urls
+https://github.com/Andrew-Kang-G/extract-normalize-urls
 
 The MIT License (MIT)
 

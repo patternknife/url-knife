@@ -1,7 +1,7 @@
 /*
 *
 *
-*   -- Pattern-extractor --
+*   -- Extract-normalize-urls --
 *
 *   Copyright (c) 2019 Andrew Kang
 *
@@ -31,6 +31,6 @@
 
 * */
 
-import PatternExtractor from './controller';
+import Pattern from './controller';
 
-export default PatternExtractor;
+export default Pattern;

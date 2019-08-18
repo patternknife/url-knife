@@ -12,6 +12,283 @@ import Valid from './valid';
 /*
 *     All Public
 * */
+
+const TextArea = {
+
+    /**
+     * @brief
+     * Distill all urls including fuzzy matched ones from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @return array
+     */
+    extractAllFuzzyUrls(textStr) {
+        //Pattern.Children.setUrlPattern(noProtocolJsn);
+
+        //console.log('a : ' + Pattern.Children.url);
+
+        return Service.Text.extractAllFuzzyUrls(textStr);
+
+    },
+
+    /**
+     * @brief
+     * Distill all urls from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
+     * @return array
+     */
+    extractAllUrls(textStr, noProtocolJsn) {
+
+
+        Pattern.Children.setUrlPattern(noProtocolJsn);
+
+        //console.log('a : ' + Pattern.Children.url);
+
+        return Service.Text.extractAllPureUrls(textStr);
+
+    },
+
+
+    /**
+     * @brief
+     * Distill all emails from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param prefixSanitizer boolean (default : true)
+     * @return array
+     */
+    extractAllEmails(textStr, prefixSanitizer) {
+
+        return Service.Text.extractAllPureEmails(textStr, prefixSanitizer);
+
+    },
+
+
+    /**
+     * @brief
+     * Distill uris with certain names from normal text
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param uris array required
+     * for example, [['a','b'], ['c','d']]
+     * If you use {number}, this means 'only number' ex) [['a','{number}'], ['c','d']]
+     * @param endBoundary boolean (default : false)
+     * @return array
+     */
+    extractCertainUris(textStr, uris, endBoundary) {
+
+        if (!(textStr && typeof textStr === 'string')) {
+            throw new ValidationError('the variable textStr must be a string type and not be null.');
+        }
+
+        let obj = Service.Text.extractCertainPureUris(textStr, uris, endBoundary);
+        let obj2 = Service.Text.extractAllPureUrls(textStr);
+
+
+        //console.log('obj : ' + JSON.stringify(obj));
+
+        let obj_final = [];
+
+        for (let a = 0; a < obj.length; a++) {
+
+            let obj_part = {
+                'uri_detected': null,
+                'in_what_url': null,
+            };
+
+            //let matchedUrlFound = false;
+            for (let b = 0; b < obj2.length; b++) {
+
+     /*           console.log('obj : ' + JSON.stringify(obj[a]));
+                console.log('obj2 : ' + JSON.stringify(obj2[b]));*/
+
+                if ((obj[a]['index']['start'] > obj2[b]['index']['start'] && obj[a]['index']['start'] < obj2[b]['index']['end'])
+                    &&
+                    (obj[a]['index']['end'] > obj2[b]['index']['start']  && obj[a]['index']['end'] <= obj2[b]['index']['end'])) {
+
+                    // Here, the uri detected is inside its url
+                    // false positives like the example '//google.com/abc/def?a=5&b=7' can be detected in 'Service.Text.extractCertainPureUris'
+
+                    let sanitizedUrl = obj[a]['value']['url'];
+
+                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Pattern.Ancestors.all_root_domains +  ')', 'gi');
+                    let matches = [];
+                    let match = {};
+
+                    while ((match = rx.exec(obj[a]['value']['url'])) !== null) {
+                        if(match[1]){
+
+                            sanitizedUrl = sanitizedUrl.replace(rx, '');
+
+                            //console.log(match[1]);
+
+                            obj[a]['value']['url'] = sanitizedUrl;
+                            obj[a]['index']['start'] += match[1].length;
+
+                            obj[a]['value']['onlyUriWithParams'] = obj[a]['value']['url'];
+                            obj[a]['value']['onlyUri'] = obj[a]['value']['url'].replace(/\?[^/]*$/gi, '');
+                        }
+                    }
+
+
+                    obj_part['in_what_url']= obj2[b];
+                    //matchedUrlFound = true;
+
+                }
+
+
+            }
+
+            obj_part['uri_detected'] = obj[a];
+            obj_final.push(obj_part);
+
+        }
+
+
+
+        return obj_final;
+
+    },
+
+    /**
+     * @brief
+     * Distill all 'strings before and after the colon'
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param delimiter string
+     * @return array
+     */
+    extractAllStrBfAfColon(textStr, delimiter) {
+
+        if (delimiter && typeof delimiter !== 'string') {
+            throw new ValidationError('Delimiter must be string type');
+        }
+
+        Pattern.Children.setStrBfAfColonDelimiter(delimiter);
+
+        return Service.Text.extractAllPureStrBfAfColon(textStr, delimiter);
+
+    },
+
+};
+
+const TextEditorArea = {
+
+    /**
+     * @brief
+     * Distill all urls
+     * @author Andrew Kang
+     * @param textStr string required
+     * @param clsName string required
+     * @param contentEditableMode boolean default false
+     * @param noProtocolJsn object
+     *    default :  {
+                'ip_v4' : false,
+                'ip_v6' : false,
+                'localhost' : false,
+                'intranet' : false
+            }
+
+     * @return string
+     */
+    addClassToAllUrls(textStr, clsName, contentEditableMode, noProtocolJsn) {
+
+        Pattern.Children.setUrlPattern(noProtocolJsn);
+
+        if (!(textStr && typeof textStr === 'string')) {
+            throw new ValidationError('the variable textStr must be a string type and not be null.');
+        }
+
+        /* To apply the regex 'Pattern.Children.url', make <div>,<br> a line return */
+        if (contentEditableMode && contentEditableMode === true) {
+            //textStr = textStr.replace(/&nbsp;/gi, ' ');
+            textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
+            textStr = textStr.replace(/<br>/gi, '\n');
+        }
+
+
+        /* This needs to be optimized for the future */
+        let t = Jquery('<p>' + textStr + '</p>');
+        t.find('.' + clsName).contents().unwrap();
+
+
+        t.each(function () {
+
+
+            let txt = Jquery(this).html();
+
+            //console.log(contentEditableMode + ' t1: ' + txt);
+
+            let obj = Service.Text.extractAllPureUrls(txt);
+            //console.log('obj : ' + JSON.stringify(obj));
+
+
+            /* Add the 'clsName' */
+            obj.reverse().forEach(function (val, idx) {
+                txt = Util.Text.replaceAt(txt, val['index']['end'], '</span>');
+                txt = Util.Text.replaceAt(txt, val['index']['start'], '<span class="' + clsName + '">');
+
+            });
+
+            //console.log(contentEditableMode + ' t2 : ' + txt);
+
+            Jquery(this).text(txt);
+        });
+
+
+        textStr = t.text();
+
+
+        //console.log(contentEditableMode + ' t3 : ' + textStr);
+
+
+        if (contentEditableMode && contentEditableMode === true) {
+            textStr = textStr.replace(/\n/gi, '<br>');
+        }
+
+
+        return textStr;
+
+    }
+};
+
+const UrlArea = {
+
+    /**
+     * @brief
+     * Assort an url into each type.
+     * @author Andrew Kang
+     * @param url string required
+     * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
+     */
+    assortUrl(url) {
+
+        return Service.Url.assortUrl(url);
+    },
+
+    /**
+     * @brief
+     * Assort an url into each type.
+     * @author Andrew Kang
+     * @param url string required
+     * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
+     */
+    normalizeUrl(url) {
+
+        return Service.Url.normalizeUrl(url);
+    }
+
+};
+
 const XmlArea = {
 
 
@@ -414,298 +691,11 @@ const XmlArea = {
 
 };
 
-const TextArea = {
-
-    /**
-     * @brief
-     * Distill all urls including fuzzy matched ones from normal text
-     * @author Andrew Kang
-     * @param textStr string required
-     * @return array
-     */
-    extractAllFuzzyUrls(textStr) {
-        //Pattern.Children.setUrlPattern(noProtocolJsn);
-
-        //console.log('a : ' + Pattern.Children.url);
-
-        return Service.Text.extractAllFuzzyUrls(textStr);
-
-    },
-
-    /**
-     * @brief
-     * Distill all urls from normal text
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param noProtocolJsn object
-     *    default :  {
-                'ip_v4' : false,
-                'ip_v6' : false,
-                'localhost' : false,
-                'intranet' : false
-            }
-
-     * @return array
-     */
-    extractAllUrls(textStr, noProtocolJsn) {
-
-
-        Pattern.Children.setUrlPattern(noProtocolJsn);
-
-        //console.log('a : ' + Pattern.Children.url);
-
-        return Service.Text.extractAllPureUrls(textStr);
-
-    },
-
-
-    /**
-     * @brief
-     * Distill all emails from normal text
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param prefixSanitizer boolean (default : true)
-     * @return array
-     */
-    extractAllEmails(textStr, prefixSanitizer) {
-
-        return Service.Text.extractAllPureEmails(textStr, prefixSanitizer);
-
-    },
-
-
-    /**
-     * @brief
-     * Distill uris with certain names from normal text
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param uris array required
-     * for example, [['a','b'], ['c','d']]
-     * If you use {number}, this means 'only number' ex) [['a','{number}'], ['c','d']]
-     * @param endBoundary boolean (default : false)
-     * @return array
-     */
-    extractCertainUris(textStr, uris, endBoundary) {
-
-        if (!(textStr && typeof textStr === 'string')) {
-            throw new ValidationError('the variable textStr must be a string type and not be null.');
-        }
-
-        let obj = Service.Text.extractCertainPureUris(textStr, uris, endBoundary);
-        let obj2 = Service.Text.extractAllPureUrls(textStr);
-
-
-        //console.log('obj : ' + JSON.stringify(obj));
-
-        let obj_final = [];
-
-        for (let a = 0; a < obj.length; a++) {
-
-            let obj_part = {
-                'uri_detected': null,
-                'in_what_url': null,
-            };
-
-            //let matchedUrlFound = false;
-            for (let b = 0; b < obj2.length; b++) {
-
-     /*           console.log('obj : ' + JSON.stringify(obj[a]));
-                console.log('obj2 : ' + JSON.stringify(obj2[b]));*/
-
-                if ((obj[a]['index']['start'] > obj2[b]['index']['start'] && obj[a]['index']['start'] < obj2[b]['index']['end'])
-                    &&
-                    (obj[a]['index']['end'] > obj2[b]['index']['start']  && obj[a]['index']['end'] <= obj2[b]['index']['end'])) {
-
-                    // Here, the uri detected is inside its url
-                    // false positives like the example '//google.com/abc/def?a=5&b=7' can be detected in 'Service.Text.extractCertainPureUris'
-
-                    let sanitizedUrl = obj[a]['value']['url'];
-
-                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Pattern.Ancestors.all_root_domains +  ')', 'gi');
-                    let matches = [];
-                    let match = {};
-
-                    while ((match = rx.exec(obj[a]['value']['url'])) !== null) {
-                        if(match[1]){
-
-                            sanitizedUrl = sanitizedUrl.replace(rx, '');
-
-                            //console.log(match[1]);
-
-                            obj[a]['value']['url'] = sanitizedUrl;
-                            obj[a]['index']['start'] += match[1].length;
-
-                            obj[a]['value']['onlyUriWithParams'] = obj[a]['value']['url'];
-                            obj[a]['value']['onlyUri'] = obj[a]['value']['url'].replace(/\?[^/]*$/gi, '');
-                        }
-                    }
-
-
-                    obj_part['in_what_url']= obj2[b];
-                    //matchedUrlFound = true;
-
-                }
-
-
-            }
-
-            obj_part['uri_detected'] = obj[a];
-            obj_final.push(obj_part);
-
-        }
-
-
-
-        return obj_final;
-
-    },
-
-    /**
-     * @brief
-     * Distill all 'strings before and after the colon'
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param delimiter string
-     * @return array
-     */
-    extractAllStrBfAfColon(textStr, delimiter) {
-
-        if (delimiter && typeof delimiter !== 'string') {
-            throw new ValidationError('Delimiter must be string type');
-        }
-
-        Pattern.Children.setStrBfAfColonDelimiter(delimiter);
-
-        return Service.Text.extractAllPureStrBfAfColon(textStr, delimiter);
-
-    },
-
-};
-
-const TextEditorArea = {
-
-    /**
-     * @brief
-     * Distill all urls
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param clsName string required
-     * @param contentEditableMode boolean default false
-     * @param noProtocolJsn object
-     *    default :  {
-                'ip_v4' : false,
-                'ip_v6' : false,
-                'localhost' : false,
-                'intranet' : false
-            }
-
-     * @return string
-     */
-    addClassToAllUrls(textStr, clsName, contentEditableMode, noProtocolJsn) {
-
-        Pattern.Children.setUrlPattern(noProtocolJsn);
-
-        if (!(textStr && typeof textStr === 'string')) {
-            throw new ValidationError('the variable textStr must be a string type and not be null.');
-        }
-
-        /* To apply the regex 'Pattern.Children.url', make <div>,<br> a line return */
-        if (contentEditableMode && contentEditableMode === true) {
-            //textStr = textStr.replace(/&nbsp;/gi, ' ');
-            textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
-            textStr = textStr.replace(/<br>/gi, '\n');
-        }
-
-
-        /* This needs to be optimized for the future */
-        let t = Jquery('<p>' + textStr + '</p>');
-        t.find('.' + clsName).contents().unwrap();
-
-
-        t.each(function () {
-
-
-            let txt = Jquery(this).html();
-
-            //console.log(contentEditableMode + ' t1: ' + txt);
-
-            let obj = Service.Text.extractAllPureUrls(txt);
-            //console.log('obj : ' + JSON.stringify(obj));
-
-
-            /* Add the 'clsName' */
-            obj.reverse().forEach(function (val, idx) {
-                txt = Util.Text.replaceAt(txt, val['index']['end'], '</span>');
-                txt = Util.Text.replaceAt(txt, val['index']['start'], '<span class="' + clsName + '">');
-
-            });
-
-            //console.log(contentEditableMode + ' t2 : ' + txt);
-
-            Jquery(this).text(txt);
-        });
-
-
-        textStr = t.text();
-
-
-        //console.log(contentEditableMode + ' t3 : ' + textStr);
-
-
-        if (contentEditableMode && contentEditableMode === true) {
-            textStr = textStr.replace(/\n/gi, '<br>');
-        }
-
-
-        return textStr;
-
-    }
-};
-
-const UrlArea = {
-
-    /**
-     * @brief
-     * Assort an url into each type.
-     * @author Andrew Kang
-     * @param url string required
-     * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
-     */
-    assortUrl(url) {
-
-        return Service.Url.assortUrl(url);
-    },
-
-    /**
-     * @brief
-     * Assort an url into each type.
-     * @author Andrew Kang
-     * @param url string required
-     * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
-     */
-    normalizeUrl(url) {
-
-        return Service.Url.normalizeUrl(url);
-    }
-
-};
-
-
-const EmailArea = {
-
-    assortEmail(email) {
-
-        return Service.Email.assortEmail(email);
-    }
-
-
-}
-
 export default {
 
-    XmlArea,
     TextArea,
     TextEditorArea,
-    UrlArea
+    UrlArea,
+    XmlArea
 
 };

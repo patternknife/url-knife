@@ -61,14 +61,7 @@ const Ancestors = {
     get fuzzy_allowance_standard_protocol_port() {
         return '(?:[\\n\\r\\t\\s]*|(?:' +  Ancestors.all_keypad_meta_chars + '|[\\n\\r\\t\\s]){0,6})';
     },
-/*    get fuzzy_allowance_domain() {
-        return '(?:' +
-            '[\\n\\r\\t\\s]*' +
-            '|' +
-            '(?:(?:' + Ancestors.all_keypad_meta_chars_without_delimiters + '|[\\n\\r\\t\\s]){0,2}'
-            + Ancestors.end_punc_regarded_char + '(?:' + Ancestors.all_keypad_meta_chars_without_delimiters + '|[\\n\\r\\t\\s]){0,2})' +
-            ')';
-    },*/
+
     get fuzzy_allowance_standard_params() {
         return '(?:[\\n\\r\\t\\s]*|(?:' +  Ancestors.all_keypad_meta_chars + '|' + Ancestors.lang_char +'|[\\n\\r\\t\\s]){0,6})';
     },
@@ -241,35 +234,6 @@ const Descendants = {
     + '(?:[0-9]|' + Ancestors.two_bytes_num + '|' + Ancestors.rfc3986_unreserved_no_alphaNums + '|' + Ancestors.lang_char + ')+?',
 
 
-
-    xml_comment: '<\\!--(?:.|[\\n\\r\\t])*?-->',
-    xml_element:
-
-    /* Type A. <p> or <p abc> */
-
-    '(?:<' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
-
-    /* Type B. <p abc="" ...> */
-
-    /* 1) Head part*/
-    '(?:<' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
-
-    /* 2) Tail part*/
-
-    // text (ex. readonly)>
-    '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
-    // "....">
-    '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
-
-    /* 3) Final tail part */
-    '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
-
-    /* Type C. </p> */
-    '(?:<\\/' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[^>]*?>)',
-
-
-
-
     /* protocol://localhost, ip v4, v6 with protocols */
     all_urls:
     Ancestors.protocol_must +
@@ -321,7 +285,32 @@ const Descendants = {
     '[^\\n\\r\\t\\s@]+\\.' + '(?:' + Ancestors.all_root_domains + '\\b)' +
     '(?:' + Ancestors.all_root_domains + '|\\.)*)',
 
-    colon_base: '[^:]+[\\n\\r\\t\\s]*:[\\n\\r\\t\\s]*[^:]+',
+
+
+    xml_comment: '<\\!--(?:.|[\\n\\r\\t])*?-->',
+    xml_element:
+
+    /* Type A. <p> or <p abc> */
+
+        '(?:<' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
+
+        /* Type B. <p abc="" ...> */
+
+        /* 1) Head part*/
+        '(?:<' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?' +
+
+        /* 2) Tail part*/
+
+        // text (ex. readonly)>
+        '(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|' +
+        // "....">
+        '(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)' +
+
+        /* 3) Final tail part */
+        '(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|' +
+
+        /* Type C. </p> */
+        '(?:<\\/' + '(?:' + Ancestors.lang_char + '[^<>\\u0022\\u0027\\t\\s]*)' + '[^>]*?>)',
 
 };
 
