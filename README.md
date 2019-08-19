@@ -35,20 +35,107 @@ import Pattern from 'extract-normalize-urls';
 ```
 
 ## Syntax & Usage
-[Chapter 1. Extract URIs with certain names](#chapter-1-extract-uris-with-certain-names)
+[Chapter 1. Normalize or parse one URL](#chapter-1-normalize-or-parse-one-url)
 
-[Chapter 2. Normalize one URL](#chapter-2-normalize-one-url)
+[Chapter 2. Extract all URLs](#chapter-2-extract-all-urls)
 
-[Chapter 3. Extract all fuzzy URLs](#chapter-3-extract-all-fuzzy-urls)
+[Chapter 3. Extract URIs with certain names](#chapter-3-extract-uris-with-certain-names)
 
-[Chapter 4. Extract all URLs](#chapter-4-extract-all-urls)
+[Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls)
 
 [Chapter 5. Highlight all URLs in texts](#chapter-5-highlight-all-urls-in-texts)
 
-[Chapter 6. Extract all URLs in raw HTML or XML](#chapter-4-extract-all-urls-in-raw-html-or-xml)
+[Chapter 6. Extract all URLs in raw HTML or XML](#chapter-6-extract-all-urls-in-raw-html-or-xml)
 
 
-#### Chapter 1. Extract URIs with certain names
+#### Chapter 1. Normalize or parse one URL
+  
+``` javascript
+/**
+* @brief
+* Normalize an url with potential human errors (Intranet urls are not normalized.)
+*/
+var url = Pattern.UrlArea.normalizeUrl("httt //-www.ex ample;comm /park/tree/?abc=1")
+ ```
+ ###### console.log() 
+ ``` javascript
+{
+  "url": "httt //-www.ex ample;comm /park/tree/?abc=1",
+  "normalizedUrl": "http://www.example.com/park/tree/?abc=1",
+  "removedTailOnUrl": "",
+  "protocol": "http",
+  "onlyDomain": "www.example.com",
+  "onlyParams": "?abc=1",
+  "onlyUri": "/park/tree/",
+  "onlyUriWithParams": "/park/tree/?abc=1",
+  "onlyParamsJsn": {
+    "abc": "1"
+  },
+  "type": "domain",
+  "port": null
+}
+ ``` 
+``` javascript
+/**
+* @brief
+* Parse an url with no potential human errors
+*/
+var url = Pattern.UrlArea.parseUrl("xtp://gooppalgo.com/park/tree/?abc=1")
+ ```
+ ###### console.log() 
+ ``` javascript
+ {
+  "url": "xtp://gooppalgo.com/park/tree/?abc=1",
+  "removedTailOnUrl": "",
+  "protocol": "xtp (unknown protocol)",
+  "onlyDomain": "gooppalgo.com",
+  "onlyParams": "?abc=1",
+  "onlyUri": "/park/tree/",
+  "onlyUriWithParams": "/park/tree/?abc=1",
+  "onlyParamsJsn": {
+    "abc": "1"
+  },
+  "type": "domain",
+  "port": null
+}
+ ```
+ 
+ #### Chapter 2. Extract all URLs
+ 
+ ``` javascript
+     var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
+         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
+         'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
+         'http://✪df.ws/123\n' +
+         'http://142.42.1.1:8080/\n' +
+         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
+         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+  
+      /**
+       * @brief
+       * Distill all urls from normal text
+       * @author Andrew Kang
+       * @param textStr string required
+       * @param noProtocolJsn object
+       *    default :  {
+                  'ip_v4' : false,
+                  'ip_v6' : false,
+                  'localhost' : false,
+                  'intranet' : false
+              }
+        
+  var urls = Pattern.TextArea.extractAllUrls(textStr, {
+                     'ip_v4' : true,
+                     'ip_v6' : false,
+                     'localhost' : false,
+                     'intranet' : true
+ })
+  ```
+  ###### console.log() 
+ <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
+ 
+#### Chapter 3. Extract URIs with certain names
 
 ``` javascript
 
@@ -281,55 +368,8 @@ var sampleText = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에�
   }
 ]
 ```
-
  
-#### Chapter 2. Normalize one URL
-  
-``` javascript
-var url = Pattern.UrlArea.assortUrl("xtp://gooppalgo.com/park/tree/?abc=1")
- ```
- ###### console.log() 
- ``` javascript
- {
-  "url": "xtp://gooppalgo.com/park/tree/?abc=1",
-  "removedTailOnUrl": "",
-  "protocol": "xtp (unknown protocol)",
-  "onlyDomain": "gooppalgo.com",
-  "onlyParams": "?abc=1",
-  "onlyUri": "/park/tree/",
-  "onlyUriWithParams": "/park/tree/?abc=1",
-  "onlyParamsJsn": {
-    "abc": "1"
-  },
-  "type": "domain",
-  "port": null
-}
- ```
- 
- 
-``` javascript
-var url = Pattern.UrlArea.normalizeUrl("xtp://gooppalgo.com/park/tree/?abc=1")
- ```
- ###### console.log() 
- ``` javascript
- {
-  "url": "xtp:// gooppalgo.com/park/tree/?abc=1",
-  "normalizedUrl": "ftp://gooppalgo.com/park/tree/?abc=1",
-  "removedTailOnUrl": "",
-  "protocol": "ftp",
-  "onlyDomain": "gooppalgo.com",
-  "onlyParams": "?abc=1",
-  "onlyUri": "/park/tree/",
-  "onlyUriWithParams": "/park/tree/?abc=1",
-  "onlyParamsJsn": {
-    "abc": "1"
-  },
-  "type": "domain",
-  "port": null
-}
- ``` 
- 
-#### Chapter 3. Extract all fuzzy URLs
+#### Chapter 4. Extract all fuzzy URLs
 ###### This does not detect intranets due to false positives. If you need to extract intranets, go to the Chapter 4. below. 
 
 ``` javascript
@@ -350,40 +390,7 @@ var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.e
  ```
  ###### console.log() 
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
-#### Chapter 4. Extract all URLs
 
-``` javascript
-    var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
-        'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'the packed1book.net. fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.net</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
-        'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
-        'http://✪df.ws/123\n' +
-        'http://142.42.1.1:8080/\n' +
-        'http://-.~_!$&\'()*+,;=:%40:80%2f::::::@example.com ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
- 
-     /**
-      * @brief
-      * Distill all urls from normal text
-      * @author Andrew Kang
-      * @param textStr string required
-      * @param noProtocolJsn object
-      *    default :  {
-                 'ip_v4' : false,
-                 'ip_v6' : false,
-                 'localhost' : false,
-                 'intranet' : false
-             }
-       
- var urls = Pattern.TextArea.extractAllUrls(textStr, {
-                    'ip_v4' : true,
-                    'ip_v6' : false,
-                    'localhost' : false,
-                    'intranet' : true
-})
- ```
- ###### console.log() 
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 #### Chapter 5. Highlight all URLs in texts
   
 ``` javascript

@@ -86,12 +86,12 @@ var Pattern = function (u) {
         }, extractAllUrls: function (u) {
             for (var e = [], t = F.extractAllComments(u), r = F.extractAllElements(u), a = 0; a < t.length; a++) for (var n = new RegExp(A.all_urls + "|" + A.all_urls2, "g"), s = {}; null !== (s = n.exec(t[a].value));) {
                 var B = s[0].replace(/-->$/, "");
-                B = B.replace(/\\n|\\r|\\t|\\s/g, ""), B = B.trim(), e.push({value: l.assortUrl(B), area: "comment"})
+                B = B.replace(/\\n|\\r|\\t|\\s/g, ""), B = B.trim(), e.push({value: l.parseUrl(B), area: "comment"})
             }
             for (var a = 0; a < r.length; a++) for (var C = new RegExp(A.all_urls + "|" + A.all_urls2, "g"), D = {}; null !== (D = C.exec(r[a].value));) {
                 var B = D[0].replace(new RegExp("[\\u0022\\u0027](?:[\\t\\s]+|[\\t\\s]*/[\\t\\s]*)(?:>|)", "g"), "");
                 B = B.replace(/\\n|\\r|\\t|\\s|\\S/g, ""), B = B.trim(), e.push({
-                    value: l.assortUrl(B),
+                    value: l.parseUrl(B),
                     area: "element : " + r[a].elementName
                 })
             }
@@ -99,7 +99,7 @@ var Pattern = function (u) {
             var E = "(?:" + A.lang_char + "[^<>\\u0022\\u0027\\t\\s]*)";
             u = u.replace(new RegExp("(?:<" + E + "(?:[\\t\\s]+[^<>\\u0022\\u0027\\u002F]*?|)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)|(?:<" + E + "[\\t\\s]+[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F].*?(?:[\\t\\s]+?[^<>\\n\\r\\t\\s\\u0022\\u0027\\u002F]+?|(?:[\\u0022].*?[\\u0022]|[\\u0027].*?[\\u0027])[\\n\\r\\t\\s]*)(?:[\\n\\r\\t\\s]*\\/[\\n\\r\\t\\s]*|)>)", "g"), "");
             for (var o = new RegExp(A.all_urls + "|" + A.all_urls2, "g"), c = {}; null !== (c = o.exec(u));) e.push({
-                value: l.assortUrl(c[0]),
+                value: l.parseUrl(c[0]),
                 area: "text"
             });
             return e
@@ -125,7 +125,7 @@ var Pattern = function (u) {
             return e
         }
     }, l = {
-        assortUrl: function (u) {
+        parseUrl: function (u) {
             var e = {}, A = "";
             if (!u || "string" != typeof u) throw new t("the variable url must be a string type.");
             u = u.trim(), A = u, e.protocol = "";

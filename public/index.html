@@ -354,19 +354,20 @@
     }
 
     start();
-
-    console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['{number}', 'kak'], ['nice','guy'],['abc', '{number}']], true), null, 2));
+    console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("http://abc.def:9094/Platform/rpa-mockup-client"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("http://abc.def:9094/Platform/rpa-mockup-client"), null, 2));
+    //console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['{number}', 'kak'], ['nice','guy'],['abc', '{number}']], true), null, 2));
    // console.log('final_3 : ' + JSON.stringify(Pattern.XmlArea.extractAllUrls(xmlStr), null, 2));
 /*
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));*/
     //console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['nice','guy'],['abc', 'def']]), null, 2));
 
 /*
     console.log('final_3 : ' + JSON.stringify(Pattern.XmlArea.extractAllUrls(xmlStr), null, 2));
     console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllUrls(textStr), null, 2));
-    //console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.assortUrl(1), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.assortUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.assortUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
+    //console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl(1), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("xtp:// gooppalgo.com/park/tree/?abc=1"), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("ssh://www.goopplgo.com/?abc=1"), null, 2));
 
     console.log('final_4 : ' + JSON.stringify(Pattern.XmlArea.extractAllEmails(xmlStr), null, 2));
     console.log('final_4_1 : ' + JSON.stringify(Pattern.TextArea.extractAllEmails(textStr, false), null, 2));
@@ -381,9 +382,9 @@
     ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
     'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
-    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
+    //console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
 /*    console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
-    console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.assortUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
+    console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 
 
     console.log('final_4_1 : ' + JSON.stringify(Pattern.TextArea.extractAllEmails(textStr, true), null, 2));*/

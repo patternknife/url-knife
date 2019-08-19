@@ -103,7 +103,7 @@ const Text = {
             let end_idx = match.index + match[0].length;
 
             let mod_val = match[0];
-            let re = Url.assortUrl(mod_val);
+            let re = Url.parseUrl(mod_val);
 
             /* SKIP DEPENDENCY */
             if (new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + ')+$', 'i').test(re['onlyDomain'])) {
@@ -185,7 +185,7 @@ const Text = {
             let mod_val = match[0];
 
             obj.push({
-                'value': Url.assortUrl(mod_val),
+                'value': Url.parseUrl(mod_val),
                 'area': 'text',
                 'index': {
                     'start': match.index,
@@ -285,7 +285,7 @@ const Url = {
 
     /**
      * @brief
-     * Normalize an url or an uri
+     * Normalize an url or a fuzzy url
      * @author Andrew Kang
      * @param url string required
      * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
@@ -360,6 +360,7 @@ const Url = {
 
             modified_url = modified_url.replace(rx, '');
 
+            //console.log('modified_url : ' + modified_url);
 
             // Domain
             let rx1 = new RegExp('^' + Pattern.Descendants.fuzzy_only_domain, 'gi');
@@ -373,28 +374,43 @@ const Url = {
 
                 //console.log('domain_temp : ' + domain_temp);
 
-
-
                 // decide domain type
                 if (new RegExp(Pattern.Descendants.fuzzy_ip_v4, 'i').test(domain_temp)) {
 
                     obj['type'] = 'ip_v4';
 
-                    domain_temp = domain_temp.replace(new RegExp('^[^0-9]+', 'g'), '');
-                    domain_temp = domain_temp.replace(new RegExp('[^0-9]+$', 'g'), '');
-                    domain_temp = domain_temp.replace(new RegExp('[^0-9]+', 'g'), '.');
+                    // with id pwd
+                    if(new RegExp('^.*@' + Pattern.Descendants.fuzzy_ip_v4, 'i').test(domain_temp)){
+                        domain_temp = domain_temp.replace(new RegExp('[^0-9]+$', 'g'), '');
+                    }else{
+                        domain_temp = domain_temp.replace(new RegExp('^[^0-9]+', 'g'), '');
+                        domain_temp = domain_temp.replace(new RegExp('[^0-9]+$', 'g'), '');
+                        domain_temp = domain_temp.replace(new RegExp('[^0-9]+', 'g'), '.');
+                    }
+
 
                 } else if (new RegExp(Pattern.Descendants.fuzzy_ip_v6, 'i').test(domain_temp)) {
 
                     obj['type'] = 'ip_v6';
 
-                    domain_temp = domain_temp.replace(new RegExp('[^\\[\\]0-9:]', 'g'), '');
+                    // with id pwd
+                    if(new RegExp('^.*@' + Pattern.Descendants.fuzzy_ip_v6, 'i').test(domain_temp)){
+
+                        if(domain_temp.split('@[')[1]){
+                            let afterAt = domain_temp.split('@[')[1];
+                            afterAt = afterAt.replace(new RegExp('[^\\[\\]0-9:]', 'g'), '');
+                            domain_temp = domain_temp.split('@[')[0] + '@[' + afterAt;
+                        }
+
+                    }else{
+                        domain_temp = domain_temp.replace(new RegExp('[^\\[\\]0-9:]', 'g'), '');
+                    }
 
 
-                } else if (/^localhost/i.test(domain_temp)) {
+                } else if (/^localhost$/i.test(domain_temp)) {
 
                     obj['type'] = 'localhost';
-                    domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
+                    //domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
 
                 } else {
 
@@ -425,7 +441,7 @@ const Url = {
                     obj['type'] = 'domain';
 
                     domain_temp = domain_temp.replace(new RegExp('^' + Pattern.Ancestors.no_lang_char + '+', 'i'), '');
-                    domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
+                    //domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
                     domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.no_lang_char + '+$', 'i'), '');
                 }
 
@@ -437,6 +453,8 @@ const Url = {
 
             modified_url = modified_url.replace(rx1, '');
             //console.log('modified_url : ' + modified_url);
+            modified_url = modified_url.replace(new RegExp('^(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')', 'i'), '');
+
 
             // Port
             let rx2 = new RegExp('^' + Pattern.Descendants.fuzzy_port_must, 'gi');
@@ -723,12 +741,12 @@ const Url = {
 
     /**
      * @brief
-     * Assort an url or an uri into each type.
+     * Parse an url
      * @author Andrew Kang
      * @param url string required
      * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
      */
-    assortUrl(url) {
+    parseUrl(url) {
 
         let obj = {
             url: null,
@@ -752,6 +770,8 @@ const Url = {
 
             if (!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)) {
                 throw new ValidationError('This is neither an url nor an uri.' + ' / Error url : ' + url);
+            }else if(Valid.isEmailPattern(url) ){
+                throw new ValidationError('This is an email pattern.' + ' / Error url : ' + url);
             }
 
 

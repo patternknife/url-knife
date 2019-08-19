@@ -270,9 +270,9 @@ const UrlArea = {
      * @param url string required
      * @return array ({'url' : '', 'protocol' : '', 'onlyDomain' : '', 'onlyUriWithParams' : '', 'type' : ''})
      */
-    assortUrl(url) {
+    parseUrl(url) {
 
-        return Service.Url.assortUrl(url);
+        return Service.Url.parseUrl(url);
     },
 
     /**
@@ -421,7 +421,7 @@ const XmlArea = {
                     //mod_val = mod_val.trim();
 
                     obj.push({
-                        'value': Service.Url.assortUrl(mod_val),
+                        'value': Service.Url.parseUrl(mod_val),
                         'area': 'comment'
                     });
 
@@ -452,7 +452,7 @@ const XmlArea = {
                     //mod_val = mod_val.trim();
 
                     obj.push({
-                        'value': Service.Url.assortUrl(mod_val),
+                        'value': Service.Url.parseUrl(mod_val),
                         'area': 'element : ' + el_matches[a].elementName
                     });
 
@@ -490,7 +490,7 @@ const XmlArea = {
             //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
 
             obj.push({
-                'value': Service.Url.assortUrl(mod_val),
+                'value': Service.Url.parseUrl(mod_val),
                 'area': 'text'
             });
         }

@@ -165,9 +165,9 @@ const Descendants = {
     },
 
     get fuzzy_only_domain() {
-        return '(?:(?:' + this.fuzzy_ip_v4 + '|' + this.fuzzy_localhost + '|' + this.fuzzy_ip_v6 + ')' +
+        return '(?:(?:.+@|)(?:' + this.fuzzy_ip_v4 + '|' + this.fuzzy_localhost + '|' + this.fuzzy_ip_v6 + ')' +
             '|(?:' +
-            '(?:.|[\\n\\r\\t\\s])+?' +
+            '(?:.)+?' +
             this.fuzzy_domain_end +
             ')' +
             //this.intranet +
