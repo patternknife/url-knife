@@ -550,7 +550,7 @@ const Url = {
 
 
                 // URI
-                let rx4 = new RegExp('\\/(?:.|[\\n\\r\\t\\s])*$', 'gi');
+                let rx4 = new RegExp('[#/](?:.|[\\n\\r\\t\\s])*$', 'gi');
                 let match4 = {};
                 while ((match4 = rx4.exec(modified_url)) !== null) {
                     obj['onlyUri'] = match4[0];
@@ -833,14 +833,14 @@ const Url = {
             }
 
             // 5. Separate uri
-            let rx2 = new RegExp('\\/(?:.|[\\n\\r\\t\\s])*$', 'gi');
+            let rx2 = new RegExp('[#/](?:.|[\\n\\r\\t\\s])*$', 'gi');
             let match2 = {};
             while ((match2 = rx2.exec(url)) !== null) {
                 obj['onlyUri'] = match2[0];
             }
             url = url.replace(rx2, '');
 
-            if (obj['onlyUri'] === "/") {
+            if (/^[#/]+$/.test(obj['onlyUri'])) {
                 obj['onlyUri'] = null;
             }
 
@@ -930,7 +930,7 @@ const Url = {
 
             } else if (obj['onlyUri'] !== null && obj['onlyParams'] === null) {
 
-                let rm_part_matches = new RegExp('\\/([^/\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
+                let rm_part_matches = new RegExp('[#/]([^/\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
                 //console.log(obj['url'] + ' : ' + rm_part_matches[1]);
 

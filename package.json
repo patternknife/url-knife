@@ -1,6 +1,6 @@
 {
   "name": "extract-normalize-urls",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Extract and normalize urls, fuzzy urls, urls without protocols, uris in natural language texts.",
   "main": "src/entry.js",
   "scripts": {
