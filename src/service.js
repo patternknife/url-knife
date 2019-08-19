@@ -453,7 +453,7 @@ const Url = {
 
             modified_url = modified_url.replace(rx1, '');
             //console.log('modified_url : ' + modified_url);
-            modified_url = modified_url.replace(new RegExp('^(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')', 'i'), '');
+            modified_url = modified_url.replace(new RegExp('^(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')+', 'i'), '');
 
 
             // Port

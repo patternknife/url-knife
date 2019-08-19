@@ -55,7 +55,8 @@ import Pattern from 'extract-normalize-urls';
 * @brief
 * Normalize an url with potential human errors (Intranet urls are not normalized.)
 */
-var url = Pattern.UrlArea.normalizeUrl("httt //-www.ex ample;comm /park/tree/?abc=1")
+var sample1 = Pattern.UrlArea.normalizeUrl("httt //-www.ex ample;comm /park/tree/?abc=1")
+var sample2 = Pattern.UrlArea.normalizeUrl("://abc.jppp:9091 /park/noon")
  ```
  ###### console.log() 
  ``` javascript
@@ -73,6 +74,20 @@ var url = Pattern.UrlArea.normalizeUrl("httt //-www.ex ample;comm /park/tree/?ab
   },
   "type": "domain",
   "port": null
+}
+
+{
+  "url": "://abc.jppp:9091 /park/noon",
+  "normalizedUrl": "abc.jp:9091/park/noon",
+  "removedTailOnUrl": "",
+  "protocol": null,
+  "onlyDomain": "abc.jp",
+  "onlyParams": null,
+  "onlyUri": "/park/noon",
+  "onlyUriWithParams": "/park/noon",
+  "onlyParamsJsn": null,
+  "type": "domain",
+  "port": "9091"
 }
  ``` 
 ``` javascript
