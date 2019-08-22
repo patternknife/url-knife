@@ -55,39 +55,53 @@ import Pattern from 'extract-normalize-urls';
 * @brief
 * Normalize an url with potential human errors (Intranet urls are not normalized.)
 */
-var sample1 = Pattern.UrlArea.normalizeUrl("httt //-www.ex ample;comm /park/tree/?abc=1")
-var sample2 = Pattern.UrlArea.normalizeUrl("://abc.jppp:9091 /park/noon")
+var sample1 = Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 #park//noon??abc=retry")
+var sample2 = Pattern.UrlArea.normalizeUrl("'://abc.jppp:9091 /park/noon'")
+var sample3 = Pattern.UrlArea.normalizeUrl("ss hd : /university,.acd. ;jpkp: 9091/adc??abc=.com")
+
  ```
  ###### console.log() 
  ``` javascript
 {
-  "url": "httt //-www.ex ample;comm /park/tree/?abc=1",
-  "normalizedUrl": "http://www.example.com/park/tree/?abc=1",
+  "url": "htp/:/abcgermany.,def;:9094 #park//noon??abc=retry",
+  "normalizedUrl": "http://abcgermany.de:9094#park/noon?abc=retry",
   "removedTailOnUrl": "",
   "protocol": "http",
-  "onlyDomain": "www.example.com",
-  "onlyParams": "?abc=1",
-  "onlyUri": "/park/tree/",
-  "onlyUriWithParams": "/park/tree/?abc=1",
+  "onlyDomain": "abcgermany.de",
+  "onlyParams": "?abc=retry",
+  "onlyUri": "#park/noon",
+  "onlyUriWithParams": "#park/noon?abc=retry",
   "onlyParamsJsn": {
-    "abc": "1"
+    "abc": "retry"
   },
   "type": "domain",
-  "port": null
+  "port": "9094"
 }
-
 {
-  "url": "://abc.jppp:9091 /park/noon",
+  "url": "'://abc.jppp:9091 /park/noon'",
   "normalizedUrl": "abc.jp:9091/park/noon",
-  "removedTailOnUrl": "",
+  "removedTailOnUrl": "'",
   "protocol": null,
   "onlyDomain": "abc.jp",
   "onlyParams": null,
-  "onlyUri": "/park/noon",
-  "onlyUriWithParams": "/park/noon",
+  "onlyUri": "/park/noon'",
+  "onlyUriWithParams": "/park/noon'",
   "onlyParamsJsn": null,
   "type": "domain",
   "port": "9091"
+}
+{
+  "url": "ss hd : /university,.acd. ;jpkp로 접속",
+  "normalizedUrl": "ssh://university.ac.jp",
+  "removedTailOnUrl": "",
+  "protocol": "ssh",
+  "onlyDomain": "university.ac.jp",
+  "onlyParams": null,
+  "onlyUri": null,
+  "onlyUriWithParams": null,
+  "onlyParamsJsn": null,
+  "type": "domain",
+  "port": null
 }
  ``` 
 ``` javascript

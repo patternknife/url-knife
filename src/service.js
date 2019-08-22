@@ -313,12 +313,6 @@ const Url = {
             let modified_url  = Util.Text.removeAllSpaces(url);
 
 
-/*            if (!Valid.isFuzzyUrlPattern(url)) {
-                console.log('Error url : ' + url);
-                throw new ValidationError('This is neither an url nor an uri.');
-            }*/
-
-
             // 1. full url
             obj['url'] = url;
 
@@ -363,15 +357,19 @@ const Url = {
             //console.log('modified_url : ' + modified_url);
 
             // Domain
-            let rx1 = new RegExp('^' + Pattern.Descendants.fuzzy_only_domain, 'gi');
+            let rx1 = new RegExp('(' + Pattern.Descendants.fuzzy_only_domain + '.*?)(' + Pattern.Descendants.fuzzy_port_recommended +
+                Pattern.Descendants.fuzzy_url_params_recommended + ')$', 'gi');
             let match1 = {};
             while ((match1 = rx1.exec(modified_url)) !== null) {
 
                 //let domain_temp = match1[0];
-
+                //console.log(match1);
                 //let domain_temp_front = domain_temp.replace(new RegExp(Pattern.Descendants.fuzzy_url_body + '$', 'gi'), '');
                 let domain_temp = match1[0];
-
+                let domain_temp2 = match1[1];
+                let domain_temp3 = match1[2];
+/*                console.log('domain_temp1 : ' + domain_temp);
+                console.log('domain_temp1.5 : ' + domain_temp2);*/
                 //console.log('domain_temp : ' + domain_temp);
 
                 // decide domain type
@@ -414,11 +412,14 @@ const Url = {
 
                 } else {
 
+                    //console.log('domain_temp1 : ' + domain_temp);
+                    //console.log('domain_temp1.5 : ' + domain_temp2);
+                    //console.log('domain_temp1.52 : ' + domain_temp3);
                     // ,com ,co,.kr ...
-                    domain_temp = domain_temp.replace(new RegExp
+                    domain_temp2 = domain_temp2.replace(new RegExp
                     ('' + Pattern.Ancestors.all_keypad_meta_chars_without_delimiters + '+'+ '(' + Pattern.Ancestors.all_root_domains + '|[a-zA-Z]+)', 'gi'), '.$1');
 
-                    let domain_temp_root_domain_match = new RegExp('\\.([^.]+)$', 'i').exec(domain_temp);
+                    let domain_temp_root_domain_match = new RegExp('\\.([^.]+)$', 'i').exec(domain_temp2);
                     if(domain_temp_root_domain_match !== null){
                         if(domain_temp_root_domain_match[1]){
 
@@ -440,18 +441,52 @@ const Url = {
 
                     obj['type'] = 'domain';
 
-                    domain_temp = domain_temp.replace(new RegExp('^' + Pattern.Ancestors.no_lang_char + '+', 'i'), '');
+                    domain_temp2 = domain_temp2.replace(new RegExp('^' + Pattern.Ancestors.no_lang_char + '+', 'i'), '');
                     //domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.not_allowed_char_on_domain, 'gi'), '');
-                    domain_temp = domain_temp.replace(new RegExp(Pattern.Ancestors.no_lang_char + '+$', 'i'), '');
+                    domain_temp2 = domain_temp2.replace(new RegExp(Pattern.Ancestors.no_lang_char + '+$', 'i'), '');
                 }
 
-                //console.log('domain_temp : ' + domain_temp);
-                obj['onlyDomain'] = domain_temp;
+               // console.log('domain_temp2 : ' + domain_temp2);
 
+
+                // root domain integrity
+                let d2_arrs = domain_temp2.split('.');
+
+                let match_rt = {};
+                let match_srt = {};
+                let final_domain = '';
+                let root_domain = '';
+                let root_domain2 = null;
+                let sub_root_domain = '';
+                if ((match_rt = new RegExp(Pattern.Ancestors.all_root_domains, 'i').exec(d2_arrs[d2_arrs.length -1])) !== null) {
+                    root_domain = match_rt[0];
+                }
+                if(d2_arrs.length >= 3 && d2_arrs[d2_arrs.length -2].length < 4){
+                    if ((match_srt = new RegExp(Pattern.Ancestors.all_root_domains, 'i').exec(d2_arrs[d2_arrs.length -2])) !== null) {
+                        root_domain2 = match_srt[0];
+                    }
+                }
+
+                d2_arrs.forEach(function (val, idx){
+
+                    if(idx === d2_arrs.length-1){
+                        final_domain += root_domain;
+                    }else if(root_domain2 && idx === d2_arrs.length-2){
+                        final_domain += root_domain2 + '.';
+                    }else{
+                        final_domain += val + '.';
+                    }
+
+                })
+
+                obj['onlyDomain'] = final_domain;
+
+                modified_url = domain_temp3;
 
             }
 
-            modified_url = modified_url.replace(rx1, '');
+/*            modified_url = modified_url.replace(new RegExp('(' + Pattern.Descendants.fuzzy_only_domain + '.*?)' + Pattern.Descendants.fuzzy_port_recommended +
+                Pattern.Descendants.fuzzy_url_params_recommended + '$', 'gi'), '');*/
             //console.log('modified_url : ' + modified_url);
             modified_url = modified_url.replace(new RegExp('^(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')+', 'i'), '');
 
@@ -536,7 +571,7 @@ const Url = {
             }else{
 
                 // PARAMS
-                let rx3 = new RegExp('\\?(?:.|[\\n\\r\\t\\s])*$', 'gi');
+                let rx3 = new RegExp('\\?(?:.)*$', 'gi');
                 let match3 = {};
                 while ((match3 = rx3.exec(modified_url)) !== null) {
 
@@ -550,7 +585,7 @@ const Url = {
 
 
                 // URI
-                let rx4 = new RegExp('[#/](?:.|[\\n\\r\\t\\s])*$', 'gi');
+                let rx4 = new RegExp('[#/](?:.)*$', 'gi');
                 let match4 = {};
                 while ((match4 = rx4.exec(modified_url)) !== null) {
                     obj['onlyUri'] = match4[0];
@@ -596,29 +631,29 @@ const Url = {
 
                 if (obj['type'] !== 'ip_v6') {
                     // removedTailOnUrl
-                    let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
+                    let rm_part_matches = obj['normalizedUrl'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
                     if (rm_part_matches) {
                         obj['removedTailOnUrl'] = rm_part_matches[0];
-                        obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                        obj['normalizedUrl'] = obj['normalizedUrl'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                     }
                 } else {
 
                     if (obj['port'] === null) {
 
                         // removedTailOnUrl
-                        let rm_part_matches = obj['url'].match(new RegExp('[^\\u005D]+$', 'gi'));
+                        let rm_part_matches = obj['normalizedUrl'].match(new RegExp('[^\\u005D]+$', 'gi'));
                         if (rm_part_matches) {
                             obj['removedTailOnUrl'] = rm_part_matches[0];
-                            obj['url'] = obj['url'].replace(new RegExp('[^\\u005D]+$', 'gi'), '');
+                            obj['normalizedUrl'] = obj['normalizedUrl'].replace(new RegExp('[^\\u005D]+$', 'gi'), '');
                         }
 
                     } else {
 
                         // removedTailOnUrl
-                        let rm_part_matches = obj['url'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
+                        let rm_part_matches = obj['normalizedUrl'].match(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'));
                         if (rm_part_matches) {
                             obj['removedTailOnUrl'] = rm_part_matches[0];
-                            obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                            obj['normalizedUrl'] = obj['normalizedUrl'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                         }
                     }
 
@@ -637,7 +672,7 @@ const Url = {
                             if (rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
-                                obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                                obj['normalizedUrl'] = obj['normalizedUrl'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                             }
                         }
                     }
@@ -657,7 +692,7 @@ const Url = {
                             if (rm_part_matches[2]) {
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
                                 obj['removedTailOnUrl'] = rm_part_matches[2];
-                                obj['url'] = obj['url'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
+                                obj['normalizedUrl'] = obj['normalizedUrl'].replace(new RegExp(Pattern.Ancestors.no_lang_char_num + '+$', 'gi'), '');
                             }
                         }
                     }
@@ -674,34 +709,34 @@ const Url = {
 
                     if (obj['port'] === null) {
 
-                        let onlyEnd = obj['url'].match(new RegExp('[^.]+$', 'gi'));
+                        let onlyEnd = obj['normalizedUrl'].match(new RegExp('[^.]+$', 'gi'));
                         if (onlyEnd && onlyEnd.length > 0) {
 
                             // this is a root domain only in English like com, ac
                             // but the situation is like com가, ac나
                             if (/^[a-zA-Z]+/.test(onlyEnd[0])) {
 
-                                if (/[^a-zA-Z]+$/.test(obj['url'])) {
+                                if (/[^a-zA-Z]+$/.test(obj['normalizedUrl'])) {
 
                                     // remove non alphabets
-                                    obj['removedTailOnUrl'] = obj['url'].match(/[^a-zA-Z]+$/)[0] + obj['removedTailOnUrl'];
-                                    obj['url'] = obj['url'].replace(/[^a-zA-Z]+$/, '');
+                                    obj['removedTailOnUrl'] = obj['normalizedUrl'].match(/[^a-zA-Z]+$/)[0] + obj['removedTailOnUrl'];
+                                    obj['normalizedUrl'] = obj['normalizedUrl'].replace(/[^a-zA-Z]+$/, '');
                                 }
                             }
 
                         }
                     } else {
                         // this is a domain with no uri no params
-                        let onlyEnd = obj['url'].match(new RegExp('[^:]+$', 'gi'));
+                        let onlyEnd = obj['normalizedUrl'].match(new RegExp('[^:]+$', 'gi'));
                         if (onlyEnd && onlyEnd.length > 0) {
 
                             // this is a port num like 8000
                             if (/[0-9]/.test(onlyEnd[0])) {
-                                if (/[^0-9]+$/.test(obj['url'])) {
+                                if (/[^0-9]+$/.test(obj['normalizedUrl'])) {
 
                                     // remove non numbers
-                                    obj['removedTailOnUrl'] = obj['url'].match(/[^0-9]+$/)[0] + obj['removedTailOnUrl'];
-                                    obj['url'] = obj['url'].replace(/[^0-9]+$/, '');
+                                    obj['removedTailOnUrl'] = obj['normalizedUrl'].match(/[^0-9]+$/)[0] + obj['removedTailOnUrl'];
+                                    obj['normalizedUrl'] = obj['normalizedUrl'].replace(/[^0-9]+$/, '');
                                 }
                             }
 

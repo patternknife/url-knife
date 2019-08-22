@@ -151,7 +151,7 @@ const Descendants = {
     fuzzy_protocols2: '(?:[a-zA-Z])+',
 
     fuzzy_protocol_domain_delimiter: '(?:(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)[:;]' + Ancestors.all_existences + '{0,6}|' +
-    '(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)\\/'+ Ancestors.fuzzy_allowance_standard_protocol_port  + '*)\\/',
+    '(?:' + Ancestors.all_existences + '{0,3}|[\\n\\r\\t\\s]*)[#/]'+ Ancestors.fuzzy_allowance_standard_protocol_port  + '*)[#/]',
 
     get fuzzy_url_body_end() {
         return '(?:(?:' + this.fuzzy_ip_v4 + '|' + this.fuzzy_localhost + '|' + this.fuzzy_ip_v6 + ')' +
