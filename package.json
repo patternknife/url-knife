@@ -1,6 +1,6 @@
 {
   "name": "extract-normalize-urls",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Extract and normalize urls, fuzzy urls, urls without protocols, uris in natural language texts.",
   "main": "src/entry.js",
   "scripts": {
@@ -12,12 +12,11 @@
     "url": "git+https://github.com/Andrew-Kang-G/extract-normalize-urls.git"
   },
   "keywords": [
-    "get",
-    "extract",
-    "normalize",
+    "get url",
+    "extract url",
+    "normalize url",
     "scrape",
     "fuzzy url",
-    "url",
     "uri",
 	"text",
 	"string"

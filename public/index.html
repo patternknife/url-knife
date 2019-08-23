@@ -355,8 +355,8 @@
 
     start();
     console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("http://abc.def:9094#park/noon"), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("'://abc.jppp:9091 /park/noon'"), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 #park//noon??abc=retry"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("'://abc.aac.jppp:9091 /park/noon'"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 ##park//noon??abc=retry"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("ss hd : /university,.acd. ;jpkp로 접속"), null, 2));
     //console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['{number}', 'kak'], ['nice','guy'],['abc', '{number}']], true), null, 2));
    // console.log('final_3 : ' + JSON.stringify(Pattern.XmlArea.extractAllUrls(xmlStr), null, 2));
@@ -384,7 +384,7 @@
     ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
     'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
-/*    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));*/
+//    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
 /*    console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
     console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 
