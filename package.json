@@ -1,7 +1,7 @@
 {
-  "name": "extract-normalize-urls",
-  "version": "2.7.2",
-  "description": "Extract and normalize urls, fuzzy urls, urls without protocols, uris in natural language texts.",
+  "name": "parse-urls",
+  "version": "2.7.5",
+  "description": "Parse (fuzzy) URLs with robust patterns",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -9,24 +9,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Andrew-Kang-G/extract-normalize-urls.git"
+    "url": "git+https://github.com/Andrew-Kang-G/parse-urls.git"
   },
   "keywords": [
-    "get url",
-    "extract url",
-    "normalize url",
-    "scrape",
-    "fuzzy url",
+    "url",
+    "pattern",
     "uri",
-	"text",
-	"string"
+    "get",
+    "parse",
+    "extract"
   ],
   "author": "Andrew Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Andrew-Kang-G/extract-normalize-urls/issues"
+    "url": "https://github.com/Andrew-Kang-G/parse-urls/issues"
   },
-  "homepage": "https://github.com/Andrew-Kang-G/extract-normalize-urls#readme",
+  "homepage": "https://github.com/Andrew-Kang-G/parse-urls#readme",
   "devDependencies": {
     "chai": "^3.3.0",
     "gulp": "^3.9.0",

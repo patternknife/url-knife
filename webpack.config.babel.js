@@ -7,7 +7,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		publicPath: '../dist/',
-		filename: 'extract-normalize-urls.bundle.js',
+		filename: 'parse-urls.bundle.js',
 		chunkFilename: '[id].bundle.js',
         libraryTarget: 'var',
         library: 'Pattern'

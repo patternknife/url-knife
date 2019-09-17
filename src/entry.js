@@ -1,7 +1,7 @@
 /*
 *
 *
-*   -- Extract-normalize-urls --
+*   -- Parse-urls --
 *
 *   Copyright (c) 2019 Andrew Kang
 *
