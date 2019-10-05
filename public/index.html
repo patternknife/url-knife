@@ -144,7 +144,7 @@
 <div id="ta" contenteditable="true" style="margin-top: 3%"></div>-->
 
 <script class="jsbin" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="../dist/parse-urls.bundle.js"></script>
+<script src="../dist/url-knife.bundle.js"></script>
 <script type="text/javascript">
 
 
@@ -355,8 +355,8 @@
 
     start();
     console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("http://abc.def:9094#park/noon"), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("abc,co.krr3000//ad/fg/?kk=5"), null, 2));
-    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 ##park//noon??abc=retry"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("tnae1ver.co. jp;8000"), null, 2));
+    console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 ##park//noon??abc==retry"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("ss hd : /university,.acd. ;jpkp로 접속"), null, 2));
     //console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['{number}', 'kak'], ['nice','guy'],['abc', '{number}']], true), null, 2));
    // console.log('final_3 : ' + JSON.stringify(Pattern.XmlArea.extractAllUrls(xmlStr), null, 2));

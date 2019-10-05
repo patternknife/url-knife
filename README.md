@@ -1,6 +1,6 @@
-# Parse-urls [![NPM version](https://img.shields.io/npm/v/parse-urls.svg)](https://www.npmjs.com/package/parse-urls)
+# Url-knife [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife)
 ## Overview
-Parse (fuzzy) URLs with robust patterns.
+Extract and decompose (fuzzy) URLs in texts with robust patterns.
 
 #### URL extractor
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
@@ -19,7 +19,7 @@ For ES5 users,
 <html>
        <body>
        	<p id="content"></p>
-       	<script src="../dist/parse-urls.bundle.js"></script>
+       	<script src="../dist/url-knife.bundle.js"></script>
        	<script type="text/javascript">
        
       
@@ -28,10 +28,10 @@ For ES5 users,
 </html>
 ```
 
-For ES6 npm users, do 'npm install --save parse-urls' on console.
+For ES6 npm users, do 'npm install --save url-knife' on console.
 
 ``` html
-import Pattern from 'parse-urls';
+import Pattern from 'url-knife';
 ```
 
 ## Syntax & Usage
@@ -455,7 +455,7 @@ var textStr_new = Pattern.TextEditorArea.addClassToAllUrls(sampleText, 'highligh
 
 You can check how url patterns are highlighted by running the sample source below.
 
-https://github.com/Andrew-Kang-G/parse-urls/blob/master/public/index.html
+https://github.com/Andrew-Kang-G/url-knife/blob/master/public/index.html
 
 or 
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>

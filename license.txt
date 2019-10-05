@@ -1,5 +1,5 @@
-parse-urls
-https://github.com/Andrew-Kang-G/parse-urls
+url-knife
+https://github.com/Andrew-Kang-G/url-knife
 
 The MIT License (MIT)
 

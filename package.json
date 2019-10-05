@@ -1,7 +1,7 @@
 {
-  "name": "parse-urls",
-  "version": "2.7.6",
-  "description": "Parse (fuzzy) URLs with robust patterns",
+  "name": "url-knife",
+  "version": "2.8.0",
+  "description": "Extract and decompose (fuzzy) URLs in texts with robust patterns",
   "main": "src/entry.js",
   "scripts": {
     "build": "gulp",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Andrew-Kang-G/parse-urls.git"
+    "url": "git+https://github.com/Andrew-Kang-G/url-knife.git"
   },
   "keywords": [
     "url parser",
@@ -20,9 +20,9 @@
   "author": "Andrew Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Andrew-Kang-G/parse-urls/issues"
+    "url": "https://github.com/Andrew-Kang-G/url-knife/issues"
   },
-  "homepage": "https://github.com/Andrew-Kang-G/parse-urls#readme",
+  "homepage": "https://github.com/Andrew-Kang-G/url-knife#readme",
   "devDependencies": {
     "chai": "^3.3.0",
     "gulp": "^3.9.0",

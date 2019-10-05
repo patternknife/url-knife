@@ -7,7 +7,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		publicPath: '../dist/',
-		filename: 'parse-urls.bundle.js',
+		filename: 'url-knife.bundle.js',
 		chunkFilename: '[id].bundle.js',
         libraryTarget: 'var',
         library: 'Pattern'
