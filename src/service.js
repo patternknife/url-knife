@@ -201,9 +201,9 @@ const Normalizer = {
 
         /*            modified_url = modified_url.replace(new RegExp('(' + Pattern.Descendants.fuzzy_only_domain + '.*?)' + Pattern.Descendants.fuzzy_port_recommended +
                         Pattern.Descendants.fuzzy_url_params_recommended + '$', 'gi'), '');*/
-        //console.log('modified_url : ' + modified_url);
-        this.modified_url = this.modified_url.replace(new RegExp('^(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')+', 'i'), '');
-
+        //console.log('modified_url : ' + this.modified_url);
+        this.modified_url = this.modified_url.replace(new RegExp('^(?:' + Pattern.Ancestors.two_bytes_num + '|' +  Pattern.Ancestors.lang_char + ')+', 'i'), '');
+        //console.log('modified_url2 : ' + this.modified_url);
         return result;
 
     },
@@ -214,7 +214,12 @@ const Normalizer = {
 
         let rx2 = new RegExp('^' + Pattern.Descendants.fuzzy_port_must, 'gi');
         let match2 = {};
+
+        //console.log('aa : ' + this.modified_url)
+
         while  ((match2 = rx2.exec(this.modified_url)) !== null) {
+
+
             port = match2[0].replace( /^\D+/g, '');
             this.modified_url = this.modified_url.replace(rx2, '');
         }

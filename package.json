@@ -1,6 +1,6 @@
 {
   "name": "parse-urls",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "description": "Parse (fuzzy) URLs with robust patterns",
   "main": "src/entry.js",
   "scripts": {
@@ -12,12 +12,10 @@
     "url": "git+https://github.com/Andrew-Kang-G/parse-urls.git"
   },
   "keywords": [
-    "url",
-    "pattern",
-    "uri",
-    "get",
-    "parse",
-    "extract"
+    "url parser",
+    "parse url",
+    "extract url",
+    "normalize url"
   ],
   "author": "Andrew Kang",
   "license": "MIT",
