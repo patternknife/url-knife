@@ -1,6 +1,3 @@
-import Jquery from 'jquery';
-
-
 import ValidationError from './error-handler';
 
 import Util from './util';
@@ -108,24 +105,24 @@ const TextArea = {
             //let matchedUrlFound = false;
             for (let b = 0; b < obj2.length; b++) {
 
-     /*           console.log('obj : ' + JSON.stringify(obj[a]));
-                console.log('obj2 : ' + JSON.stringify(obj2[b]));*/
+                /*           console.log('obj : ' + JSON.stringify(obj[a]));
+                           console.log('obj2 : ' + JSON.stringify(obj2[b]));*/
 
                 if ((obj[a]['index']['start'] > obj2[b]['index']['start'] && obj[a]['index']['start'] < obj2[b]['index']['end'])
                     &&
-                    (obj[a]['index']['end'] > obj2[b]['index']['start']  && obj[a]['index']['end'] <= obj2[b]['index']['end'])) {
+                    (obj[a]['index']['end'] > obj2[b]['index']['start'] && obj[a]['index']['end'] <= obj2[b]['index']['end'])) {
 
                     // Here, the uri detected is inside its url
                     // false positives like the example '//google.com/abc/def?a=5&b=7' can be detected in 'Service.Text.extractCertainPureUris'
 
                     let sanitizedUrl = obj[a]['value']['url'];
 
-                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Pattern.Ancestors.all_root_domains +  ')', 'gi');
+                    let rx = new RegExp('^(\\/\\/[^/]*|\\/[^\\n\\r\\t\\s]+\\.' + Pattern.Ancestors.all_root_domains + ')', 'gi');
                     let matches = [];
                     let match = {};
 
                     while ((match = rx.exec(obj[a]['value']['url'])) !== null) {
-                        if(match[1]){
+                        if (match[1]) {
 
                             sanitizedUrl = sanitizedUrl.replace(rx, '');
 
@@ -140,7 +137,7 @@ const TextArea = {
                     }
 
 
-                    obj_part['in_what_url']= obj2[b];
+                    obj_part['in_what_url'] = obj2[b];
                     //matchedUrlFound = true;
 
                 }
@@ -154,112 +151,13 @@ const TextArea = {
         }
 
 
-
         return obj_final;
 
     },
 
-    /**
-     * @brief
-     * Distill all 'strings before and after the colon'
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param delimiter string
-     * @return array
-     */
-    extractAllStrBfAfColon(textStr, delimiter) {
-
-        if (delimiter && typeof delimiter !== 'string') {
-            throw new ValidationError('Delimiter must be string type');
-        }
-
-        Pattern.Children.setStrBfAfColonDelimiter(delimiter);
-
-        return Service.Text.extractAllPureStrBfAfColon(textStr, delimiter);
-
-    },
 
 };
 
-const TextEditorArea = {
-
-    /**
-     * @brief
-     * Distill all urls
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param clsName string required
-     * @param contentEditableMode boolean default false
-     * @param noProtocolJsn object
-     *    default :  {
-                'ip_v4' : false,
-                'ip_v6' : false,
-                'localhost' : false,
-                'intranet' : false
-            }
-
-     * @return string
-     */
-    addClassToAllUrls(textStr, clsName, contentEditableMode, noProtocolJsn) {
-
-        Pattern.Children.setUrlPattern(noProtocolJsn);
-
-        if (!(textStr && typeof textStr === 'string')) {
-            throw new ValidationError('the variable textStr must be a string type and not be null.');
-        }
-
-        /* To apply the regex 'Pattern.Children.url', make <div>,<br> a line return */
-        if (contentEditableMode && contentEditableMode === true) {
-            //textStr = textStr.replace(/&nbsp;/gi, ' ');
-            textStr = textStr.replace(/<div>/gi, '<br>').replace(/<\/div>/gi, '');
-            textStr = textStr.replace(/<br>/gi, '\n');
-        }
-
-
-        /* This needs to be optimized for the future */
-        let t = Jquery('<p>' + textStr + '</p>');
-        t.find('.' + clsName).contents().unwrap();
-
-
-        t.each(function () {
-
-
-            let txt = Jquery(this).html();
-
-            //console.log(contentEditableMode + ' t1: ' + txt);
-
-            let obj = Service.Text.extractAllPureUrls(txt);
-            //console.log('obj : ' + JSON.stringify(obj));
-
-
-            /* Add the 'clsName' */
-            obj.reverse().forEach(function (val, idx) {
-                txt = Util.Text.replaceAt(txt, val['index']['end'], '</span>');
-                txt = Util.Text.replaceAt(txt, val['index']['start'], '<span class="' + clsName + '">');
-
-            });
-
-            //console.log(contentEditableMode + ' t2 : ' + txt);
-
-            Jquery(this).text(txt);
-        });
-
-
-        textStr = t.text();
-
-
-        //console.log(contentEditableMode + ' t3 : ' + textStr);
-
-
-        if (contentEditableMode && contentEditableMode === true) {
-            textStr = textStr.replace(/\n/gi, '<br>');
-        }
-
-
-        return textStr;
-
-    }
-};
 
 const UrlArea = {
 
@@ -694,7 +592,6 @@ const XmlArea = {
 export default {
 
     TextArea,
-    TextEditorArea,
     UrlArea,
     XmlArea
 

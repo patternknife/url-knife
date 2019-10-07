@@ -1,15 +1,11 @@
-# Url-knife [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife)
+# Url-knife [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/Andrew-Kang-G/url-knife/badge)](https://www.jsdelivr.com/package/gh/Andrew-Kang-G/url-knife)
 ## Overview
 Extract and decompose (fuzzy) URLs in texts with robust patterns.
 
-#### URL extractor
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
-
-##### If you can't see any results on 'jsfiddle.net', change the 'Editor layout' like this.
-![how-to-see](https://user-images.githubusercontent.com/46193964/61584977-777d9200-ab8c-11e9-8e68-11b01c592b73.png)
-
-#### Fuzzy URL extractor
+#### Fuzzy URL knife
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
+#### URL knife
+<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
 ## Installation
 
@@ -43,9 +39,7 @@ import Pattern from 'url-knife';
 
 [Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls)
 
-[Chapter 5. Highlight all URLs in texts](#chapter-5-highlight-all-urls-in-texts)
-
-[Chapter 6. Extract all URLs in raw HTML or XML](#chapter-6-extract-all-urls-in-raw-html-or-xml)
+[Chapter 5. Extract all URLs in raw HTML or XML](#chapter-6-extract-all-urls-in-raw-html-or-xml)
 
 
 #### Chapter 1. Normalize or parse one URL
@@ -420,47 +414,8 @@ var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.e
  ###### console.log() 
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
 
-#### Chapter 5. Highlight all URLs in texts
-  
-``` javascript
 
-var sampleText = "If you visit "192.179.3.5?abc=2"..  
-                   http://[::1]:8000.... "
-
-    /**
-     * @brief
-     * Distill all urls
-     * @author Andrew Kang
-     * @param textStr string required
-     * @param clsName string required
-     * @param contentEditableMode boolean default false
-     * @param noProtocolJsn object
-     *    default :  {
-                'ip_v4' : false,
-                'ip_v6' : false,
-                'localhost' : false,
-                'intranet' : false
-            }
-
-     * @return string
-     */
-             
-var textStr_new = Pattern.TextEditorArea.addClassToAllUrls(sampleText, 'highlighted1', false, {
-                              'ip_v4' : true,
-                              'ip_v6' : true,
-                              'localhost' : true,
-                              'intranet' : false
-                          });
- ```
-
-You can check how url patterns are highlighted by running the sample source below.
-
-https://github.com/Andrew-Kang-G/url-knife/blob/master/public/index.html
-
-or 
-<a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
-
-#### Chapter 6. Extract all URLs in raw HTML or XML
+#### Chapter 5. Extract all URLs in raw HTML or XML
   
 ``` javascript
     // The sample of 'XML (HTML)'

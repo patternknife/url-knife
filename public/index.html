@@ -118,18 +118,10 @@
 </style>
 
 <body>
-<h3>This is the tester for parsing capability, not a 'text-edtior'. In case that there are issues with colored parts, check 'console.log' first.</h3>
-<h4> !!IMPORTANT <br>
-    The sample below is set to {
-    'ip_v4' : true,
-    'ip_v6' : true,
-    'localhost' : true,
-    'intranet' : false
-    }, but the default is all 'false'.</h4>
-<!-- 1. TextArea -->
-<h5>(In case of "noProtocolJsn['intranet']", some false positives can be caused)</h5>
-<h3>TextArea (recommended)</h3>
+
+
 <div class="container">
+    Console.log()
     <div class="backdrop">
         <div class="highlights"></div>
     </div>
@@ -137,8 +129,6 @@
 </div>
 
 
-<button>Toggle Perspective</button>
-<pre id="logger" class="web_console"></pre>
 <!-- 2. ContentEditable -->
 <!--<h3>2. ContentEditable</h3>
 <div id="ta" contenteditable="true" style="margin-top: 3%"></div>-->
@@ -185,155 +175,8 @@
         'http: //ne1ver.com:8000?abc=1&dd=5 localhost:80 estonia.ee/ estonia.ee? <p class="https://www.aadc给s.cn"> 	https://flaviocopes.com/how-to-inspect-javascript-object/ ※Please ask 203.35.33.555:8000 if you have any issues! ※&nbsp;&nbsp;&nbsp;&nbsp;</p></body> Have you visited goasidaioaaa.ac.kr';
 
     // 1. TextArea
-    var $container = $('.container');
-    var $backdrop = $('.backdrop');
-    var $highlights = $('.highlights');
     var $textarea = $('textarea');
     var $toggle = $('button');
-
-    // Common
-    // yeah, browser sniffing sucks, but there are browser-specific quirks to handle that are not a matter of feature detection
-    var ua = window.navigator.userAgent.toLowerCase();
-    var isIE = !!ua.match(/msie|trident\/7|edge/);
-    var isWinPhone = ua.indexOf('windows phone') !== -1;
-    var isIOS = !isWinPhone && !!ua.match(/ipad|iphone|ipod/);
-
-    // 1. TextArea
-    function handleInput() {
-
-
-        var text = $textarea.val();
-        var nJsnObj =  {
-            'ip_v4' : true,
-            'ip_v6' : true,
-            'localhost' : true,
-            'intranet' : false,
-        };
-
-        $('#logger').html(JSON.stringify(Pattern.TextArea.extractAllUrls(text, nJsnObj), null, 2));
-
-        text = text.replace(/\n$/g, '\n\n');
-
-        let entityMap = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-            '/': '&#x2F;',
-            '`': '&#x60;',
-            '=': '&#x3D;'
-        };
-        text = String(text).replace(/[&<>"'`=\/]/g, function (s) {
-            return entityMap[s];
-        });
-
-
-        let tg = Pattern.TextEditorArea.addClassToAllUrls(text, 'highlighted1', false, nJsnObj);
-
-        console.log(tg);
-
-        $highlights.html(tg);
-
-
-
-
-    }
-
-    function handleScroll() {
-
-        var scrollTop = $textarea.scrollTop();
-        $backdrop.scrollTop(scrollTop);
-
-        var scrollLeft = $textarea.scrollLeft();
-        $backdrop.scrollLeft(scrollLeft);
-    }
-
-    function bindEvents() {
-        $textarea.on({
-            'input': handleInput,
-            'scroll': handleScroll
-        });
-
-        $toggle.on('click', function () {
-            $container.toggleClass('perspective');
-        });
-    }
-
-    function fixIOS() {
-        // iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
-        $highlights.css({
-            'padding-left': '+=3px',
-            'padding-right': '+=3px'
-        });
-    }
-
-    if (isIOS) {
-        fixIOS();
-    }
-
-    //2. ContentEditable
-    function getCaretCharacterOffsetWithin(element) {
-        var caretOffset = 0;
-        var doc = element.ownerDocument || element.document;
-        var win = doc.defaultView || doc.parentWindow;
-        var sel;
-        if (typeof win.getSelection != "undefined") {
-            sel = win.getSelection();
-            if (sel.rangeCount > 0) {
-                var range = win.getSelection().getRangeAt(0);
-                var preCaretRange = range.cloneRange();
-                preCaretRange.selectNodeContents(element);
-                preCaretRange.setEnd(range.endContainer, range.endOffset);
-                caretOffset = preCaretRange.toString().length;
-            }
-        } else if ((sel = doc.selection) && sel.type != "Control") {
-            var textRange = sel.createRange();
-            var preCaretTextRange = doc.body.createTextRange();
-            preCaretTextRange.moveToElementText(element);
-            preCaretTextRange.setEndPoint("EndToEnd", textRange);
-            caretOffset = preCaretTextRange.text.length;
-        }
-        return caretOffset;
-    }
-
-    function setCaretPosition(element, offset) {
-        var range = document.createRange();
-        var sel = window.getSelection();
-        //select appropriate node
-        var currentNode = null;
-        var previousNode = null;
-        for (var i = 0; i < element.childNodes.length; i++) {
-            //save previous node
-            previousNode = currentNode;
-            //get current node
-            currentNode = element.childNodes[i];
-            //if we get span or something else then we should get child node
-            while (currentNode.childNodes.length > 0) {
-                currentNode = currentNode.childNodes[0];
-            }
-            //calc offset in current node
-            if (previousNode !== null) {
-                offset -= previousNode.length;
-            }
-            //check whether current node has enough length
-            if (offset <= currentNode.length) {
-                break;
-            }
-        }
-        //move caret to specified offset
-        if (currentNode !== null) {
-            /*            let tmp = offset;
-                        if (offset >= currentNode.length) {
-                            tmp = currentNode.length;
-                        }*/
-            range.setStart(currentNode, offset);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
-    }
-
 
     var startTime, endTime;
 
@@ -354,6 +197,7 @@
     }
 
     start();
+    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllUrls(textStr), null, 2));
     console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("http://abc.def:9094#park/noon"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("tnae1ver.co. jp;8000"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 ##park//noon??abc==retry"), null, 2));
@@ -384,7 +228,7 @@
     ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
     'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
-   console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
+   console.log('final_3_2 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
 /*    console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
     console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 
@@ -393,36 +237,11 @@
     end();
 
 
-    //2. ContentEditable
-/*    $('#ta').on("propertychange paste input", function (e) {
-
-        // ContentEditable
-        if ($(this).text() != $(this).attr("origin")) {
-
-            let tg = this.innerHTML;
-            var ele = document.getElementById('ta');
-
-            let temp = Pattern.TextEditorArea.addClassToAllUrls(tg, 'highlighted2', true);
-            //console.log('re : ' + textStr);
-            var position = getCaretCharacterOffsetWithin(ele);
-
-            setCaretPosition(ele, position);
-            $("#ta").html(temp);
-            setCaretPosition(ele, position);
-
-        }
-
-    });*/
 
 
     $(function () {
 
-        // 1. TextArea
-        bindEvents();
-        handleInput();
-
         $textarea.val(textStr);
-        handleInput();
 
 
         //2. ContentEditable
