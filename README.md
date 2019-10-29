@@ -393,7 +393,7 @@ var sampleText = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에�
 ```
  
 #### Chapter 4. Extract all fuzzy URLs
-###### This does not detect intranets due to false positives. If you need to extract intranets, go to the Chapter 4. below. 
+###### This does not detect intranets due to false positives. If you need to extract intranets, go back to the Chapter 2 above. 
 
 ``` javascript
 var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.ex ample;com    -/wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
