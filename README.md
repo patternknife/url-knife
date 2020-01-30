@@ -1,4 +1,4 @@
-# Url-knife [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/Andrew-Kang-G/url-knife/badge)](https://www.jsdelivr.com/package/gh/Andrew-Kang-G/url-knife)
+# Url-knife [![Build Status](https://travis-ci.org/Andrew-Kang-G/url-knife.svg?branch=master)](https://travis-ci.org/Andrew-Kang-G/url-knife) [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/Andrew-Kang-G/url-knife/badge)](https://www.jsdelivr.com/package/gh/Andrew-Kang-G/url-knife)
 ## Overview
 Extract and decompose (fuzzy) URLs in texts with robust patterns.
 
