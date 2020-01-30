@@ -44,6 +44,7 @@ gulp.task('webpack', ['test'], function(callback) {
   });
 });
 
+/*
 gulp.task('server', ['webpack'], function(callback) {
 	// modify some webpack config options
 	var myConfig = Object.create(webpackConfig);
@@ -61,4 +62,4 @@ gulp.task('server', ['webpack'], function(callback) {
 		if(err) throw new gutil.PluginError('webpack-dev-server', err);
 		gutil.log('[webpack-dev-server]', 'http://localhost:8080/webpack-dev-server/index.html');
 	});
-});
+});*/

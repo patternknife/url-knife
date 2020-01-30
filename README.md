@@ -24,7 +24,7 @@ For ES5 users,
 </html>
 ```
 
-For ES6 npm users, do 'npm install --save url-knife' on console.
+For ES6 npm users, run 'npm install --save url-knife' on console.
 
 ``` html
 import Pattern from 'url-knife';
@@ -47,7 +47,7 @@ import Pattern from 'url-knife';
 ``` javascript
 /**
 * @brief
-* Normalize an url with potential human errors (Intranet urls are not normalized.)
+* Normalize an url with potential human errors (Intranet urls are not allowed.)
 */
 var sample1 = Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 #park//noon??abc=retry")
 var sample2 = Pattern.UrlArea.normalizeUrl("'://abc.jppp:9091 /park/noon'")
