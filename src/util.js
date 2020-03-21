@@ -2,7 +2,6 @@
 *     Private : Utils
 * */
 import Valid from "./valid";
-import ValidationError from './error-handler';
 import Pattern from './pattern';
 
 const Text = {
@@ -58,7 +57,7 @@ const Text = {
             for (let b = 0; b < uris[a].length; b++) {
 
                 if (!(uris[a][b] && typeof uris[a][b] === 'string')) {
-                    throw new ValidationError('A value not in a string type has been found : ' + uris[a][b] + ' / loc in for clause : a=' + a + ' / b=' + b);
+                    throw new Error('A value not in a string type has been found : ' + uris[a][b] + ' / loc in for clause : a=' + a + ' / b=' + b);
                 }
 
                 uris[a][b] = this.removeAllSpaces(uris[a][b]);
@@ -67,7 +66,7 @@ const Text = {
                     if (new RegExp('^' + Pattern.Ancestors.no_lang_char_num, 'i').test(uris[a][b])) {
 
                         if(uris[a][b] !== "{number}"){
-                            throw new ValidationError('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
+                            throw new Error('The first letter of the first URI part must not be a meta char : not valid : ' + uris[a][b]);
                         }
 
                     }

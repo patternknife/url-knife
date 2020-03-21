@@ -1,4 +1,3 @@
-import ValidationError from './error-handler';
 import Pattern from './pattern';
 
 /*
@@ -10,7 +9,7 @@ const Valid = {
 
         if (!(sth && typeof sth === 'string')) {
 
-            throw new ValidationError('the variable url must be a string type and not be null.');
+            throw new Error('the variable url must be a string type and not be null.');
 
         } else {
 
@@ -27,7 +26,7 @@ const Valid = {
         //v = this.checkAndTrimStr(v);
 
         /*        if (/\?\//.test(v)) {
-                    throw new ValidationError('?/ is a wrong url pattern.');
+                    throw new Error('?/ is a wrong url pattern.');
                 }*/
 
         if(!new RegExp('^' + Pattern.Children.fuzzy_url() ,'gi').test(v)){
@@ -43,7 +42,7 @@ const Valid = {
         //v = this.checkAndTrimStr(v);
 
 /*        if (/\?\//.test(v)) {
-            throw new ValidationError('?/ is a wrong url pattern.');
+            throw new Error('?/ is a wrong url pattern.');
         }*/
 
         if(!new RegExp('^' + Pattern.Children.url ,'gi').test(v)){
@@ -84,7 +83,7 @@ const Valid = {
                 noProtocolJsn.hasOwnProperty('intranet') && typeof noProtocolJsn['intranet'] === 'boolean'
             )){
 
-            throw new ValidationError('Not a "noProtocolJsn{' +
+            throw new Error('Not a "noProtocolJsn{' +
                 '\'ip_v4\' : [boolean],' +
                 '\'ip_v6\' : [boolean],' +
                 '\'localhost\' : [boolean],' +

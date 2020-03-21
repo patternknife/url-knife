@@ -1,5 +1,3 @@
-import ValidationError from './error-handler';
-
 import Util from './util';
 import Pattern from './pattern';
 import Service from './service';
@@ -84,7 +82,7 @@ const TextArea = {
     extractCertainUris(textStr, uris, endBoundary) {
 
         if (!(textStr && typeof textStr === 'string')) {
-            throw new ValidationError('the variable textStr must be a string type and not be null.');
+            throw new Error('the variable textStr must be a string type and not be null.');
         }
 
         let obj = Service.Text.extractCertainPureUris(textStr, uris, endBoundary);
@@ -202,7 +200,7 @@ const XmlArea = {
     extractAllElements(xmlStr) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
-            throw new ValidationError('the variable xmlStr must be a string type and not be null.');
+            throw new Error('the variable xmlStr must be a string type and not be null.');
         }
 
         const cmt_matches = Service.Xml.extractAllPureComments(xmlStr);
@@ -241,7 +239,7 @@ const XmlArea = {
     extractAllComments(xmlStr) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
-            throw new ValidationError('the variable xmlStr must be a string type and not be null.');
+            throw new Error('the variable xmlStr must be a string type and not be null.');
         }
 
         let el_matches = Service.Xml.extractAllPureElements(xmlStr);
@@ -285,7 +283,7 @@ const XmlArea = {
     extractAllUrls(xmlStr, skipXml = false, noProtocolJsn) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
-            throw new ValidationError('the variable xmlStr must be a string type and not be null.');
+            throw new Error('the variable xmlStr must be a string type and not be null.');
         }
 
         Pattern.Children.setUrlPattern(noProtocolJsn);
@@ -410,7 +408,7 @@ const XmlArea = {
     extractAllEmails(xmlStr, prefixSanitizer = true, skipXml = false) {
 
         if (!(xmlStr && typeof xmlStr === 'string')) {
-            throw new ValidationError('the variable xmlStr must be a string type and not be null.');
+            throw new Error('the variable xmlStr must be a string type and not be null.');
         }
 
         let final_prefixSanitizer = null;
