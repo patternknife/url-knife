@@ -272,7 +272,8 @@ const Text = {
                 'index': {
                     'start': st_idx,
                     'end': end_idx
-                }
+                },
+                'pass' : Email.strictTest(re['email'])
             });
         }
 
@@ -828,7 +829,7 @@ const Email = {
             email = Util.Text.removeAllSpaces(email);
 
             if (!Valid.isEmailPattern(email)) {
-                throw new Error('This is not an email');
+                throw new Error('This is not an email pattern');
             }
 
             obj['email'] = email;
@@ -891,6 +892,35 @@ const Email = {
 
         }
 
+    },
+    strictTest(email){
+
+        // Test for total length of RFC-2821 etc...
+        try {
+
+            if (!email) return false;
+
+            if (email.length > 256) return false;
+
+            if (!/^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/.test(email)) return false;
+
+            let [account, address] = email.split('@');
+            if (account.length > 64) return false;
+
+            let domainParts = address.split('.');
+            if (domainParts.some(function (part) {
+                return part.length > 63;
+            })) return false;
+
+            return true;
+
+        }catch (e) {
+
+            console.log(e);
+
+            return false;
+
+        }
     }
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "url-knife",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Extract and decompose (fuzzy) URLs in texts with robust patterns",
   "main": "src/entry.js",
   "scripts": {

@@ -139,15 +139,16 @@
 
 
     // TextArea (URL) - All tags are just string
-    var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
+    const textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
         'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-        'the packed1book.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+        'the packed1book.net. 가나다@apacbook.ac.kr? adssd@asdasd.ac.jp... fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
         'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
         'http://✪df.ws/123\n' +
         'http://142.42.1.1:8080/\n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::a@example.com 가abc@pacbook.net ' +
         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
+    console.log('final_4_1 : ' + JSON.stringify(Pattern.TextArea.extractAllEmails(textStr, true), null, 2));
 
     // 1.2  TextArea (URI) - All tags are just string
     var textStr1 = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에서 abc/53 abc/533/ka abc/53a/ka /123a/abc/556/dd /abc/123?a=5&b=tkt /xyj/asff' +
@@ -228,7 +229,8 @@
     ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
     'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
 
-   console.log('final_3_2 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
+   //console.log('final_3_2 : ' + JSON.stringify(Pattern.TextArea.extractAllFuzzyUrls(textStr5), null, 2));
+
 /*    console.log('final_5 : ' + JSON.stringify(Pattern.TextArea.extractCertainUris(textStr1, [['abc', 'def'], ['nice', 'guy']]), null, 2));
     console.log('final_3_4 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
 

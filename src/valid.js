@@ -23,12 +23,6 @@ const Valid = {
 
     isFuzzyUrlPattern(v) {
 
-        //v = this.checkAndTrimStr(v);
-
-        /*        if (/\?\//.test(v)) {
-                    throw new Error('?/ is a wrong url pattern.');
-                }*/
-
         if(!new RegExp('^' + Pattern.Children.fuzzy_url() ,'gi').test(v)){
             return false;
         }

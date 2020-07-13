@@ -1,10 +1,10 @@
 # Url-knife [![Build Status](https://travis-ci.org/Andrew-Kang-G/url-knife.svg?branch=master)](https://travis-ci.org/Andrew-Kang-G/url-knife) [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/Andrew-Kang-G/url-knife/badge)](https://www.jsdelivr.com/package/gh/Andrew-Kang-G/url-knife)
 ## Overview
-Extract and decompose (fuzzy) URLs in texts with robust patterns.
+Extract and decompose (fuzzy) URLs (including emails, which are conceptually a part of URLs) in texts with robust patterns.
 
 #### Fuzzy URL knife
 <a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
-#### URL knife
+#### URL knife (recommended)
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
 
 ## Installation
@@ -33,16 +33,24 @@ import Pattern from 'url-knife';
 ## Syntax & Usage
 [Chapter 1. Normalize or parse one URL](#chapter-1-normalize-or-parse-one-url)
 
-[Chapter 2. Extract all URLs](#chapter-2-extract-all-urls)
+[Chapter 2. Extract all URLs or emails](#chapter-2-extract-all-urls-or-emails)
 
 [Chapter 3. Extract URIs with certain names](#chapter-3-extract-uris-with-certain-names)
 
 [Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls)
 
-[Chapter 5. Extract all URLs in raw HTML or XML](#chapter-6-extract-all-urls-in-raw-html-or-xml)
+[Chapter 5. Extract all URLs in raw HTML or XML](#chapter-5-extract-all-urls-in-raw-html-or-xml)
 
 
 #### Chapter 1. Normalize or parse one URL
+The following two methods should be used for only one url, not for multiple ones in texts. 
+(for multiple ones, refer to Chapter 2 & 4)
+
+##### normalizeUrl vs parseUrl
+If you want to parse a normal url with no typos, it is safe to use <b>parseUrl</b>. However, <b>normalizeUrl</b> is for
+parsing urls with possible human errors.
+
+* ##### normalizeUrl
   
 ``` javascript
 /**
@@ -98,6 +106,9 @@ var sample3 = Pattern.UrlArea.normalizeUrl("ss hd : /university,.acd. ;jpkp: 909
   "port": null
 }
  ``` 
+
+* ##### parseUrl
+
 ``` javascript
 /**
 * @brief
@@ -123,7 +134,11 @@ var url = Pattern.UrlArea.parseUrl("xtp://gooppalgo.com/park/tree/?abc=1")
 }
  ```
  
- #### Chapter 2. Extract all URLs
+ #### Chapter 2. Extract all URLs or emails
+ 
+ ##### The following methods are recommended to use in most cases.
+ 
+* ##### extractAllUrls
  
  ``` javascript
      var textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
@@ -154,8 +169,54 @@ var url = Pattern.UrlArea.parseUrl("xtp://gooppalgo.com/park/tree/?abc=1")
                      'localhost' : false,
                      'intranet' : true
  })
+```
+
+* ##### extractAllEmails
+
+```
+        /**
+         * @brief
+         * Distill all emails from normal text
+         * @author Andrew Kang
+         * @param textStr string required
+         * @param prefixSanitizer boolean (default : false)
+         * @return array
+         */
+
+  var emails = Pattern.TextArea.extractAllEmails(textStr, true)
+
   ```
-  ###### console.log() 
+ ###### console.log() 
+ ##### You may be wondering what the 'pass' property below means. If 'pass' is true, that is the email pattern is strictly true following RFC rules.
+```json
+ [{
+    "value": {
+      "email": "가나다@apacbook.ac.kr",
+      "removedTailOnEmail": null,
+      "type": "domain"
+    },
+    "area": "text",
+    "index": {
+      "start": 222,
+      "end": 240
+    },
+    "pass": false
+  },
+  {
+    "value": {
+      "email": "adssd@asdasd.ac.jp",
+      "removedTailOnEmail": null,
+      "type": "domain",
+      "removedTailOnUrl": "..."
+    },
+    "area": "text",
+    "index": {
+      "start": 242,
+      "end": 263
+    },
+    "pass": true
+  }]
+```
  <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
  
 #### Chapter 3. Extract URIs with certain names
@@ -393,7 +454,7 @@ var sampleText = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에�
 ```
  
 #### Chapter 4. Extract all fuzzy URLs
-###### This does not detect intranets due to false positives. If you need to extract intranets, go back to the Chapter 2 above. 
+##### The strongest url extracting method of URL-knife in natural language texts. However, this does not detect intranets due to false positives. If you need to extract intranets, go back to the Chapter 2 above. 
 
 ``` javascript
 var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.ex ample;com    -/wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +

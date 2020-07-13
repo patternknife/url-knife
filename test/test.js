@@ -57,12 +57,13 @@ describe('BDD style', function() {
 
         const textStr = 'http://[::1]:8000에서 http ://www.example.com/wpstyle/?p=364 is ok \n' +
             'HTTP://foo.com/blah_blah_(wikipedia) https://www.google.com/maps/place/USA/@36.2218457,... tnae1ver.com:8000on the internet  Asterisk\n ' +
-            'the packed1book.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
+            'the packed1book.net. 가나다@apacbook.ac.kr? adssd@asdasd.ac.jp... fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>; abc.com/ad/fg/?kk=5 abc@daum.net' +
             'Have you visited http://goasidaio.ac.kr?abd=5안녕하세요?5...,.&kkk=5rk.,, ' +
             'http://✪df.ws/123\n' +
             'http://142.42.1.1:8080/\n' +
             'http://-.~_!$&\'()*+,;=:%40:80%2f::::::a@example.com 가abc@pacbook.net ' +
-            'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+            'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';;
+
 
 
         it('extractAllUrls', function() {
@@ -201,8 +202,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 278,
-                        "end": 361
+                        "start": 301,
+                        "end": 384
                     }
                 },
                 {
@@ -222,8 +223,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 362,
-                        "end": 381
+                        "start": 385,
+                        "end": 404
                     }
                 },
                 {
@@ -244,8 +245,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 411,
-                        "end": 459
+                        "start": 434,
+                        "end": 482
                     }
                 },
                 {
@@ -263,8 +264,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 463,
-                        "end": 480
+                        "start": 486,
+                        "end": 503
                     }
                 },
                 {
@@ -282,8 +283,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 481,
-                        "end": 503
+                        "start": 504,
+                        "end": 526
                     }
                 },
                 {
@@ -301,8 +302,8 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 505,
-                        "end": 556
+                        "start": 528,
+                        "end": 579
                     }
                 },
                 {
@@ -323,15 +324,86 @@ describe('BDD style', function() {
                     },
                     "area": "text",
                     "index": {
-                        "start": 598,
-                        "end": 637
+                        "start": 621,
+                        "end": 660
                     }
                 }
             ])
         });
 
+       it('extractAllEmails', function() {
+            assert.deepEqual(Pattern.TextArea.extractAllEmails(textStr, true), [
+                {
+                    "value": {
+                        "email": "가나다@apacbook.ac.kr",
+                        "removedTailOnEmail": null,
+                        "type": "domain"
+                    },
+                    "area": "text",
+                    "index": {
+                        "start": 222,
+                        "end": 240
+                    },
+                    "pass": false
+                },
+                {
+                    "value": {
+                        "email": "adssd@asdasd.ac.jp",
+                        "removedTailOnEmail": null,
+                        "type": "domain",
+                        "removedTailOnUrl": "..."
+                    },
+                    "area": "text",
+                    "index": {
+                        "start": 242,
+                        "end": 263
+                    },
+                    "pass": true
+                },
+                {
+                    "value": {
+                        "email": "가나다@pacbook.travelersinsurance",
+                        "removedTailOnEmail": null,
+                        "type": "domain"
+                    },
+                    "area": "text",
+                    "index": {
+                        "start": 346,
+                        "end": 376
+                    },
+                    "pass": false
+                },
+                {
+                    "value": {
+                        "email": "a@example.com",
+                        "removedTailOnEmail": null,
+                        "type": "domain"
+                    },
+                    "area": "text",
+                    "index": {
+                        "start": 566,
+                        "end": 579
+                    },
+                    "pass": true
+                },
+                {
+                    "value": {
+                        "email": "abc@pacbook.net",
+                        "removedTailOnEmail": null,
+                        "type": "domain"
+                    },
+                    "area": "text",
+                    "index": {
+                        "start": 581,
+                        "end": 596
+                    },
+                    "pass": true
+                }
+            ])
+        })
 
-        const textStr2 = '142 .42.1.1,:,,8080 123.45xtp://--[::1]:8000에서 httt //-www.ex ample;comm                      /wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
+
+            const textStr2 = '142 .42.1.1,:,,8080 123.45xtp://--[::1]:8000에서 httt //-www.ex ample;comm                      /wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
             'h ttp:/://132 .42.,1.1 HT TP:// foo, co,.kr/blah_blah_(wikipedia) localhost   :80 https://www.google .org :8005/maps/place/USA/@36.2218457,... tnae1ver.co. jp;8000on the internet  Asterisk\n ' +
             'the packed1book,ac,.kr,.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;' +
             ' abc,co.krr//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr ?abd=55...,.&kkk=5rk.,, ' +
