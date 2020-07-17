@@ -3,11 +3,7 @@ import Valid from './valid';
 import Util from './util';
 import {Normalizer} from './normalizer';
 
-const fup = require("fast-url-parser");
-fup.queryString = require("querystringparser");
-
-
-
+const queryString = require('query-string');
 /*
 *     Public for controller
 * */
@@ -32,9 +28,9 @@ const Text = {
         while ((match = rx.exec(textStr)) !== null) {
 
             /* SKIP DEPENDENCY */
- /*           if (/^@/.test(match[0])) {
-                continue;
-            }*/
+            /*           if (/^@/.test(match[0])) {
+                           continue;
+                       }*/
 
             /* this can affect indexes so commented */
             //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
@@ -57,17 +53,17 @@ const Text = {
 
 
             /* this part doesn't need to be included */
-   /*         if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
-                end_idx -= re['removedTailOnUrl'].length;
-            }*/
+            /*         if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
+                         end_idx -= re['removedTailOnUrl'].length;
+                     }*/
 
             obj.push({
                 'value': re,
                 'area': 'text'
-          /*      'index': {
-                    'start': st_idx,
-                    'end': end_idx
-                }*/
+                /*      'index': {
+                          'start': st_idx,
+                          'end': end_idx
+                      }*/
             });
         }
 
@@ -138,13 +134,13 @@ const Text = {
 
         let uri_ptrn = Util.Text.urisToOne(uris);
 
-         //console.log('uri_ptrn : ' + uri_ptrn);
+        //console.log('uri_ptrn : ' + uri_ptrn);
 
         if (!uri_ptrn) {
             throw new Error('the variable uris are not available');
         }
 
-        if(endBoundary){
+        if (endBoundary) {
 
 
             uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
@@ -157,7 +153,7 @@ const Text = {
 
             ;
 
-        }else{
+        } else {
 
             uri_ptrn = '(?:\\/[^\\n\\r\\t\\s]*\\/|' +
                 '(?:[0-9]|' + Pattern.Ancestors.two_bytes_num + '|' + Pattern.Ancestors.lang_char + ')'
@@ -179,9 +175,9 @@ const Text = {
         while ((match = rx.exec(textStr)) !== null) {
 
             /* remove email patterns related to 'all_urls3_front' regex */
-        /*    if (/^@/.test(match[0])) {
-                continue;
-            }*/
+            /*    if (/^@/.test(match[0])) {
+                    continue;
+                }*/
 
             let mod_val = match[0];
 
@@ -241,10 +237,10 @@ const Text = {
 
                     //console.log('match2:' + match2);
 
-                    if(match2[1]) {
+                    if (match2[1]) {
                         removedLength = match2[1].length;
                     }
-                    if(match2[2]) {
+                    if (match2[2]) {
                         border = match2[2];
                     }
                 }
@@ -273,7 +269,7 @@ const Text = {
                     'start': st_idx,
                     'end': end_idx
                 },
-                'pass' : Email.strictTest(re['email'])
+                'pass': Email.strictTest(re['email'])
             });
         }
 
@@ -315,13 +311,13 @@ const Url = {
 
             /* Chapter 1. Normalizing process */
 
-            Normalizer.modified_url  = Util.Text.removeAllSpaces(url);
+            Normalizer.modified_url = Util.Text.removeAllSpaces(url);
 
             // 1. full url
             obj['url'] = url;
 
             // 2. protocol
-            obj['protocol']  =  Normalizer.extractAndNormalizeProtocolFromSpacesRemovedUrl();
+            obj['protocol'] = Normalizer.extractAndNormalizeProtocolFromSpacesRemovedUrl();
 
             // 3. Domain
             let typeDomain = Normalizer.extractAndNormalizeDomainFromProtocolRemovedUrl();
@@ -331,7 +327,7 @@ const Url = {
             //console.log('modified_url : ' + Normalizer.modified_url);
 
             // 4. Port
-            obj['port'] =Normalizer.extractAndNormalizePortFromDomainRemovedUrl();
+            obj['port'] = Normalizer.extractAndNormalizePortFromDomainRemovedUrl();
 
             // 5. Finalize
             obj['normalizedUrl'] = Normalizer.finalizeNormalization(obj['protocol'], obj['port'], obj['onlyDomain']);
@@ -340,7 +336,6 @@ const Url = {
             let uriParams = Normalizer.extractAndNormalizeUriParamsFromPortRemovedUrl();
             obj['onlyUri'] = uriParams['uri'];
             obj['onlyParams'] = uriParams['params'];
-
 
 
             /* Chapter 2. Post normalizing process  (same as the function 'parseUrl')*/
@@ -363,17 +358,16 @@ const Url = {
             if (obj['onlyParams']) {
 
                 try {
-                    obj['onlyParamsJsn'] = fup.parse(obj['onlyParams'], true).query;
+                    obj['onlyParamsJsn'] = queryString.parse(obj['onlyParams']);
                 } catch (e1) {
                     console.log(e1);
                 }
-                /*                let onlyParamsJsnTxt = obj['onlyParams'].replace(/^\?/, '');
-                                obj['onlyParamsJsn'] = JSON.parse('{"' + decodeURI(onlyParamsJsnTxt.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}');*/
+
             }
 
 
             // If no uris no params, we remove suffix in case that it is a meta character.
-           if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
+            if (obj['onlyUri'] === null && obj['onlyParams'] === null) {
 
                 if (obj['type'] !== 'ip_v6') {
                     // removedTailOnUrl
@@ -429,8 +423,8 @@ const Url = {
 
                 let rm_part_matches = new RegExp('\\=([^=\\n\\r\\t\\s]+?)(' + Pattern.Ancestors.no_lang_char_num + '+)$', 'gi').exec(obj['url']);
 
-   /*                    console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
-                              console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
+                /*                    console.log(obj['url'] + '1 : ' + rm_part_matches[1]);
+                                           console.log(obj['url'] + '2 : ' + rm_part_matches[2]);*/
 
                 if (rm_part_matches) {
                     if (rm_part_matches[1]) {
@@ -537,7 +531,7 @@ const Url = {
 
             if (!Valid.isUrlPattern(url) && !Valid.isUriPattern(url)) {
                 throw new Error('This is neither an url nor an uri.' + ' / Error url : ' + url);
-            }else if(Valid.isEmailPattern(url) ){
+            } else if (Valid.isEmailPattern(url)) {
                 throw new Error('This is an email pattern.' + ' / Error url : ' + url);
             }
 
@@ -630,12 +624,10 @@ const Url = {
             if (obj['onlyParams']) {
 
                 try {
-                    obj['onlyParamsJsn'] = fup.parse(obj['onlyParams'], true).query;
+                    obj['onlyParamsJsn'] = queryString.parse(obj['onlyParams']);
                 } catch (e1) {
                     console.log(e1);
                 }
-                /*                let onlyParamsJsnTxt = obj['onlyParams'].replace(/^\?/, '');
-                                obj['onlyParamsJsn'] = JSON.parse('{"' + decodeURI(onlyParamsJsnTxt.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}');*/
             }
 
             // 8. port
@@ -795,7 +787,7 @@ const Url = {
                 }
             }
 
-           //obj['normalizedUrl'] = this.normalizeUrl(obj['url'])['normalizedUrl'];
+            //obj['normalizedUrl'] = this.normalizeUrl(obj['url'])['normalizedUrl'];
 
 
             //}
@@ -815,12 +807,12 @@ const Url = {
 };
 
 const Email = {
-    assortEmail(email){
+    assortEmail(email) {
 
         let obj = {
-            email : null,
+            email: null,
             removedTailOnEmail: null,
-            type : null
+            type: null
         };
 
         try {
@@ -893,7 +885,7 @@ const Email = {
         }
 
     },
-    strictTest(email){
+    strictTest(email) {
 
         // Test for total length of RFC-2821 etc...
         try {
@@ -914,7 +906,7 @@ const Email = {
 
             return true;
 
-        }catch (e) {
+        } catch (e) {
 
             console.log(e);
 
@@ -974,5 +966,5 @@ const Xml = {
 
 export default {
 
-    Text, Url,  Xml
+    Text, Url, Xml
 }
