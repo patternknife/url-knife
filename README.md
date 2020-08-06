@@ -2,10 +2,11 @@
 ## Overview
 Extract and decompose (fuzzy) URLs (including emails, which are conceptually a part of URLs) in texts with robust patterns.
 
-#### Fuzzy URL knife
-<a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
 #### URL knife (recommended)
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
+#### Fuzzy URL knife (false positives, but detect human errors)
+<a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
+
 
 ## Installation
 
@@ -17,8 +18,6 @@ For ES5 users,
        	<p id="content"></p>
        	<script src="../dist/url-knife.bundle.js"></script>
        	<script type="text/javascript">
-       
-      
        	</script>
        </body>
 </html>
@@ -37,7 +36,7 @@ import Pattern from 'url-knife';
 
 [Chapter 3. Extract URIs with certain names](#chapter-3-extract-uris-with-certain-names)
 
-[Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls)
+[Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls) (False positives detected)
 
 [Chapter 5. Extract all URLs in raw HTML or XML](#chapter-5-extract-all-urls-in-raw-html-or-xml)
 

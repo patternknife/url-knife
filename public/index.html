@@ -146,7 +146,8 @@
         'http://✪df.ws/123\n' +
         'http://142.42.1.1:8080/\n' +
         'http://-.~_!$&\'()*+,;=:%40:80%2f::::::a@example.com 가abc@pacbook.net ' +
-        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
+        'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. abc.def 1353aa.liars다';
+
 
     console.log('final_4_1 : ' + JSON.stringify(Pattern.TextArea.extractAllEmails(textStr, true), null, 2));
 
@@ -198,7 +199,7 @@
     }
 
     start();
-    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllUrls(textStr), null, 2));
+    console.log('final_3_1 : ' + JSON.stringify(Pattern.TextArea.extractAllUrls(textStr, {ip_v4 : false, ip_v6 :false,  localhost : false, intranet : true}), null, 2));
     console.log('final_3_2 : ' + JSON.stringify(Pattern.UrlArea.parseUrl("packed1book.net?user[name][first]=tj&user[name][last]=holowaychuk"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("tnae1ver.co. jp;8000"), null, 2));
     console.log('final_3_3 : ' + JSON.stringify(Pattern.UrlArea.normalizeUrl("htp/:/abcgermany.,def;:9094 ##park//noon??abc==retry"), null, 2));

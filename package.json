@@ -1,8 +1,8 @@
 {
   "name": "url-knife",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Extract and decompose (fuzzy) URLs (including emails, which are conceptually a part of URLs) in texts with robust patterns.",
-  "main": "src/entry.js",
+  "main": "dist/url-knife.bundle.js",
   "scripts": {
     "build": "gulp",
     "test": "gulp test"
