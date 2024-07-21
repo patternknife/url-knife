@@ -1,8 +1,5 @@
-import Util from './util';
 import Pattern from './pattern';
 import Service from './service';
-
-import Valid from './valid';
 
 /*
 *     All Public
@@ -10,21 +7,6 @@ import Valid from './valid';
 
 const TextArea = {
 
-    /**
-     * @brief
-     * Distill all urls including fuzzy matched ones from normal text
-     * @author Andrew Kang
-     * @param textStr string required
-     * @return array
-     */
-    extractAllFuzzyUrls(textStr) {
-        //Pattern.Children.setUrlPattern(noProtocolJsn);
-
-        //console.log('a : ' + Pattern.Children.url);
-
-        return Service.Text.extractAllFuzzyUrls(textStr);
-
-    },
 
     /**
      * @brief
@@ -155,7 +137,6 @@ const TextArea = {
 
 
 };
-
 
 const UrlArea = {
 

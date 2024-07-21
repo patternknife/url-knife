@@ -9,68 +9,6 @@ const queryString = require('query-string');
 * */
 const Text = {
 
-    extractAllFuzzyUrls(textStr) {
-
-        if (!(textStr && typeof textStr === 'string')) {
-            throw new Error('the variable textStr must be a string type and not be null.');
-        }
-
-        // To increase the accuracy of applying regexes...
-        textStr = textStr.replace(/[\n\r\t\s]{2,}/, ' ');
-
-        let obj = [];
-
-        let rx = new RegExp(Pattern.Children.fuzzy_url(), 'gi');
-
-        let matches = [];
-        let match = {};
-
-        while ((match = rx.exec(textStr)) !== null) {
-
-            /* SKIP DEPENDENCY */
-            /*           if (/^@/.test(match[0])) {
-                           continue;
-                       }*/
-
-            /* this can affect indexes so commented */
-            //mod_val = mod_val.replace(/[\n\r\t\s]/g, '');
-
-            let st_idx = match.index;
-            let end_idx = match.index + match[0].length;
-
-            let mod_val = match[0];
-            let re = Url.normalizeUrl(mod_val);
-
-            /* SKIP DEPENDENCY */
-
-            // Decimals
-            if (new RegExp('^(?:\\.|[0-9]|' + Pattern.Ancestors.two_bytes_num + '|[\\n\\r\\t\\s])+$', 'i').test(re['url'])) {
-                // ip_v4 is OK
-                if (!new RegExp('^' + Pattern.Ancestors.ip_v4 + '$', 'i').test(re['onlyDomain'])) {
-                    continue;
-                }
-            }
-
-
-            /* this part doesn't need to be included */
-            /*         if (re['removedTailOnUrl'] && re['removedTailOnUrl'].length > 0) {
-                         end_idx -= re['removedTailOnUrl'].length;
-                     }*/
-
-            obj.push({
-                'value': re,
-                'area': 'text'
-                /*      'index': {
-                          'start': st_idx,
-                          'end': end_idx
-                      }*/
-            });
-        }
-
-        return obj;
-
-    },
-
     extractAllPureUrls(textStr) {
 
         //console.log('a : ' + Pattern.Children.url);

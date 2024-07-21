@@ -174,54 +174,6 @@ const Descendants = {
             ')';
     },
 
-    get fuzzy_root_domains() {
-
-        let alls = Ancestors.all_root_domains;
-        alls = alls.replace(/^\(\?:|\)$/, '');
-
-        let arrs = alls.split('|');
-
-        let whole_rx = '(?:';
-        for (let a = 0; a < arrs.length; a++) {
-
-            let full_rx = '(?:[0-9]|[\\n\\r\\t\\s]|' + Ancestors.all_keypad_meta_chars + '|';
-
-            let part_arrs = [];
-            let part_rx = '[';
-
-            let one = arrs[a];
-            for (let b = 0; b < one.length; b++) {
-
-                let cr = one.charAt(b);
-
-                part_rx += cr;
-                part_arrs.push(cr);
-
-            }
-
-            part_rx += ']';
-
-            full_rx += part_rx + '|)';
-
-            for (let c = 0; c < part_arrs.length; c++) {
-
-                if (c < part_arrs.length - 1) {
-                    whole_rx += part_arrs[c] + full_rx;
-                } else {
-                    whole_rx += part_arrs[c];
-                }
-            }
-
-            if (a < arrs.length - 1) {
-                whole_rx += '|';
-            }
-        }
-
-        //console.log('w : ' + whole_rx);
-
-        return whole_rx;
-
-    },
 
     fuzzy_domain_end:
     '(?:[\\n\\r\\t\\s]|' + Ancestors.all_keypad_meta_chars_without_delimiters + '){0,2}?' + Ancestors.end_punc_regarded_char +

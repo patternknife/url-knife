@@ -1,4 +1,4 @@
-# Url-knife [![Build Status](https://travis-ci.org/patternknife/url-knife.svg?branch=master)](https://travis-ci.org/patternknife/url-knife) [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/patternknife/url-knife/badge)](https://www.jsdelivr.com/package/gh/patternknife/url-knife) [![](https://badgen.net/bundlephobia/minzip/url-knife)](https://bundlephobia.com/result?p=url-knife)
+# Url-knife [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/patternknife/url-knife/badge)](https://www.jsdelivr.com/package/gh/patternknife/url-knife) [![](https://badgen.net/bundlephobia/minzip/url-knife)](https://bundlephobia.com/result?p=url-knife)
 ## Overview
 Extract and decompose (fuzzy) URLs (including emails, which are conceptually a part of URLs) in texts with robust patterns.
 
@@ -35,9 +35,7 @@ import Pattern from 'url-knife';
 
 [Chapter 3. Extract URIs with certain names](#chapter-3-extract-uris-with-certain-names)
 
-[Chapter 4. Extract all fuzzy URLs](#chapter-4-extract-all-fuzzy-urls) (False positives detected)
-
-[Chapter 5. Extract all URLs in raw HTML or XML](#chapter-5-extract-all-urls-in-raw-html-or-xml)
+[Chapter 4. Extract all URLs in raw HTML or XML](#chapter-4-extract-all-urls-in-raw-html-or-xml)
 
 
 #### Chapter 1. Normalize or parse one URL
@@ -450,31 +448,8 @@ var sampleText = 'https://google.com/abc/777?a=5&b=7 abc/def 333/kak abc/55에�
   }
 ]
 ```
- 
-#### Chapter 4. Extract all fuzzy URLs
-##### The strongest url extracting method of URL-knife in natural language texts. However, this does not detect intranets due to false positives. If you need to extract intranets, go back to the Chapter 2 above. 
 
-``` javascript
-var textStr = '142 .42.1.1:8080 123.45 xtp://--[::1]:8000에서 h ttpp ;//-www.ex ample;com    -/wpstyle/??p=3?6/4&x=5/3 in the ssh h::/;/ww.example.com/wpstyle/?p=364 is ok ' +
-         'h ttp:/://132 .42.,1.1 HT TP:// foo, co,.kr/blah_blah_(wikipedia) https://www.google .org :8005/maps/place/USA/@36.2218457,... tnae1ver.co. jp;8000on the internet  Asterisk\n ' +
-         'the packed1book.net. 가나다@apacbook.ac.kr fakeshouldnotbedetected.url?abc=fake s5houl７十七日dbedetected.jp?japan=go&html=<span>가나다@pacbook.travelersinsurance</span>;' +
-         ' abc,com//ad/fg/?kk=5 abc@daum.net Have you visited http://agoasidaio.ac.kr?abd=55...,.&kkk=5rk.,, ' +
-         'Have <b>you</b> visited goasidaio.ac.kr?abd=5hell0?5...&kkk=5rk.,. ';
- 
-     /**
-      * @brief
-     * Distill all urls including fuzzy matched ones from normal text
-      * @author Andrew Kang
-      * @param textStr string required
-        
-       
- var urls = Pattern.TextArea.extractAllFuzzyUrls(textStr)
- ```
- ###### console.log() 
-<a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
-
-
-#### Chapter 5. Extract all URLs in raw HTML or XML
+#### Chapter 4. Extract all URLs in raw HTML or XML
   
 ``` javascript
     // The sample of 'XML (HTML)'
@@ -538,4 +513,4 @@ var urls = PatternExtractor.XmlArea.extractAllUrls(xmlStr);
  ]
 ```
 
-Please inform me of more sophisticated patterns you need by leaving issues on Github or emailing me at studypurpose@naver.com.
+Please inform me of more sophisticated patterns you need by leaving issues or emailing me at studypurpose@naver.com.
