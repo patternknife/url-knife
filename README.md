@@ -1,11 +1,9 @@
-# Url-knife [![Build Status](https://travis-ci.org/Andrew-Kang-G/url-knife.svg?branch=master)](https://travis-ci.org/Andrew-Kang-G/url-knife) [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/Andrew-Kang-G/url-knife/badge)](https://www.jsdelivr.com/package/gh/Andrew-Kang-G/url-knife) [![](https://badgen.net/bundlephobia/minzip/url-knife)](https://bundlephobia.com/result?p=url-knife)
+# Url-knife [![Build Status](https://travis-ci.org/patternknife/url-knife.svg?branch=master)](https://travis-ci.org/patternknife/url-knife) [![NPM version](https://img.shields.io/npm/v/url-knife.svg)](https://www.npmjs.com/package/url-knife) [![](https://data.jsdelivr.com/v1/package/gh/patternknife/url-knife/badge)](https://www.jsdelivr.com/package/gh/patternknife/url-knife) [![](https://badgen.net/bundlephobia/minzip/url-knife)](https://bundlephobia.com/result?p=url-knife)
 ## Overview
 Extract and decompose (fuzzy) URLs (including emails, which are conceptually a part of URLs) in texts with robust patterns.
 
-#### URL knife (recommended)
+#### URL knife
 <a href="https://jsfiddle.net/AndrewKang/xtfjn8g3/" target="_blank">LIVE DEMO</a>
-#### Fuzzy URL knife (false positives, but detect human errors)
-<a href="https://jsfiddle.net/AndrewKang/p0tc4ovb/" target="_blank">LIVE DEMO</a>
 
 
 ## Installation
@@ -24,6 +22,7 @@ For ES5 users,
 ```
 
 For ES6 npm users, run 'npm install --save url-knife' on console.
+(Node v18.20.4)
 
 ``` html
 import Pattern from 'url-knife';
